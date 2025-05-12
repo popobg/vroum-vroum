@@ -38,7 +38,7 @@ public class VehiculeService {
     private StatutVehicule statut;
     @OneToMany(mappedBy = "vehiculeService")
     private List<Reservation> reservations;
-    @ManyToMany(mappedBy = "vehiculeService")
+    @ManyToMany(mappedBy = "vehiculeServices")
     private Set<Collaborateur> collaborateurs;
 
     {

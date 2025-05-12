@@ -29,12 +29,12 @@ public class Collaborateur {
     private String password;
     @Column(name = "ADMIN")
     private Boolean admin;
-    @OneToMany(mappedBy = "Collaborateur")
+    @OneToMany(mappedBy = "collaborateur")
     private List<Vehicule> vehicules;
     @ManyToMany
     @JoinTable(name = "PASSAGER_COVOITURAGE", joinColumns = @JoinColumn(name="ID_PASSAGER", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name="ID_COVOITURAGE", referencedColumnName = "ID"))
     private Set<Covoiturage> covoiturages;
-    @OneToMany(mappedBy = "Collaborateur")
+    @OneToMany(mappedBy = "collaborateur")
     private List<Reservation> reservations;
     @ManyToMany
     @JoinTable(name = "ADMINISTRATEUR_VEHICULE_SERVICE", joinColumns = @JoinColumn(name = "ID_ADMINISTARTEUR", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ID_VEHICULE_SEVICE", referencedColumnName = "ID"))
