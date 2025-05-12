@@ -1,0 +1,81 @@
+package demo.vroum_vroum.entity;
+
+import jakarta.persistence.*;
+
+import java.util.Date;
+
+@Entity
+@Table(name = "RESERVARTION")
+public class Reservation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private int id;
+    @Column(name = "DATE_DEPART")
+    private Date dateDepart;
+    @Column(name = "DATE_RETOUR")
+    private Date dateRetour;
+    @ManyToOne
+    @JoinColumn(name = "ID_COLABORATEUR")
+    private Colaborateur colaborateur;
+    @ManyToOne
+    @JoinColumn(name = "ID_VEHICULE_SERVICE")
+    private VehiculeService vehiculeService;
+
+    public Reservation() {}
+
+    public Reservation(int id, Date dateDepart, Date dateRetour) {
+        this.id = id;
+        this.dateDepart = dateDepart;
+        this.dateRetour = dateRetour;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Date getDateDepart() {
+        return dateDepart;
+    }
+
+    public void setDateDepart(Date dateDepart) {
+        this.dateDepart = dateDepart;
+    }
+
+    public Date getDateRetour() {
+        return dateRetour;
+    }
+
+    public void setDateRetour(Date dateRetour) {
+        this.dateRetour = dateRetour;
+    }
+
+    public Colaborateur getColaborateur() {
+        return colaborateur;
+    }
+
+    public void setColaborateur(Colaborateur colaborateur) {
+        this.colaborateur = colaborateur;
+    }
+
+    public VehiculeService getVehiculeService() {
+        return vehiculeService;
+    }
+
+    public void setVehiculeService(VehiculeService vehiculeService) {
+        this.vehiculeService = vehiculeService;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id=" + id +
+                ", dateDepart=" + dateDepart +
+                ", dateRetour=" + dateRetour +
+                '}';
+    }
+}
