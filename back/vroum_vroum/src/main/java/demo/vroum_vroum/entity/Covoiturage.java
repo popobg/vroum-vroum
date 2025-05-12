@@ -25,13 +25,13 @@ public class Covoiturage {
     @Column(name = "DUREE")
     private int duree;
     @ManyToOne
-    @JoinColumn(name = "ID_COLABORATEUR")
-    private Colaborateur organisateur;
+    @JoinColumn(name = "ID_COLLABORATEUR")
+    private Collaborateur organisateur;
     @ManyToOne
     @JoinColumn(name = "ID_VEHICULE")
     private Vehicule vehicule;
     @ManyToMany(mappedBy = "covoiturages")
-    private Set<Colaborateur> colaborateurs;
+    private Set<Collaborateur> collaborateurs;
 
     public Covoiturage() {}
 
@@ -101,11 +101,11 @@ public class Covoiturage {
         this.duree = duree;
     }
 
-    public Colaborateur getOrganisateur() {
+    public Collaborateur getOrganisateur() {
         return organisateur;
     }
 
-    public void setOrganisateur(Colaborateur organisateur) {
+    public void setOrganisateur(Collaborateur organisateur) {
         this.organisateur = organisateur;
     }
 
@@ -117,12 +117,12 @@ public class Covoiturage {
         this.vehicule = vehicule;
     }
 
-    public Set<Colaborateur> getColaborateurs() {
-        return colaborateurs;
+    public Set<Collaborateur> getCollaborateurs() {
+        return collaborateurs;
     }
 
-    public void setColaborateurs(Set<Colaborateur> colaborateurs) {
-        this.colaborateurs = colaborateurs;
+    public void setCollaborateurs(Set<Collaborateur> Collaborateurs) {
+        this.collaborateurs = Collaborateurs;
     }
 
     @Override

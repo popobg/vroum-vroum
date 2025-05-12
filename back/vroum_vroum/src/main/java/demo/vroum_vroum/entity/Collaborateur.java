@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "COLABORATEUR")
-public class Colaborateur {
+@Table(name = "COLLABORATEUR")
+public class Collaborateur {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -29,12 +29,12 @@ public class Colaborateur {
     private String password;
     @Column(name = "ADMIN")
     private Boolean admin;
-    @OneToMany(mappedBy = "colaborateur")
+    @OneToMany(mappedBy = "Collaborateur")
     private List<Vehicule> vehicules;
     @ManyToMany
     @JoinTable(name = "PASSAGER_COVOITURAGE", joinColumns = @JoinColumn(name="ID_PASSAGER", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name="ID_COVOITURAGE", referencedColumnName = "ID"))
     private Set<Covoiturage> covoiturages;
-    @OneToMany(mappedBy = "colaborateur")
+    @OneToMany(mappedBy = "Collaborateur")
     private List<Reservation> reservations;
     @ManyToMany
     @JoinTable(name = "ADMINISTRATEUR_VEHICULE_SERVICE", joinColumns = @JoinColumn(name = "ID_ADMINISTARTEUR", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ID_VEHICULE_SEVICE", referencedColumnName = "ID"))
@@ -45,9 +45,9 @@ public class Colaborateur {
         reservations = new ArrayList<>();
     }
 
-    public Colaborateur() {}
+    public Collaborateur() {}
 
-    public Colaborateur(int id, String nom, String prenom, String adresse, String email, int telephone, String pseudo, String password, Boolean admin) {
+    public Collaborateur(int id, String nom, String prenom, String adresse, String email, int telephone, String pseudo, String password, Boolean admin) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -165,7 +165,7 @@ public class Colaborateur {
 
     @Override
     public String toString() {
-        return "Colaborateur{" +
+        return "Collaborateur{" +
                 "id=" + id +
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +

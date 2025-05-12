@@ -35,7 +35,7 @@ public class VehiculeService {
     @OneToMany(mappedBy = "vehiculeService")
     private List<Reservation> reservations;
     @ManyToMany(mappedBy = "vehiculeService")
-    private Set<Colaborateur> colaborateurs;
+    private Set<Collaborateur> collaborateurs;
 
     {
         reservations = new ArrayList<>();
@@ -144,12 +144,12 @@ public class VehiculeService {
         this.reservations = reservations;
     }
 
-    public Set<Colaborateur> getColaborateurs() {
-        return colaborateurs;
+    public Set<Collaborateur> getCollaborateurs() {
+        return collaborateurs;
     }
 
-    public void setColaborateurs(Set<Colaborateur> colaborateurs) {
-        this.colaborateurs = colaborateurs;
+    public void setCollaborateurs(Set<Collaborateur> collaborateurs) {
+        this.collaborateurs = collaborateurs;
     }
 
     @Override

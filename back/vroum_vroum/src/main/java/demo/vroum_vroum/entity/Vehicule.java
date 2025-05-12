@@ -18,8 +18,8 @@ public class Vehicule {
     @Column(name = "NB_PLACES")
     private int nbPlaces;
     @ManyToOne
-    @JoinColumn(name = "ID_COLABORATEUR")
-    private Colaborateur colaborateur;
+    @JoinColumn(name = "ID_COLLABORATEUR")
+    private Collaborateur collaborateur;
 
     public Vehicule() {}
 
@@ -71,12 +71,12 @@ public class Vehicule {
         this.nbPlaces = nbPlaces;
     }
 
-    public Colaborateur getColaborateur() {
-        return colaborateur;
+    public Collaborateur getCollaborateur() {
+        return collaborateur;
     }
 
-    public void setColaborateur(Colaborateur colaborateur) {
-        this.colaborateur = colaborateur;
+    public void setCollaborateur(Collaborateur collaborateur) {
+        this.collaborateur = collaborateur;
     }
 
     @Override

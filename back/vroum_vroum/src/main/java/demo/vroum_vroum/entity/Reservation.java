@@ -16,8 +16,8 @@ public class Reservation {
     @Column(name = "DATE_RETOUR")
     private Date dateRetour;
     @ManyToOne
-    @JoinColumn(name = "ID_COLABORATEUR")
-    private Colaborateur colaborateur;
+    @JoinColumn(name = "ID_COLLABORATEUR")
+    private Collaborateur collaborateur;
     @ManyToOne
     @JoinColumn(name = "ID_VEHICULE_SERVICE")
     private VehiculeService vehiculeService;
@@ -54,12 +54,12 @@ public class Reservation {
         this.dateRetour = dateRetour;
     }
 
-    public Colaborateur getColaborateur() {
-        return colaborateur;
+    public Collaborateur getCollaborateur() {
+        return collaborateur;
     }
 
-    public void setColaborateur(Colaborateur colaborateur) {
-        this.colaborateur = colaborateur;
+    public void setCollaborateur(Collaborateur collaborateur) {
+        this.collaborateur = collaborateur;
     }
 
     public VehiculeService getVehiculeService() {
