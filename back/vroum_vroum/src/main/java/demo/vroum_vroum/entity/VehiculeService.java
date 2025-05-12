@@ -1,5 +1,7 @@
 package demo.vroum_vroum.entity;
 
+import demo.vroum_vroum.enums.Categorie;
+import demo.vroum_vroum.enums.StatutVehicule;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -21,7 +23,8 @@ public class VehiculeService {
     @Column(name = "MODELE")
     private String modele;
     @Column(name = "CATEGORIE")
-    private String categorie;
+    @Enumerated(EnumType.STRING)
+    private Categorie categorie;
     @Column(name = "PHOTO")
     private int photo;
     @Column(name = "MOTORISATION")
@@ -31,7 +34,8 @@ public class VehiculeService {
     @Column(name = "NB_PLACES")
     private int nbPlaces;
     @Column(name = "STATUT")
-    private String statut;
+    @Enumerated(EnumType.STRING)
+    private StatutVehicule statut;
     @OneToMany(mappedBy = "vehiculeService")
     private List<Reservation> reservations;
     @ManyToMany(mappedBy = "vehiculeService")
@@ -43,7 +47,7 @@ public class VehiculeService {
 
     public VehiculeService() {}
 
-    public VehiculeService(int id, String immatriculation, String marque, String modele, String categorie, int photo, int motorisation, int CO2parKm, int nbPlaces, String statut) {
+    public VehiculeService(int id, String immatriculation, String marque, String modele, Categorie categorie, int photo, int motorisation, int CO2parKm, int nbPlaces, StatutVehicule statut) {
         this.id = id;
         this.immatriculation = immatriculation;
         this.marque = marque;
@@ -88,11 +92,11 @@ public class VehiculeService {
         this.modele = modele;
     }
 
-    public String getCategorie() {
+    public Categorie getCategorie() {
         return categorie;
     }
 
-    public void setCategorie(String categorie) {
+    public void setCategorie(Categorie categorie) {
         this.categorie = categorie;
     }
 
@@ -128,11 +132,11 @@ public class VehiculeService {
         this.nbPlaces = nbPlaces;
     }
 
-    public String getStatut() {
+    public StatutVehicule getStatut() {
         return statut;
     }
 
-    public void setStatut(String statut) {
+    public void setStatut(StatutVehicule statut) {
         this.statut = statut;
     }
 
