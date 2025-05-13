@@ -2,9 +2,11 @@ package demo.vroum_vroum.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "VEHICULE")
-public class Vehicule {
+public class Vehicule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

@@ -2,12 +2,13 @@ package demo.vroum_vroum.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "COVOITURAGE")
-public class Covoiturage {
+public class Covoiturage implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
