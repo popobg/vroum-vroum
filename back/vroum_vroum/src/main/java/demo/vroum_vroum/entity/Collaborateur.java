@@ -1,14 +1,17 @@
 package demo.vroum_vroum.entity;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "COLLABORATEUR")
-public class Collaborateur {
+public class Collaborateur implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -57,6 +60,36 @@ public class Collaborateur {
         this.pseudo = pseudo;
         this.password = password;
         this.admin = admin;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(() -> admin ? "ROLE_ADMIN" : "ROLE_USER");
+    }
+
+    @Override
+    public String getUsername() {
+        return pseudo;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public int getId() {
