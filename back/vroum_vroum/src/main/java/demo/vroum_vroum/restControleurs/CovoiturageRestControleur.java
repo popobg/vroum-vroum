@@ -1,41 +1,75 @@
 package demo.vroum_vroum.restControleurs;
 
 import demo.vroum_vroum.dto.CovoiturageDTO;
+import demo.vroum_vroum.entity.Collaborateur;
+import demo.vroum_vroum.entity.Covoiturage;
+import demo.vroum_vroum.mappers.CovoiturageMapper;
+import demo.vroum_vroum.service.CollaborateurService;
 import demo.vroum_vroum.service.CovoiturageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/covoiturage")
 public class CovoiturageRestControleur {
+    /**
+     * Service concernant le covoiturage
+     */
+    private final CovoiturageService covoiturageService;
 
-    private CovoiturageService covoiturageService;
+    /**
+     * service concernant les collaborateurs
+     */
+    private final CollaborateurService collaborateurService;
 
+    /**
+     * Constructeur CovoiturageRestControleur
+     * @param covoiturageService service pour le covoiturage
+     * @param collaborateurService service pour les collaborateurs
+     */
     @Autowired
-    public CovoiturageRestControleur(CovoiturageService covoiturageService) {
+    public CovoiturageRestControleur(CovoiturageService covoiturageService, CollaborateurService collaborateurService) {
         this.covoiturageService = covoiturageService;
+        this.collaborateurService = collaborateurService;
     }
 
-    @GetMapping("/myList")
-    public List<CovoiturageDTO> getAll() {
+    @GetMapping("/all")
+    public List<CovoiturageDTO> getAllCovoitBy(@RequestParam adresseDepart) {
+
+    }
+
+    /**
+     * Méthode retournant les informations d'un covoiturage
+     * @param id Id du covoiturage recherché
+     * @return un covoiturage dto
+     */
+    @GetMapping("/details/{id}")
+    public CovoiturageDTO getById(@PathVariable int id) {
+        Optional<Covoiturage> covoit = covoiturageService.getCovoiturageById(id);
+
+        return covoit.map(CovoiturageMapper::toDto).orElse(null);
+    }
+
+    /**
+     * Méthode retournant les covoiturages auxquels participe l'utilisateur connecté.
+     * @return liste de covoiturages dto
+     */
+    @GetMapping("/myPassengerCovoit")
+    public List<CovoiturageDTO> getMyPassengerCovoit() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            String currentId = authentication.getId();
-            return currentUserName;
-        }
-        return covoiturageService.getAll();
-    }
+            String username = authentication.getName();
+            Collaborateur currentUser = collaborateurService.findByPseudo(username);
 
-    @GetMapping("/details")
-    public CovoiturageDTO getById(int id) {
-        return covoiturageService.getById(id);
+            List<Covoiturage> covoit = covoiturageService.getMyPassengerCovoit(currentUser);
+
+        }
+        return null;
     }
 }
