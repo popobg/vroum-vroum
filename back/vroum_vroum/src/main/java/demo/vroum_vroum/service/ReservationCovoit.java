@@ -1,23 +1,21 @@
 package demo.vroum_vroum.service;
 
+import demo.vroum_vroum.entity.Collaborateur;
 import demo.vroum_vroum.entity.Reservation;
 import demo.vroum_vroum.exeption.Controle;
 import demo.vroum_vroum.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 @Service
-public class ReservationService {
+public class ReservationCovoit {
 
     @Autowired
     ReservationRepository reservationRepository;
 
-    public Iterable<Reservation> findByCollaborateur(Collaborateur) throws Controle {
-        if(reservationRepository.findByCollaborateur(Collaborateur).isPresent()){
-            return reservationRepository.findByCollaborateur(Collaborateur);
-        }else {
-            throw new Controle("Ce collaborateur n'existe pas")
-        }
+    public Iterable<Reservation> findByCollaborateur(Collaborateur collaborateur) throws Controle{
+        return reservationRepository.findByCollaborateur(collaborateur);
     }
 
     public Reservation findById(int id) throws Controle {
