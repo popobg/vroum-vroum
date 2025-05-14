@@ -3,40 +3,75 @@ package demo.vroum_vroum.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "COVOITURAGE")
 public class Covoiturage implements Serializable {
+    /** Identifiant unique et non modifiable d'un covoiturage */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private int id;
+
+    /** Date d'un covoiturage */
     @Column(name = "DATE")
-    private Date date;
-    @Column(name = "ADRS_DEPART")
-    private String adresseDepart;
-    @Column(name = "ADRS_ARRIVEE")
-    private String adresseArrivee;
+    private LocalDateTime date;
+
+    /** Adresse de départ du covoiturage */
+    @ManyToOne
+    @JoinColumn(name = "ID_ADRS_DEPART")
+    private Adresse adresseDepart;
+
+    /** Adresse d'arrivée du covoiturage */
+    @ManyToOne
+    @JoinColumn(name = "ID_ADRS_ARRIVEE")
+    private Adresse adresseArrivee;
+
+    /** Nombre de places passagers du covoiturage */
     @Column(name = "NB_PLACES")
     private int nbPlaces;
+
+    /** Distance du trajet */
     @Column(name = "DISTANCE")
     private String distance;
+
+    /** Durée estimée du trajet */
     @Column(name = "DUREE")
     private int duree;
+
+    /** Collaborateur organisant le covoiturage (conducteur) */
     @ManyToOne
     @JoinColumn(name = "ID_COLLABORATEUR")
     private Collaborateur organisateur;
+
+    /** Véhicule utilisé par l'organisateur */
     @ManyToOne
     @JoinColumn(name = "ID_VEHICULE")
     private Vehicule vehicule;
+
+    /** Collaborateur(s) passager(s) du covoiturage */
     @ManyToMany(mappedBy = "covoiturages")
     private Set<Collaborateur> collaborateurs;
 
+    /**
+     * Constructeur vide
+     */
     public Covoiturage() {}
 
-    public Covoiturage(int id, int duree, String distance, int nbPlaces, String adresseArrivee, String adresseDepart, Date date) {
+    /**
+     * Constructeur
+     * @param id identifiant du covoiturage
+     * @param duree durée estimée du covoiturage
+     * @param distance distance du covoiturage
+     * @param nbPlaces nombre de places passagers
+     * @param adresseArrivee adresse d'arrivée
+     * @param adresseDepart adresse de départ
+     * @param date date et heure du départ
+     */
+    public Covoiturage(int id, int duree, String distance, int nbPlaces, Adresse adresseArrivee, Adresse adresseDepart, LocalDateTime date) {
         this.id = id;
         this.duree = duree;
         this.distance = distance;
@@ -54,27 +89,27 @@ public class Covoiturage implements Serializable {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
-    public String getAdresseDepart() {
+    public Adresse getAdresseDepart() {
         return adresseDepart;
     }
 
-    public void setAdresseDepart(String adresseDepart) {
+    public void setAdresseDepart(Adresse adresseDepart) {
         this.adresseDepart = adresseDepart;
     }
 
-    public String getAdresseArrivee() {
+    public Adresse getAdresseArrivee() {
         return adresseArrivee;
     }
 
-    public void setAdresseArrivee(String adresseArrivee) {
+    public void setAdresseArrivee(Adresse adresseArrivee) {
         this.adresseArrivee = adresseArrivee;
     }
 
