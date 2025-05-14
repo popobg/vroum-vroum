@@ -1,6 +1,8 @@
 package demo.vroum_vroum.restControleurs;
 
+import demo.vroum_vroum.dto.VehiculeServiceDto;
 import demo.vroum_vroum.entity.VehiculeService;
+import demo.vroum_vroum.mappers.VehiculeServiceMapper;
 import demo.vroum_vroum.service.VehiculeServiceServ;
 import demo.vroum_vroum.exeption.Controle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +19,27 @@ public class VehiculeServiceRestControleurs {
     @Autowired
     VehiculeServiceServ vehiculeServiceServ;
 
+    @Autowired
+    VehiculeServiceMapper vehiculeServiceMapper;
+
     @GetMapping
-    public List<VehiculeService> getAllVehiculeService() {
+    public List<VehiculeServiceDto> getAllVehiculeService() {
         Iterable<VehiculeService> vehiculeServices = vehiculeServiceServ.findAll();
-        List<VehiculeService> vehiculeServicesList = new ArrayList<>();
+        List<VehiculeServiceDto> vehiculeServiceDto = new ArrayList<>();
         for (VehiculeService vehiculeService : vehiculeServices) {
-            vehiculeServicesList.add(vehiculeService);
+            vehiculeServiceDto.add(vehiculeServiceMapper.toDto(vehiculeService));
         }
-        return vehiculeServicesList;
+        return vehiculeServiceDto;
     }
 
     @GetMapping("{id}")
-    public VehiculeService getVehiculeServiceById(@PathVariable int id) throws Controle {
-        return vehiculeServiceServ.findById(id);
+    public VehiculeServiceDto getVehiculeServiceById(@PathVariable int id) throws Controle {
+        return vehiculeServiceMapper.toDto(vehiculeServiceServ.findById(id));
     }
 
     @PostMapping
-    public ResponseEntity<String> postVehiculeService(@RequestBody VehiculeService vehiculeService) throws Controle {
-        vehiculeServiceServ.create(vehiculeService);
+    public ResponseEntity<String> postVehiculeService(@RequestBody VehiculeServiceDto vehiculeServiceDto) throws Controle {
+        vehiculeServiceServ.create(vehiculeServiceMapper.toEntity(vehiculeServiceDto));
         return ResponseEntity.ok("Véhicule de service crée avec succès");
     }
 
