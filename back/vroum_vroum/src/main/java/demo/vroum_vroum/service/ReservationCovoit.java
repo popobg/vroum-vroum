@@ -13,8 +13,11 @@ public class ReservationService {
     ReservationRepository reservationRepository;
 
     public Iterable<Reservation> findByCollaborateur(Collaborateur) throws Controle {
-        if(reservationRepository.findByCollaborateur(Collaborateur).isPresent())
-        return reservationRepository.findByCollaborateur();
+        if(reservationRepository.findByCollaborateur(Collaborateur).isPresent()){
+            return reservationRepository.findByCollaborateur(Collaborateur);
+        }else {
+            throw new Controle("Ce collaborateur n'existe pas")
+        }
     }
 
     public Reservation findById(int id) throws Controle {
