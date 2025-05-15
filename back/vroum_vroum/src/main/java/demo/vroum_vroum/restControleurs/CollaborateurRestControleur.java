@@ -6,12 +6,12 @@ package demo.vroum_vroum.restControleurs;
 import demo.vroum_vroum.entity.Collaborateur;
 import demo.vroum_vroum.service.CollaborateurService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -36,35 +36,33 @@ public class CollaborateurRestControleur {
         }
     }
 
-    // GET all collaborateurs
     @GetMapping
     public List<Collaborateur> getAllCollaborateurs() {
         return collaborateurService.getAllCollaborateurs();
     }
 
-    // GET collaborateur by ID
     @GetMapping("/{id}")
-    public Optional<Collaborateur> getCollaborateurById(@PathVariable int id) {
-        return collaborateurService.getCollaborateurById(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Optional<Collaborateur>> getCollaborateurById(@PathVariable int id) {
+        return ResponseEntity.ok(collaborateurService.getCollaborateurById(id));
     }
 
-    // POST new collaborateur
     @PostMapping
     public Collaborateur addCollaborateur(@RequestBody Collaborateur collaborateur) {
         return collaborateurService.saveCollaborateur(collaborateur);
     }
 
-    // PUT update collaborateur
     @PutMapping("/{id}")
     public Collaborateur updateCollaborateur(@PathVariable int id, @RequestBody Collaborateur collaborateur) {
         collaborateur.setId(id);
         return collaborateurService.saveCollaborateur(collaborateur);
     }
 
-    // DELETE collaborateur by ID
     @DeleteMapping("/{id}")
-    public void deleteCollaborateur(@PathVariable int id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteCollaborateur(@PathVariable int id) {
         collaborateurService.deleteCollaborateur(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/login")

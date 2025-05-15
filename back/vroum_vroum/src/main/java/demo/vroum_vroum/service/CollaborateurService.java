@@ -3,6 +3,9 @@ package demo.vroum_vroum.service;
 import demo.vroum_vroum.entity.Collaborateur;
 import demo.vroum_vroum.repository.CollaborateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,9 +24,19 @@ public class CollaborateurService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String pseudo) throws UsernameNotFoundException {
-        return collaborateurRepository.findByPseudo(pseudo);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Collaborateur collaborateur = collaborateurRepository.findByPseudo(username);
+        if (collaborateur == null) {
+            throw new RuntimeException("Collaborateur not found");
+        }
+
+        // Déterminer le rôle en fonction du champ "admin"
+        String role = collaborateur.getAdmin() ? "ROLE_ADMIN" : "ROLE_USER";
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
+
+        return new User(collaborateur.getPseudo(), collaborateur.getPassword(), authorities);
     }
+
 
     public List<Collaborateur> getAllCollaborateurs() {
         return collaborateurRepository.findAll();
