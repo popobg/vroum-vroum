@@ -21,8 +21,13 @@ public class Ville implements Serializable, Comparable<Ville> {
     @Column(name="NOM")
     private String nom;
 
-    /** Code postal de la ville */
+    /** Adresses associées à cette ville  */
     @OneToMany(mappedBy = "ville")
+    private Set<Adresse> adresses;
+
+    /** Codes postaux de la ville */
+    @ManyToMany
+    @JoinTable(name = "CODE_POSTAL_VILLE", joinColumns = @JoinColumn(name = "ID_VILLE", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ID_CODE_POSTAL", referencedColumnName = "ID"))
     private Set<CodePostal> codesPostaux;
 
     /**

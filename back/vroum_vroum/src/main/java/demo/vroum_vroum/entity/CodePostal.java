@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.text.Collator;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "CODE_POSTAL")
@@ -20,9 +21,13 @@ public class CodePostal implements Serializable, Comparable<CodePostal> {
     @Column(name="CODE")
     private String code;
 
-    @ManyToOne
-    @JoinColumn(name = "ID_VILLE")
-    private Ville ville;
+    /** Villes associées au code postal */
+    @ManyToMany(mappedBy = "codesPostaux")
+    private Set<Ville> villes;
+
+    /** Adresses associées à ce code postal */
+    @OneToMany(mappedBy = "codePostal")
+    private Set<Adresse> adresses;
 
     /**
      * Constructeur vide
@@ -33,22 +38,22 @@ public class CodePostal implements Serializable, Comparable<CodePostal> {
     /**
      * Constructeur
      * @param code code postal
-     * @param ville ville associée
+     * @param villes villes associées
      */
-    public CodePostal(String code, Ville ville) {
-        this(0L, code, ville);
+    public CodePostal(String code, Set<Ville> villes) {
+        this(0L, code, villes);
     }
 
     /**
      * Constructeur
      * @param id identifiant de la ville
      * @param code code postal
-     * @param ville ville associée
+     * @param villes villes associées
      */
-    public CodePostal(long id, String code, Ville ville) {
+    public CodePostal(long id, String code, Set<Ville> villes) {
         this.id = id;
         this.code = code;
-        this.ville = ville;
+        this.villes = villes;
     }
 
     /**
@@ -125,17 +130,17 @@ public class CodePostal implements Serializable, Comparable<CodePostal> {
 
     /**
      * Getter
-     * @return ville
+     * @return villes
      */
-    public Ville getVille() {
-        return ville;
+    public Set<Ville> getVilles() {
+        return villes;
     }
 
     /**
      * Setter
-     * @param ville ville
+     * @param villes villes
      */
-    public void setVille(Ville ville) {
-        this.ville = ville;
+    public void setVille(Set<Ville> villes) {
+        this.villes = villes;
     }
 }
