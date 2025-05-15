@@ -24,7 +24,7 @@ public class Adresse implements Serializable, Comparable<Adresse> {
     @Column(name = "NUMERO")
     private String numero;
 
-    /** Nom de la rue */
+    /** Libellé de la voie */
     @Column(name = "RUE")
     private String rue;
 
@@ -33,9 +33,16 @@ public class Adresse implements Serializable, Comparable<Adresse> {
     @JoinColumn(name = "ID_CODE_POSTAL")
     private CodePostal codePostal;
 
+    /** Ville associée à l'adresse */
+    @ManyToOne
+    @JoinColumn(name = "ID_VILLE")
+    private Ville ville;
+
+    /** Covoiturages possédant cette adresse comme point de départ */
     @OneToMany(mappedBy = "adresseDepart")
     private Set<Covoiturage> covoituragesDepart;
 
+    /** Covoiturages possédant cette adresse comme point d'arrivée */
     @OneToMany(mappedBy = "adresseArrivee")
     private Set<Covoiturage> covoituragesArrivee;
 
@@ -50,12 +57,14 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      * @param numero numéro de rue
      * @param rue rue
      * @param codePostal code postal
+     * @param ville ville
      */
-    public Adresse(int id, String numero, String rue, CodePostal codePostal) {
+    public Adresse(int id, String numero, String rue, CodePostal codePostal, Ville ville) {
         this.id = id;
         this.numero = numero;
         this.rue = rue;
         this.codePostal = codePostal;
+        this.ville = ville;
     }
 
     /**
@@ -68,7 +77,8 @@ public class Adresse implements Serializable, Comparable<Adresse> {
         if (this == o) return true;
         if (!(o instanceof Adresse autreAdresse)) return false;
         return id == autreAdresse.id && Objects.equals(numero, autreAdresse.numero)
-                && Objects.equals(rue, autreAdresse.rue) && codePostal.equals(autreAdresse.codePostal);
+                && Objects.equals(rue, autreAdresse.rue) && codePostal.equals(autreAdresse.codePostal)
+                && ville.equals(autreAdresse.ville);
     }
 
     /**
@@ -77,7 +87,7 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, numero, rue, codePostal);
+        return Objects.hash(id, numero, rue, codePostal.getCode(), ville.getNom());
     }
 
     /**
@@ -89,7 +99,7 @@ public class Adresse implements Serializable, Comparable<Adresse> {
         final StringBuilder sb = new StringBuilder(numero);
         sb.append(" ").append(rue);
         sb.append(", ").append(codePostal.getCode());
-        sb.append(" ").append(codePostal.getVille().getNom());
+        sb.append(" ").append(ville.getNom());
         return sb.toString();
     }
 
@@ -105,7 +115,7 @@ public class Adresse implements Serializable, Comparable<Adresse> {
     @Override
     public int compareTo(Adresse autreAdresse) {
         // Tri par nom de ville
-        int villeComparaison = this.codePostal.getVille().compareTo(autreAdresse.codePostal.getVille());
+        int villeComparaison = this.ville.compareTo(autreAdresse.getVille());
 
         if (villeComparaison != 0) {
             return villeComparaison;
@@ -185,5 +195,21 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      */
     public void setCodePostal(CodePostal codePostal) {
         this.codePostal = codePostal;
+    }
+
+    /**
+     * Getter
+     * @return ville
+     */
+    public Ville getVille() {
+        return ville;
+    }
+
+    /**
+     * Setter
+     * @param ville ville
+     */
+    public void setVille(Ville ville) {
+        this.ville = ville;
     }
 }
