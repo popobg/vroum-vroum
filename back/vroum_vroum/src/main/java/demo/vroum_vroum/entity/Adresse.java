@@ -8,6 +8,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Entité Adresse
+ */
 @Entity
 @Table(name = "ADRESSE")
 public class Adresse implements Serializable, Comparable<Adresse> {

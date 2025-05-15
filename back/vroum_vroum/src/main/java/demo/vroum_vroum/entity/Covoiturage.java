@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
+/**
+ * Entité Covoiturage
+ */
 @Entity
 @Table(name = "COVOITURAGE")
 public class Covoiturage implements Serializable {
@@ -34,11 +37,11 @@ public class Covoiturage implements Serializable {
     @Column(name = "NB_PLACES")
     private int nbPlaces;
 
-    /** Distance du trajet */
+    /** Distance du trajet (en kilomètres) */
     @Column(name = "DISTANCE")
-    private String distance;
+    private long distance;
 
-    /** Durée estimée du trajet */
+    /** Durée estimée du trajet (en secondes) */
     @Column(name = "DUREE")
     private int duree;
 
@@ -71,7 +74,7 @@ public class Covoiturage implements Serializable {
      * @param adresseDepart adresse de départ
      * @param date date et heure du départ
      */
-    public Covoiturage(int id, int duree, String distance, int nbPlaces, Adresse adresseArrivee, Adresse adresseDepart, LocalDateTime date) {
+    public Covoiturage(int id, int duree, long distance, int nbPlaces, Adresse adresseArrivee, Adresse adresseDepart, LocalDateTime date) {
         this.id = id;
         this.duree = duree;
         this.distance = distance;
@@ -121,11 +124,11 @@ public class Covoiturage implements Serializable {
         this.nbPlaces = nbPlaces;
     }
 
-    public String getDistance() {
+    public long getDistance() {
         return distance;
     }
 
-    public void setDistance(String distance) {
+    public void setDistance(long distance) {
         this.distance = distance;
     }
 

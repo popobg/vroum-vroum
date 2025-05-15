@@ -1,6 +1,6 @@
 package demo.vroum_vroum.restControleurs;
 
-import demo.vroum_vroum.dto.CovoiturageDTO;
+import demo.vroum_vroum.dto.CovoiturageDto;
 import demo.vroum_vroum.entity.Collaborateur;
 import demo.vroum_vroum.entity.Covoiturage;
 import demo.vroum_vroum.mappers.CovoiturageMapper;
@@ -12,20 +12,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/covoiturage")
 public class CovoiturageRestControleur {
-    /**
-     * Service concernant le covoiturage
-     */
+    /** Service concernant le covoiturage */
     private final CovoiturageService covoiturageService;
 
-    /**
-     * service concernant les collaborateurs
-     */
+    /** Service concernant les collaborateurs */
     private final CollaborateurService collaborateurService;
 
     /**
@@ -40,8 +37,8 @@ public class CovoiturageRestControleur {
     }
 
     @GetMapping("/all")
-    public List<CovoiturageDTO> getAllCovoitBy(@RequestParam adresseDepart) {
-
+    public List<CovoiturageDto> getCovoitByAdressesDate(@RequestParam AdresseDTO adresseDepart, AdresseDTO adresseArrivee, LocalDateTime dateDepart) {
+        return CovoiturageMapper.toEntity(covoiturageService.getCovoitByAdressesDate(AdresseMapper.toEntity(adresseDepart), AdresseMapper.toEntity(adresseArrivee), dateDepart));
     }
 
     /**
@@ -50,7 +47,7 @@ public class CovoiturageRestControleur {
      * @return un covoiturage dto
      */
     @GetMapping("/details/{id}")
-    public CovoiturageDTO getById(@PathVariable int id) {
+    public CovoiturageDto getById(@PathVariable int id) {
         Optional<Covoiturage> covoit = covoiturageService.getCovoiturageById(id);
 
         return covoit.map(CovoiturageMapper::toDto).orElse(null);
@@ -61,7 +58,7 @@ public class CovoiturageRestControleur {
      * @return liste de covoiturages dto
      */
     @GetMapping("/myPassengerCovoit")
-    public List<CovoiturageDTO> getMyPassengerCovoit() {
+    public List<CovoiturageDto> getMyPassengerCovoit() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String username = authentication.getName();
