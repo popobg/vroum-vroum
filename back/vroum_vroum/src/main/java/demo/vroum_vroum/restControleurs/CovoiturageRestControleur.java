@@ -40,7 +40,7 @@ public class CovoiturageRestControleur {
 
     @GetMapping("/all")
     public List<CovoiturageDto> getCovoitByAdressesDate(@RequestParam AdresseDto adresseDepart, AdresseDto adresseArrivee, LocalDateTime dateDepart) {
-        return CovoiturageMapper.toEntity(covoiturageService.getCovoitByAdressesDate(AdresseMapper.toEntity(adresseDepart), AdresseMapper.toEntity(adresseArrivee), dateDepart));
+        return CovoiturageMapper.toEntity(covoiturageService.getCovoitByAdressesDate(adresseDepart.getNomVille(), adresseDepart.getCodePostal(), adresseArrivee.getNomVille(), adresseArrivee.getCodePostal(), dateDepart));
     }
 
     /**

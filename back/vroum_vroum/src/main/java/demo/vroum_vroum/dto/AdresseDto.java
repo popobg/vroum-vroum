@@ -120,21 +120,21 @@ public class AdresseDto {
      * Getter
      * @return Code postal
      */
-    public int getIdCodePostal() {
-        return idCodePostal;
+    public String getCodePostal() {
+        return codePostal;
     }
 
     /**
      * Setter
-     * @param idCodePostal Id code postal
+     * @param codePostal Code postal
      */
-    public void setIdCodePostal(int idCodePostal) {
-        this.idCodePostal = idCodePostal;
+    public void setIdCodePostal(String codePostal) {
+        this.codePostal = codePostal;
     }
 
     /**
      * Getter
-     * @return nom ville
+     * @return Id ville
      */
     public int getIdVille() {
         return idVille;
@@ -142,9 +142,25 @@ public class AdresseDto {
 
     /**
      * Setter
-     * @param nomVille nom ville
+     * @param idVille Id ville
      */
     public void setIdVille(int idVille) {
-        this.idVille = nomVille;
+        this.idVille = idVille;
+    }
+
+    /**
+     * Getter
+     * @return Nom ville
+     */
+    public String getNomVille() {
+        return nomVille;
+    }
+
+    /**
+     * Setter
+     * @param nomVille Nom ville
+     */
+    public void setNomVille(String nomVille) {
+        this.nomVille = nomVille;
     }
 }

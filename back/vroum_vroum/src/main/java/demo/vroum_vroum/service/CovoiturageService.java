@@ -25,10 +25,20 @@ public class CovoiturageService {
         this.covoiturageRepository = covoiturageRepository;
     }
 
+    /**
+     * Méthode de service récupérant les covoiturages d'un passager
+     * @param collaborateur collaborateur passager
+     * @return liste de covoiturages
+     */
     public List<Covoiturage> getMyPassengerCovoit(Collaborateur collaborateur) {
         return covoiturageRepository.findByCollaborateursContaining(collaborateur);
     }
 
+    /**
+     * Méthode de service récupérant un covoiturage à partir de son Id
+     * @param id Id du covoiturage
+     * @return un covoiturage ou null si pas de covoiturage trouvé à cet Id
+     */
     public Optional<Covoiturage> getCovoiturageById(int id) {
         return covoiturageRepository.findById(id);
     }
