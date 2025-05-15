@@ -1,8 +1,10 @@
 package demo.vroum_vroum.restControleurs;
 
+import demo.vroum_vroum.dto.AdresseDto;
 import demo.vroum_vroum.dto.CovoiturageDto;
 import demo.vroum_vroum.entity.Collaborateur;
 import demo.vroum_vroum.entity.Covoiturage;
+import demo.vroum_vroum.mappers.AdresseMapper;
 import demo.vroum_vroum.mappers.CovoiturageMapper;
 import demo.vroum_vroum.service.CollaborateurService;
 import demo.vroum_vroum.service.CovoiturageService;
@@ -37,7 +39,7 @@ public class CovoiturageRestControleur {
     }
 
     @GetMapping("/all")
-    public List<CovoiturageDto> getCovoitByAdressesDate(@RequestParam AdresseDTO adresseDepart, AdresseDTO adresseArrivee, LocalDateTime dateDepart) {
+    public List<CovoiturageDto> getCovoitByAdressesDate(@RequestParam AdresseDto adresseDepart, AdresseDto adresseArrivee, LocalDateTime dateDepart) {
         return CovoiturageMapper.toEntity(covoiturageService.getCovoitByAdressesDate(AdresseMapper.toEntity(adresseDepart), AdresseMapper.toEntity(adresseArrivee), dateDepart));
     }
 
