@@ -4,6 +4,7 @@ import demo.vroum_vroum.enums.Categorie;
 import demo.vroum_vroum.enums.StatutVehicule;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "VEHICULE_SERVICE")
-public class VehiculeService {
+public class VehiculeService implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")

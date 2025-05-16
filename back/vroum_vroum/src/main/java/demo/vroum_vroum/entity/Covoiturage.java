@@ -2,14 +2,17 @@ package demo.vroum_vroum.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
+/**
+ * Entité Covoiturage
+ */
 @Entity
 @Table(name = "COVOITURAGE")
-public class Covoiturage {
+public class Covoiturage implements Serializable {
     /** Identifiant unique et non modifiable d'un covoiturage */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +37,11 @@ public class Covoiturage {
     @Column(name = "NB_PLACES")
     private int nbPlaces;
 
-    /** Distance du trajet */
+    /** Distance du trajet (en kilomètres) */
     @Column(name = "DISTANCE")
-    private String distance;
+    private int distance;
 
-    /** Durée estimée du trajet */
+    /** Durée estimée du trajet (en secondes) */
     @Column(name = "DUREE")
     private int duree;
 
@@ -71,7 +74,7 @@ public class Covoiturage {
      * @param adresseDepart adresse de départ
      * @param date date et heure du départ
      */
-    public Covoiturage(int id, int duree, String distance, int nbPlaces, Adresse adresseArrivee, Adresse adresseDepart, LocalDateTime date) {
+    public Covoiturage(int id, int duree, int distance, int nbPlaces, Adresse adresseArrivee, Adresse adresseDepart, LocalDateTime date) {
         this.id = id;
         this.duree = duree;
         this.distance = distance;
@@ -121,11 +124,11 @@ public class Covoiturage {
         this.nbPlaces = nbPlaces;
     }
 
-    public String getDistance() {
+    public int getDistance() {
         return distance;
     }
 
-    public void setDistance(String distance) {
+    public void setDistance(int distance) {
         this.distance = distance;
     }
 

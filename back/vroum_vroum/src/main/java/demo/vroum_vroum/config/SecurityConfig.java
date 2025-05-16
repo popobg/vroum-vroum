@@ -30,8 +30,15 @@ public class SecurityConfig {
                         .anyRequest().permitAll()
                 )
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(form -> form.defaultSuccessUrl("/collaborateur/me", true))
-                .logout(logout -> logout.logoutSuccessUrl("/").permitAll());
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                .formLogin(form -> form
+                        .defaultSuccessUrl("/collaborateur/me", true)  // Redirection après login
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")  // URL après déconnexion
+                        .permitAll()
+                );
 
         return http.build();
     }
