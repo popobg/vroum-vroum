@@ -26,7 +26,7 @@ public class VehiculeServiceServ {
     }
 
     public Iterable<VehiculeService> findVehiculeServiceByCollaborateur(Collaborateur collaborateur) throws Controle {
-        return vehiculeServiceRepository.findVehiculeServiceByCollaborateur(collaborateur);
+        return vehiculeServiceRepository.findVehiculeServiceByCollaborateurs(collaborateur);
     }
 
     public void create(VehiculeService vehiculeService) throws Controle {
