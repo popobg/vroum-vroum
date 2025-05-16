@@ -47,9 +47,14 @@ public class CovoiturageRestControleur {
      * @return une liste de covoiturages dto (ou une liste vide si aucun covoiturage ne correspond aux critères)
      */
     @GetMapping("/rechercher")
-    public List<CovoiturageDto> getCovoitDisponiblesByAdressesDate(@RequestParam("villedep") String nomVilleDepart,
-                                                                   @RequestParam("cpdep") String codePostalDepart, @RequestParam("villearr") String nomVilleArrivee, @RequestParam("cparr") String codePostalArrivee, @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateDepart) {
-        return CovoiturageMapper.toDtos(covoiturageService.getCovoitDisponiblesByAdressesDate(nomVilleDepart, codePostalDepart, nomVilleArrivee, codePostalArrivee, dateDepart));
+    public List<CovoiturageDto> getCovoitDisponiblesByAdressesDate(
+            @RequestParam("villedep") String nomVilleDepart,
+            @RequestParam("cpdep") String codePostalDepart,
+            @RequestParam("villearr") String nomVilleArrivee,
+            @RequestParam("cparr") String codePostalArrivee,
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateDepart)
+    {
+        return CovoiturageMapper.toDtos(covoiturageService.getCovoitDisponiblesByAdressesDate(nomVilleDepart.toLowerCase(),codePostalDepart.toLowerCase(), nomVilleArrivee.toLowerCase(), codePostalArrivee.toLowerCase(), dateDepart));
     }
 
     /**

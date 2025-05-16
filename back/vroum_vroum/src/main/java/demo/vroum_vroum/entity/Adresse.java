@@ -29,14 +29,12 @@ public class Adresse implements Serializable, Comparable<Adresse> {
     private String rue;
 
     /** Code postal associé à l'adresse */
-    @ManyToOne
-    @JoinColumn(name = "ID_CODE_POSTAL")
-    private CodePostal codePostal;
+    @Column(name = "CODE_POSTAL")
+    private String codePostal;
 
     /** Ville associée à l'adresse */
-    @ManyToOne
-    @JoinColumn(name = "ID_VILLE")
-    private Ville ville;
+    @Column(name = "VILLE")
+    private String ville;
 
     /** Covoiturages possédant cette adresse comme point de départ */
     @OneToMany(mappedBy = "adresseDepart")
@@ -59,7 +57,7 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      * @param codePostal code postal
      * @param ville ville
      */
-    public Adresse(int id, String numero, String rue, CodePostal codePostal, Ville ville) {
+    public Adresse(int id, String numero, String rue, String codePostal, String ville) {
         this.id = id;
         this.numero = numero;
         this.rue = rue;
@@ -87,7 +85,7 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, numero, rue, codePostal.getCode(), ville.getNom());
+        return Objects.hash(id, numero, rue, codePostal, ville);
     }
 
     /**
@@ -98,8 +96,8 @@ public class Adresse implements Serializable, Comparable<Adresse> {
     public String toString() {
         final StringBuilder sb = new StringBuilder(numero);
         sb.append(" ").append(rue);
-        sb.append(", ").append(codePostal.getCode());
-        sb.append(" ").append(ville.getNom());
+        sb.append(", ").append(codePostal);
+        sb.append(" ").append(ville);
         return sb.toString();
     }
 
@@ -185,7 +183,7 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      * Getter
      * @return code postal
      */
-    public CodePostal getCodePostal() {
+    public String getCodePostal() {
         return codePostal;
     }
 
@@ -193,7 +191,7 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      * Setter
      * @param codePostal code postal
      */
-    public void setCodePostal(CodePostal codePostal) {
+    public void setCodePostal(String codePostal) {
         this.codePostal = codePostal;
     }
 
@@ -201,7 +199,7 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      * Getter
      * @return ville
      */
-    public Ville getVille() {
+    public String getVille() {
         return ville;
     }
 
@@ -209,7 +207,7 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      * Setter
      * @param ville ville
      */
-    public void setVille(Ville ville) {
+    public void setVille(String ville) {
         this.ville = ville;
     }
 }

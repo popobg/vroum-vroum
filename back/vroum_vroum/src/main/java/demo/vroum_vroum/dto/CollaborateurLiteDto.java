@@ -11,7 +11,7 @@ public class CollaborateurLiteDto {
     private String prenom;
 
     /** Numéro de téléphone du collaborateur */
-    private int telephone;
+    private String telephone;
 
     /** Constructeur vide */
     public CollaborateurLiteDto() {}
@@ -22,7 +22,7 @@ public class CollaborateurLiteDto {
      * @param prenom Prénom
      * @param telephone Numéro téléphone
      */
-    public CollaborateurLiteDto(String nom, String prenom, int telephone) {
+    public CollaborateurLiteDto(String nom, String prenom, String telephone) {
         this.nom = nom;
         this.prenom = prenom;
         this.telephone = telephone;
@@ -64,7 +64,7 @@ public class CollaborateurLiteDto {
      * Getter
      * @return numéro téléphone
      */
-    public int getTelephone() {
+    public String getTelephone() {
         return telephone;
     }
 
@@ -72,7 +72,7 @@ public class CollaborateurLiteDto {
      * Setter
      * @param telephone numéro téléphone
      */
-    public void setTelephone(int telephone) {
+    public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
 }

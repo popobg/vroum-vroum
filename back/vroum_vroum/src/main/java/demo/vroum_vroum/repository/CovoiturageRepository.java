@@ -25,11 +25,10 @@ public interface CovoiturageRepository extends JpaRepository<Covoiturage, Intege
     SELECT covoit FROM Covoiturage covoit
     WHERE covoit.nbPlaces > 0
     and covoit.date >= :dateMin
-    and covoit.adresseDepart.ville
-    .nom = :nomVilleDepart
-    and covoit.adresseDepart.codePostal.code = :codePostalDepart
-    and covoit.adresseArrivee.ville.nom = :nomVilleArrivee
-    and covoit.adresseArrivee.codePostal.code = :codePostalArrivee
+    and covoit.adresseDepart.ville = :nomVilleDepart
+    and covoit.adresseDepart.codePostal = :codePostalDepart
+    and covoit.adresseArrivee.ville = :nomVilleArrivee
+    and covoit.adresseArrivee.codePostal = :codePostalArrivee
 """)
     public List<Covoiturage> findCovoitDisponiblesByAdressesDate(String nomVilleDepart, String codePostalDepart, String nomVilleArrivee, String codePostalArrivee, LocalDateTime dateMin);
 

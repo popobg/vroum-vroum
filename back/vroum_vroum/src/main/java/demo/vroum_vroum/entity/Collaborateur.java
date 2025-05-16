@@ -26,7 +26,7 @@ public class Collaborateur implements UserDetails {
     @Column(name = "EMAIL")
     private String email;
     @Column(name = "TELEPHONE")
-    private int telephone;
+    private String telephone;
     @Column(name = "PSEUDO")
     private String pseudo;
     @Column(name = "PASSWORD")
@@ -51,7 +51,7 @@ public class Collaborateur implements UserDetails {
 
     public Collaborateur() {}
 
-    public Collaborateur(int id, String nom, String prenom, String adresse, String email, int telephone, String pseudo, String password, Boolean admin) {
+    public Collaborateur(int id, String nom, String prenom, String adresse, String email, String telephone, String pseudo, String password, Boolean admin) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -133,11 +133,11 @@ public class Collaborateur implements UserDetails {
         this.email = email;
     }
 
-    public int getTelephone() {
+    public String getTelephone() {
         return telephone;
     }
 
-    public void setTelephone(int telephone) {
+    public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
 

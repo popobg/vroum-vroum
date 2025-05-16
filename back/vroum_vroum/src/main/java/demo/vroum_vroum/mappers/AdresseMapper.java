@@ -12,6 +12,6 @@ public class AdresseMapper {
      * @return une adresse dto
      */
     public static AdresseDto toDto(Adresse adresse) {
-        return new AdresseDto(adresse.getId(), adresse.getNumero(), adresse.getRue(), adresse.getCodePostal().getId(), adresse.getCodePostal().getCode(), adresse.getVille().getId(), adresse.getVille().getNom());
+        return new AdresseDto(adresse.getId(), adresse.getNumero(), adresse.getRue(), adresse.getCodePostal(), adresse.getVille());
     }
 }
