@@ -26,6 +26,7 @@ public class SecurityConfig {
                 )
                 .httpBasic(Customizer.withDefaults())
                 .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form
                         .defaultSuccessUrl("/collaborateur/me", true)  // Redirection après login
                 )
