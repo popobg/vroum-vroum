@@ -1,7 +1,7 @@
 package demo.vroum_vroum.restControleurs;
 
 
-import demo.vroum_vroum.service.VehiculeService;
+import demo.vroum_vroum.service.VehiculeServiceServ;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.RestController;
 public class VehiculeRestControleur {
 
     @Autowired
-    VehiculeService vehiculeService;
+    VehiculeServiceServ vehiculeService;
 }
