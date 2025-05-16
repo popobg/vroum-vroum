@@ -4,9 +4,8 @@ import demo.vroum_vroum.dto.CollaborateurLiteDto;
 import demo.vroum_vroum.entity.Collaborateur;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Mapper de l'entité Collaborateur vers CollaborateurLiteDto
@@ -27,8 +26,8 @@ public class CollaborateurMapper {
      * @param passagers une liste de Collaborateur
      * @return une liste de CollaborateurLiteDto
      */
-    public static List<CollaborateurLiteDto> toLiteDtos(List<Collaborateur> passagers) {
-        List<CollaborateurLiteDto> collaborateurLiteDtos = new ArrayList<>();
+    public static Set<CollaborateurLiteDto> toLiteDtos(Set<Collaborateur> passagers) {
+        Set<CollaborateurLiteDto> collaborateurLiteDtos = new HashSet<>();
 
         for (Collaborateur passager : passagers) {
             collaborateurLiteDtos.add(toLiteDto(passager));

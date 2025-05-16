@@ -15,7 +15,7 @@ public class Ville implements Serializable, Comparable<Ville> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private long id;
+    private int id;
 
     /** Nom de la ville */
     @Column(name="NOM")
@@ -60,7 +60,7 @@ public class Ville implements Serializable, Comparable<Ville> {
      * @param codePostaux codes postaux rattachés à la ville
      * @param adresses adresses rattachées à la ville
      */
-    public Ville(long id, String nom, Set<CodePostal> codePostaux, Set<Adresse> adresses) {
+    public Ville(int id, String nom, Set<CodePostal> codePostaux, Set<Adresse> adresses) {
         this.id = id;
         this.nom = nom;
         this.codesPostaux = codePostaux;
@@ -121,7 +121,7 @@ public class Ville implements Serializable, Comparable<Ville> {
      * Getter
      * @return id
      */
-    public long getId() {
+    public int getId() {
         return id;
     }
 

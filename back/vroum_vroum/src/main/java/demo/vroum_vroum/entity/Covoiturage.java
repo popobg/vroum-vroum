@@ -39,7 +39,7 @@ public class Covoiturage implements Serializable {
 
     /** Distance du trajet (en kilomètres) */
     @Column(name = "DISTANCE")
-    private long distance;
+    private int distance;
 
     /** Durée estimée du trajet (en secondes) */
     @Column(name = "DUREE")
@@ -74,7 +74,7 @@ public class Covoiturage implements Serializable {
      * @param adresseDepart adresse de départ
      * @param date date et heure du départ
      */
-    public Covoiturage(int id, int duree, long distance, int nbPlaces, Adresse adresseArrivee, Adresse adresseDepart, LocalDateTime date) {
+    public Covoiturage(int id, int duree, int distance, int nbPlaces, Adresse adresseArrivee, Adresse adresseDepart, LocalDateTime date) {
         this.id = id;
         this.duree = duree;
         this.distance = distance;
@@ -124,11 +124,11 @@ public class Covoiturage implements Serializable {
         this.nbPlaces = nbPlaces;
     }
 
-    public long getDistance() {
+    public int getDistance() {
         return distance;
     }
 
-    public void setDistance(long distance) {
+    public void setDistance(int distance) {
         this.distance = distance;
     }
 

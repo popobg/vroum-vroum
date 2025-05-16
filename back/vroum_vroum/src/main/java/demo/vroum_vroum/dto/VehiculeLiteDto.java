@@ -1,9 +1,11 @@
 package demo.vroum_vroum.dto;
 
+import java.io.Serializable;
+
 /**
- * DTO de l'entité Vehicule
+ * DTO lite de l'entité Vehicule
  */
-public class VehiculeDto {
+public class VehiculeLiteDto implements Serializable {
     /** Identifiant unique et non modifiable du véhicule */
     private int id;
 
@@ -14,7 +16,7 @@ public class VehiculeDto {
     private String modele;
 
     /** Constructeur vide */
-    public VehiculeDto() {}
+    public VehiculeLiteDto() {}
 
     /**
      * Constructeur
@@ -22,7 +24,7 @@ public class VehiculeDto {
      * @param marque marque
      * @param modele modèle
      */
-    public VehiculeDto(int id, String marque, String modele) {
+    public VehiculeLiteDto(int id, String marque, String modele) {
         this.id = id;
         this.marque = marque;
         this.modele = modele;

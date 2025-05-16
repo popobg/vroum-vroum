@@ -6,13 +6,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AdresseMapper {
+    /**
+     * Méthode permettant de mapper un objet Adresse vers un objet AdresseDto
+     * @param adresse adresse
+     * @return une adresse dto
+     */
     public static AdresseDto toDto(Adresse adresse) {
-        AdresseDto adresseDto = new AdresseDto();
-        return adresseDto;
-    }
-
-    public static Adresse toEntity(AdresseDto adresseDto) {
-        Adresse adresse = new Adresse();
-        return adresse;
+        return new AdresseDto(adresse.getId(), adresse.getNumero(), adresse.getRue(), adresse.getCodePostal().getId(), adresse.getCodePostal().getCode(), adresse.getVille().getId(), adresse.getVille().getNom());
     }
 }

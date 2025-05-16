@@ -33,7 +33,7 @@ public class CovoiturageDto implements Serializable {
     private CollaborateurLiteDto organisateur;
 
     /** Véhicule utilisé par l'organisateur pour ce covoiturage */
-    private VehiculeDto vehicule;
+    private VehiculeLiteDto vehicule;
 
     /** Collaborateurs passagers du covoiturage */
     private Set<CollaborateurLiteDto> passagers;
@@ -41,7 +41,7 @@ public class CovoiturageDto implements Serializable {
     /** Constructeur vide */
     public CovoiturageDto() {}
 
-    public CovoiturageDto(int id, LocalDateTime date, AdresseDto adresseDepart, AdresseDto adresseArrivee, int distance, int duree, CollaborateurLiteDto orga, VehiculeDto vehicule, Set<CollaborateurLiteDto> passagers) {
+    public CovoiturageDto(int id, LocalDateTime date, AdresseDto adresseDepart, AdresseDto adresseArrivee, int distance, int duree, CollaborateurLiteDto orga, VehiculeLiteDto vehicule, Set<CollaborateurLiteDto> passagers) {
         this.id = id;
         this.date = date;
         this.adresseDepart = adresseDepart;
@@ -169,7 +169,7 @@ public class CovoiturageDto implements Serializable {
      * Getter
      * @return véhicule
      */
-    public VehiculeDto getVehicule() {
+    public VehiculeLiteDto getVehicule() {
         return vehicule;
     }
 
@@ -177,7 +177,7 @@ public class CovoiturageDto implements Serializable {
      * Setter
      * @param vehicule véhicule
      */
-    public void setVehicule(VehiculeDto vehicule) {
+    public void setVehicule(VehiculeLiteDto vehicule) {
         this.vehicule = vehicule;
     }
 
