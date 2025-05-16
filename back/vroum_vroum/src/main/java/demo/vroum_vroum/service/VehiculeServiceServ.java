@@ -1,5 +1,6 @@
 package demo.vroum_vroum.service;
 
+import demo.vroum_vroum.entity.Collaborateur;
 import demo.vroum_vroum.entity.VehiculeService;
 import demo.vroum_vroum.exeption.Controle;
 import demo.vroum_vroum.repository.VehiculeServiceRepository;
@@ -20,8 +21,12 @@ public class VehiculeServiceServ {
         if (vehiculeServiceRepository.existsById(id)) {
             return vehiculeServiceRepository.findById(id).get();
         } else {
-            throw new Controle("L'id n'existe pas.");
+            throw new Controle("L'id n'existe pas");
         }
+    }
+
+    public Iterable<VehiculeService> findVehiculeServiceByCollaborateur(Collaborateur collaborateur) throws Controle {
+        return vehiculeServiceRepository.findVehiculeServiceByCollaborateurs(collaborateur);
     }
 
     public void create(VehiculeService vehiculeService) throws Controle {

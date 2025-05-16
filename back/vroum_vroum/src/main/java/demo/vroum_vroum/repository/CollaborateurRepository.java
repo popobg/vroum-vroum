@@ -9,5 +9,4 @@ public interface CollaborateurRepository extends JpaRepository<Collaborateur, In
     Collaborateur findByPseudo(String pseudo);
 
     Optional<Collaborateur> findByPseudoAndPassword(String pseudo, String password);
-
 }

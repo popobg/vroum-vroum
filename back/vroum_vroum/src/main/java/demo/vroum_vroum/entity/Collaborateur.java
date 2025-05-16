@@ -28,9 +28,12 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur>, Se
     @Column(name = "PRENOM")
     private String prenom;
 
+    @ManyToOne
+
     /** Adresse du collaborateur */
-    @Column(name = "ADRESSE")
+    @JoinColumn(name = "ID_ADRESSE")
     private String adresse;
+
 
     /** Adresse email du collaborateur */
     @Column(name = "EMAIL")
