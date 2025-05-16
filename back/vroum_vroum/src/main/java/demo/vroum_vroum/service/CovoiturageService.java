@@ -129,9 +129,11 @@ public class CovoiturageService {
         // Plus de places disponibles dans le covoiturage
         // ou date de départ du covoiturage passé
         // ou passager ayant déjà réservé ce covoit
+        // ou utilisateur actuel = conducteur
         if (nbPlaces == 0
                 || covoit.getDate().isBefore(LocalDateTime.now())
-                || covoit.getCollaborateurs().contains(collab)) {
+                || covoit.getCollaborateurs().contains(collab)
+                || covoit.getOrganisateur().getId() == collab.getId()) {
             return false;
         }
 
