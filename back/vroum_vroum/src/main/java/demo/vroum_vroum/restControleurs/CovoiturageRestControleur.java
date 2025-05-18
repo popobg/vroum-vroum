@@ -2,17 +2,17 @@ package demo.vroum_vroum.restControleurs;
 
 import demo.vroum_vroum.dto.CovoiturageDto;
 import demo.vroum_vroum.entities.Collaborateur;
-import demo.vroum_vroum.entities.Covoiturage;
+import demo.vroum_vroum.exceptions.UserNotFoundException;
 import demo.vroum_vroum.mappers.CovoiturageMapper;
 import demo.vroum_vroum.services.CollaborateurService;
 import demo.vroum_vroum.services.CovoiturageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller des routes en lien avec le covoiturage
@@ -47,14 +47,14 @@ public class CovoiturageRestControleur {
      * @return une liste de covoiturages dto (ou une liste vide si aucun covoiturage ne correspond aux critères)
      */
     @GetMapping("/rechercher")
-    public List<CovoiturageDto> getCovoitDisponiblesByAdressesDate(
+    public ResponseEntity<List<CovoiturageDto>> getCovoitDisponiblesByAdressesDate(
             @RequestParam("villedep") String nomVilleDepart,
             @RequestParam("cpdep") String codePostalDepart,
             @RequestParam("villearr") String nomVilleArrivee,
             @RequestParam("cparr") String codePostalArrivee,
             @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateDepart)
     {
-        return CovoiturageMapper.toDtos(covoiturageService.getCovoitDisponiblesByAdressesDate(nomVilleDepart.toLowerCase(),codePostalDepart.toLowerCase(), nomVilleArrivee.toLowerCase(), codePostalArrivee.toLowerCase(), dateDepart));
+        return ResponseEntity.ok(CovoiturageMapper.toDtos(covoiturageService.getCovoitDisponiblesByAdressesDate(nomVilleDepart.toLowerCase(),codePostalDepart.toLowerCase(), nomVilleArrivee.toLowerCase(), codePostalArrivee.toLowerCase(), dateDepart)));
     }
 
     /**
@@ -63,10 +63,8 @@ public class CovoiturageRestControleur {
      * @return un covoiturage dto (ou null si l'ID ne correspond à aucun covoiturage)
      */
     @GetMapping("/{id}")
-    public CovoiturageDto getById(@PathVariable int id) {
-        Optional<Covoiturage> covoit = covoiturageService.getCovoiturageById(id);
-
-        return covoit.map(CovoiturageMapper::toDto).orElse(null);
+    public ResponseEntity<CovoiturageDto> getById(@PathVariable int id) {
+        return ResponseEntity.ok(CovoiturageMapper.toDto(covoiturageService.getCovoiturageById(id)));
     }
 
     /**
@@ -74,14 +72,14 @@ public class CovoiturageRestControleur {
      * @return une liste de covoiturages dto
      */
     @GetMapping("/reservations")
-    public List<CovoiturageDto> getMesReservations() {
+    public ResponseEntity<List<CovoiturageDto>> getMesReservations() throws UserNotFoundException {
         Collaborateur currentUser = collaborateurService.getCurrentUser();
 
         if (currentUser == null) {
-            return null;
+            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel afficher les réservations de covoiturage.");
         }
 
-        return CovoiturageMapper.toDtos(covoiturageService.getMesReservationsCovoit(currentUser));
+        return ResponseEntity.ok(CovoiturageMapper.toDtos(covoiturageService.getMesReservationsCovoit(currentUser)));
     }
 
     /**
@@ -90,14 +88,14 @@ public class CovoiturageRestControleur {
      * @return true si l'annulation est un succès, sinon false
      */
     @PutMapping("/reservations/annuler/{id}")
-    public Boolean annulerReservation(@PathVariable int id) {
+    public ResponseEntity<Boolean> annulerReservation(@PathVariable int id) throws Exception {
         Collaborateur currentUser = collaborateurService.getCurrentUser();
 
         if (currentUser == null) {
-            return false;
+            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel annuler une réservation de covoiturage.");
         }
 
-        return covoiturageService.annulerReservationCovoit(id, currentUser.getId());
+        return ResponseEntity.ok(covoiturageService.annulerReservationCovoit(id, currentUser));
     }
 
     /**
@@ -106,13 +104,13 @@ public class CovoiturageRestControleur {
      * @return true si la réservation est un succès, sinon false
      */
     @PutMapping("/reserver/{id}")
-    public Boolean reserverCovoit(@PathVariable int id) {
+    public ResponseEntity<Boolean> reserverCovoit(@PathVariable int id) {
         Collaborateur currentUser = collaborateurService.getCurrentUser();
 
         if (currentUser == null) {
-            return false;
+            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel réserver un covoiturage.");
         }
 
-        return covoiturageService.reserverCovoit(id, currentUser.getId());
+        return ResponseEntity.ok(covoiturageService.reserverCovoit(id, currentUser));
     }
 }
