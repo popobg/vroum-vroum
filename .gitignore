@@ -78,3 +78,6 @@ Thumbs.db
 # Visual Paradigm
 *.vpp.vbak
 *.vpp.bak_*
+
+# CUSTOM
+*.log
