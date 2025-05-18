@@ -1,7 +1,7 @@
 package demo.vroum_vroum.mappers;
 
 import demo.vroum_vroum.dto.CollaborateurLiteDto;
-import demo.vroum_vroum.entity.Collaborateur;
+import demo.vroum_vroum.entities.Collaborateur;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;

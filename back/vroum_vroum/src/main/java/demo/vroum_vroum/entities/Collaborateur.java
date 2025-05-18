@@ -1,4 +1,4 @@
-package demo.vroum_vroum.entity;
+package demo.vroum_vroum.entities;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;

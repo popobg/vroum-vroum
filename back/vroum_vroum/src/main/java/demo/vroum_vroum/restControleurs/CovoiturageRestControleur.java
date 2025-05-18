@@ -1,11 +1,11 @@
 package demo.vroum_vroum.restControleurs;
 
 import demo.vroum_vroum.dto.CovoiturageDto;
-import demo.vroum_vroum.entity.Collaborateur;
-import demo.vroum_vroum.entity.Covoiturage;
+import demo.vroum_vroum.entities.Collaborateur;
+import demo.vroum_vroum.entities.Covoiturage;
 import demo.vroum_vroum.mappers.CovoiturageMapper;
-import demo.vroum_vroum.service.CollaborateurService;
-import demo.vroum_vroum.service.CovoiturageService;
+import demo.vroum_vroum.services.CollaborateurService;
+import demo.vroum_vroum.services.CovoiturageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;

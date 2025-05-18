@@ -1,10 +1,10 @@
 package demo.vroum_vroum.restControleurs;
 
 import demo.vroum_vroum.dto.VehiculeServiceDto;
-import demo.vroum_vroum.entity.VehiculeService;
+import demo.vroum_vroum.entities.VehiculeService;
 import demo.vroum_vroum.mappers.VehiculeServiceMapper;
-import demo.vroum_vroum.service.VehiculeServiceServ;
-import demo.vroum_vroum.exeption.Controle;
+import demo.vroum_vroum.services.VehiculeServiceServ;
+import demo.vroum_vroum.exceptions.Controle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

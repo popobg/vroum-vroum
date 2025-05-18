@@ -1,9 +1,9 @@
-package demo.vroum_vroum.service;
+package demo.vroum_vroum.services;
 
-import demo.vroum_vroum.entity.Collaborateur;
-import demo.vroum_vroum.entity.VehiculeService;
-import demo.vroum_vroum.exeption.Controle;
-import demo.vroum_vroum.repository.VehiculeServiceRepository;
+import demo.vroum_vroum.entities.Collaborateur;
+import demo.vroum_vroum.entities.VehiculeService;
+import demo.vroum_vroum.exceptions.Controle;
+import demo.vroum_vroum.repositories.VehiculeServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

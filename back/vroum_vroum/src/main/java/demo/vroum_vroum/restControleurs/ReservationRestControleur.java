@@ -1,8 +1,8 @@
 package demo.vroum_vroum.restControleurs;
 
-import demo.vroum_vroum.entity.Reservation;
-import demo.vroum_vroum.exeption.Controle;
-import demo.vroum_vroum.service.ReservationService;
+import demo.vroum_vroum.entities.Reservation;
+import demo.vroum_vroum.exceptions.Controle;
+import demo.vroum_vroum.services.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

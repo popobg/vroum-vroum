@@ -1,9 +1,9 @@
-package demo.vroum_vroum.service;
+package demo.vroum_vroum.services;
 
-import demo.vroum_vroum.entity.Collaborateur;
-import demo.vroum_vroum.entity.Covoiturage;
-import demo.vroum_vroum.repository.CollaborateurRepository;
-import demo.vroum_vroum.repository.CovoiturageRepository;
+import demo.vroum_vroum.entities.Collaborateur;
+import demo.vroum_vroum.entities.Covoiturage;
+import demo.vroum_vroum.repositories.CollaborateurRepository;
+import demo.vroum_vroum.repositories.CovoiturageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

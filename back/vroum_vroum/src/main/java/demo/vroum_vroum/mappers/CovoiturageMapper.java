@@ -1,7 +1,7 @@
 package demo.vroum_vroum.mappers;
 
 import demo.vroum_vroum.dto.CovoiturageDto;
-import demo.vroum_vroum.entity.Covoiturage;
+import demo.vroum_vroum.entities.Covoiturage;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
