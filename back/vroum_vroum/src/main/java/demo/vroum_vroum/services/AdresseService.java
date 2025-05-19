@@ -1,4 +1,4 @@
-package demo.vroum_vroum.service;
+package demo.vroum_vroum.services;
 
 import org.springframework.stereotype.Service;
 

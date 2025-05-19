@@ -1,6 +1,6 @@
-package demo.vroum_vroum.repository;
+package demo.vroum_vroum.repositories;
 
-import demo.vroum_vroum.entity.Collaborateur;
+import demo.vroum_vroum.entities.Collaborateur;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

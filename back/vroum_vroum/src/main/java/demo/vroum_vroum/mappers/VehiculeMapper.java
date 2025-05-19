@@ -1,7 +1,7 @@
 package demo.vroum_vroum.mappers;
 
 import demo.vroum_vroum.dto.VehiculeLiteDto;
-import demo.vroum_vroum.entity.Vehicule;
+import demo.vroum_vroum.entities.Vehicule;
 import org.springframework.stereotype.Component;
 
 /**

@@ -3,8 +3,8 @@
 // ==============================
 package demo.vroum_vroum.restControleurs;
 
-import demo.vroum_vroum.entity.Collaborateur;
-import demo.vroum_vroum.service.CollaborateurService;
+import demo.vroum_vroum.entities.Collaborateur;
+import demo.vroum_vroum.services.CollaborateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;

@@ -1,6 +1,6 @@
 package demo.vroum_vroum.dto;
 
-import demo.vroum_vroum.entity.Reservation;
+import demo.vroum_vroum.entities.Reservation;
 import demo.vroum_vroum.enums.Categorie;
 import demo.vroum_vroum.enums.StatutVehicule;
 

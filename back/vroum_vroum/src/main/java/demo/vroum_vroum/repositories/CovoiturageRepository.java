@@ -1,7 +1,7 @@
-package demo.vroum_vroum.repository;
+package demo.vroum_vroum.repositories;
 
-import demo.vroum_vroum.entity.Collaborateur;
-import demo.vroum_vroum.entity.Covoiturage;
+import demo.vroum_vroum.entities.Collaborateur;
+import demo.vroum_vroum.entities.Covoiturage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

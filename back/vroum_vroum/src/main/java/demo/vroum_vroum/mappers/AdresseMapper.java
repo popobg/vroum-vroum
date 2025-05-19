@@ -1,7 +1,7 @@
 package demo.vroum_vroum.mappers;
 
 import demo.vroum_vroum.dto.AdresseDto;
-import demo.vroum_vroum.entity.Adresse;
+import demo.vroum_vroum.entities.Adresse;
 import org.springframework.stereotype.Component;
 
 @Component

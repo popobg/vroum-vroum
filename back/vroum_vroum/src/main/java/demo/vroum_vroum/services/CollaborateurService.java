@@ -1,7 +1,7 @@
-package demo.vroum_vroum.service;
+package demo.vroum_vroum.services;
 
-import demo.vroum_vroum.entity.Collaborateur;
-import demo.vroum_vroum.repository.CollaborateurRepository;
+import demo.vroum_vroum.entities.Collaborateur;
+import demo.vroum_vroum.repositories.CollaborateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

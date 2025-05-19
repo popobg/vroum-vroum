@@ -1,4 +1,4 @@
-package demo.vroum_vroum.entity;
+package demo.vroum_vroum.entities;
 
 import demo.vroum_vroum.enums.Categorie;
 import demo.vroum_vroum.enums.StatutVehicule;

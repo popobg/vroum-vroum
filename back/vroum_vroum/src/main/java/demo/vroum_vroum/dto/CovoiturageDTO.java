@@ -1,8 +1,6 @@
 package demo.vroum_vroum.dto;
 
 
-import demo.vroum_vroum.entity.Adresse;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;

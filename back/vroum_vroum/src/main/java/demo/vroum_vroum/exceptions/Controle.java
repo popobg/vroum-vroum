@@ -1,4 +1,4 @@
-package demo.vroum_vroum.exeption;
+package demo.vroum_vroum.exceptions;
 
 public class Controle extends Exception {
     public Controle(String message) {
