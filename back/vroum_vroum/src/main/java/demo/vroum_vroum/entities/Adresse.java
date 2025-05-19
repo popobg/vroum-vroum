@@ -59,6 +59,22 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      */
     public Adresse() {}
 
+    /**
+     * Constructeur
+     * @param ville ville
+     * @param codePostal code postal
+     */
+    public Adresse(String ville, String codePostal) {
+        this(0, null, null, codePostal, ville);
+    }
+
+    /**
+     * Constructeur
+     * @param numero numéro
+     * @param rue rue
+     * @param codePostal code postal
+     * @param ville ville
+     */
     public Adresse(String numero, String rue, String codePostal, String ville) {
         this(0, numero, rue, codePostal, ville);
     }

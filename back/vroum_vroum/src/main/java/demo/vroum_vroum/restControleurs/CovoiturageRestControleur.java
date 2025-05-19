@@ -6,7 +6,6 @@ import demo.vroum_vroum.exceptions.UserNotFoundException;
 import demo.vroum_vroum.mappers.CovoiturageMapper;
 import demo.vroum_vroum.services.CollaborateurService;
 import demo.vroum_vroum.services.CovoiturageService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +36,10 @@ public class CovoiturageRestControleur {
         this.covoiturageService = covoiturageService;
         this.collaborateurService = collaborateurService;
     }
+
+    /*
+    * Méthodes GET
+    */
 
     /**
      * Méthode retournant les covoiturages disponibles pour les informations saisies
@@ -98,6 +101,10 @@ public class CovoiturageRestControleur {
         return ResponseEntity.ok(CovoiturageMapper.toDtos(covoiturageService.getMesAnnoncesCovoit(currentUser)));
     }
 
+    /*
+    * Méthode POST
+    */
+
     /**
      * Méthode permettant de créer une annonce de covoiturage à venir.
      * L'utilisateur connecté est l'organisateur du covoiturage.
@@ -112,8 +119,12 @@ public class CovoiturageRestControleur {
             throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel créer une annonce de covoiturage.");
         }
 
-        return ResponseEntity.ok(covoiturageService.creerAnnonceCovoit(CovoiturageMapper.toEntity(covoiturageDto, currentUser)));
+        return ResponseEntity.ok(covoiturageService.sauvegarderAnnonceCovoit(CovoiturageMapper.toEntity(covoiturageDto, currentUser)));
     }
+
+    /*
+    * Méthodes PUT
+    */
 
     /**
      * Méthode permettant de modifier une annonce de covoiturage à venir.
@@ -138,7 +149,7 @@ public class CovoiturageRestControleur {
      * @return true si l'annulation est un succès, sinon false
      */
     @PutMapping("/reservations/annuler/{id}")
-    public ResponseEntity<Boolean> annulerReservation(@PathVariable int id) {
+    public ResponseEntity<Boolean> cancelReservationCovoit(@PathVariable int id) {
         Collaborateur currentUser = collaborateurService.getCurrentUser();
 
         if (currentUser == null) {
@@ -154,7 +165,7 @@ public class CovoiturageRestControleur {
      * @return true si la réservation est un succès, sinon false
      */
     @PutMapping("/reserver/{id}")
-    public ResponseEntity<Boolean> reserverCovoit(@PathVariable int id) {
+    public ResponseEntity<Boolean> reserveCovoit(@PathVariable int id) {
         Collaborateur currentUser = collaborateurService.getCurrentUser();
 
         if (currentUser == null) {
@@ -163,6 +174,10 @@ public class CovoiturageRestControleur {
 
         return ResponseEntity.ok(covoiturageService.reserverCovoit(id, currentUser));
     }
+
+    /*
+    * Méthode DELETE
+    */
 
     /**
      * Méthode permettant de supprimer une annonce de covoiturage à venir.
@@ -178,6 +193,6 @@ public class CovoiturageRestControleur {
             throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel supprimer ce covoiturage.");
         }
 
-        return ResponseEntity.ok(covoiturageService.supprimerAnnonceCovoit(id));
+        return ResponseEntity.ok(covoiturageService.supprimerAnnonceCovoit(id, currentUser.getId()));
     }
 }

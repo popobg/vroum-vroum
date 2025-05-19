@@ -21,6 +21,8 @@ public class GlobalExceptionHandler {
     private static final String DEFAULT_ENTITY_NOT_FOUND_ERROR_MESSAGE = "L'entité demandée est introuvable dans la base de données.";
     private static final String DEFAULT_ILLEGAL_ARGUMENTS_ERROR_MESSAGE = "Les données communiquées ne sont pas valides.";
     private static final String DEFAULT_USER_NOT_FOUND_ERROR_MESSAGE = "Aucun utilisateur connecté.";
+    private static final String DEFAULT_UNSUPPORTED_OPERATION_ERROR_MESSAGE = "Cette action est impossible à réaliser dans le contexte actuel.";
+    private static final String DEFAULT_INAPPROPRIATE_CALLER_ERROR_MESSAGE = "Vous n'avez pas le statut adapté pour réaliser cette action.";
     private static final String DEFAULT_GENERAL_ERROR_MESSAGE = "Une erreur interne s'est produite.";
 
     // Logger
@@ -74,6 +76,41 @@ public class GlobalExceptionHandler {
         response.put("message", StringUtils.isEmpty(ex.getMessage()) ? DEFAULT_USER_NOT_FOUND_ERROR_MESSAGE : ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+    }
+
+    /**
+     * Méthode gérant les exceptions lorsque l'action demandée ne peut pas être réalisée
+     * @param ex exception levée si l'action demandée ne peut pas être réalisée dans le contexte actuel
+     * @return réponse contenant le message d'erreur informant que l'action n'a pas pu être réalisée, ainsi
+     * que le motif
+     */
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<Map<String, String>> handleUnsupportedOperationException(UnsupportedOperationException ex) {
+        log.error("UnsupportedOperationException", ex);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("Erreur", "UnsupportedOperationException");
+        response.put("message", StringUtils.isEmpty(ex.getMessage()) ? DEFAULT_UNSUPPORTED_OPERATION_ERROR_MESSAGE : ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(response);
+    }
+
+    /**
+     * Méthode gérant les exceptions lorsque l'utilisateur tente d'effectuer une action qu'il n'a
+     * pas le droit d'effectuer
+     * @param ex exception levée si l'utilisateur tente de réaliser une action qu'il n'est pas autorisé à faire
+     * @return réponse contenant le message d'erreur informant que l'utilisateur n'est pas autorisé
+     * à réaliser cette action
+     */
+    @ExceptionHandler(IllegalCallerException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalCallerException(IllegalCallerException ex) {
+        log.error("IllegalCallerException", ex);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("Erreur", "IllegalCallerException");
+        response.put("message", StringUtils.isEmpty(ex.getMessage()) ? DEFAULT_INAPPROPRIATE_CALLER_ERROR_MESSAGE : ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(response);
     }
 
     /**

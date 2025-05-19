@@ -1,6 +1,7 @@
 package demo.vroum_vroum.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "COVOITURAGE")
+@DynamicUpdate
 public class Covoiturage implements Serializable {
     /** Identifiant unique et non modifiable d'un covoiturage */
     @Id
@@ -72,20 +74,11 @@ public class Covoiturage implements Serializable {
      * @param adresseArrivee adresse d'arrivée
      * @param adresseDepart adresse de départ
      * @param date date et heure du départ
-     */
-    /**
-     * Constructeur
-     * @param duree durée estimée du covoiturage
-     * @param distance distance du covoiturage
-     * @param nbPlaces nombre de places passagers
-     * @param adresseArrivee adresse d'arrivée
-     * @param adresseDepart adresse de départ
-     * @param date date et heure du départ
      * @param organisateur collaborateur organisateur du covoiturage
      * @param vehicule véhicule utilisé par l'organisateur
      */
-    public Covoiturage(int duree, int distance, int nbPlaces, Adresse adresseDepart, Adresse adresseArrivee, LocalDateTime date, Collaborateur organisateur, Vehicule vehicule) {
-        this(0, duree, distance, nbPlaces, adresseDepart, adresseArrivee, date, organisateur, vehicule, new HashSet<>());
+    public Covoiturage(int id, int duree, int distance, int nbPlaces, Adresse adresseDepart, Adresse adresseArrivee, LocalDateTime date, Collaborateur organisateur, Vehicule vehicule) {
+        this(id, duree, distance, nbPlaces, adresseDepart, adresseArrivee, date, organisateur, vehicule, new HashSet<>());
     }
 
     /**
@@ -113,86 +106,171 @@ public class Covoiturage implements Serializable {
         this.collaborateurs = collaborateurs;
     }
 
+    /**
+     * Getter
+     * @return Id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Setter
+     * @param id Id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Getter
+     * @return date
+     */
     public LocalDateTime getDate() {
         return date;
     }
 
+    /**
+     * Setter
+     * @param date date
+     */
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
+    /**
+     * Getter
+     * @return adresse de départ
+     */
     public Adresse getAdresseDepart() {
         return adresseDepart;
     }
 
+    /**
+     * Setter
+     * @param adresseDepart adresse de départ
+     */
     public void setAdresseDepart(Adresse adresseDepart) {
         this.adresseDepart = adresseDepart;
     }
 
+    /**
+     * Getter
+     * @return adresse d'arrivée
+     */
     public Adresse getAdresseArrivee() {
         return adresseArrivee;
     }
 
+    /**
+     * Setter
+     * @param adresseArrivee adresse d'arrivée
+     */
     public void setAdresseArrivee(Adresse adresseArrivee) {
         this.adresseArrivee = adresseArrivee;
     }
 
+    /**
+     * Getter
+     * @return nombre de places
+     */
     public int getNbPlaces() {
         return nbPlaces;
     }
 
+    /**
+     * Setter
+     * @param nbPlaces nombre de places
+     */
     public void setNbPlaces(int nbPlaces) {
         this.nbPlaces = nbPlaces;
     }
 
+    /**
+     * Getter
+     * @return distance
+     */
     public int getDistance() {
         return distance;
     }
 
+    /**
+     * Setter
+     * @param distance distance
+     */
     public void setDistance(int distance) {
         this.distance = distance;
     }
 
+    /**
+     * Getter
+     * @return durée
+     */
     public int getDuree() {
         return duree;
     }
 
+    /**
+     * Setter
+     * @param duree durée
+     */
     public void setDuree(int duree) {
         this.duree = duree;
     }
 
+    /**
+     * Getter
+     * @return organisateur
+     */
     public Collaborateur getOrganisateur() {
         return organisateur;
     }
 
+    /**
+     * Setter
+     * @param organisateur organisateur
+     */
     public void setOrganisateur(Collaborateur organisateur) {
         this.organisateur = organisateur;
     }
 
+    /**
+     * Getter
+     * @return véhicule
+     */
     public Vehicule getVehicule() {
         return vehicule;
     }
 
+    /**
+     * Setter
+     * @param vehicule véhicule
+     */
     public void setVehicule(Vehicule vehicule) {
         this.vehicule = vehicule;
     }
 
+    /**
+     * Getter
+     * @return passagers collaborateurs
+     */
     public Set<Collaborateur> getCollaborateurs() {
         return collaborateurs;
     }
 
+    /**
+     * Setter
+     * @param Collaborateurs passagers collaborateurs
+     */
     public void setCollaborateurs(Set<Collaborateur> Collaborateurs) {
         this.collaborateurs = Collaborateurs;
     }
 
+    /**
+     * Méthode retournant une chaîne de caractères avec les informations
+     * de l'objet Covoiturage
+     * @return String
+     */
     @Override
     public String toString() {
         return "Covoiturage{" +

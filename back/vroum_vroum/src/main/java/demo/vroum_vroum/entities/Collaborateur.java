@@ -68,7 +68,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur>, Se
 
     /** Véhicules de service gérés par le collaborateur */
     @ManyToMany
-    @JoinTable(name = "ADMINISTRATEUR_VEHICULE_SERVICE", joinColumns = @JoinColumn(name = "ID_ADMINISTARTEUR", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ID_VEHICULE_SEVICE", referencedColumnName = "ID"))
+    @JoinTable(name = "ADMINISTRATEUR_VEHICULE_SERVICE", joinColumns = @JoinColumn(name = "ID_ADMINISTRATEUR", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ID_VEHICULE_SERVICE", referencedColumnName = "ID"))
     private Set<VehiculeService> vehiculeServices;
 
     {

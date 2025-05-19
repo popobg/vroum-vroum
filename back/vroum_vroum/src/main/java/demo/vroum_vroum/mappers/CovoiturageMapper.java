@@ -43,6 +43,6 @@ public class CovoiturageMapper {
      * @return un objet Covoiturage
      */
     public static Covoiturage toEntity(CovoiturageDto dto, Collaborateur organisateur) {
-        return new Covoiturage(dto.getDuree(), dto.getDistance(), dto.getNbPlaces(), AdresseMapper.toEntity(dto.getAdresseDepart()), AdresseMapper.toEntity(dto.getAdresseArrivee()), dto.getDate(), organisateur, VehiculeMapper.toEntity(dto.getVehicule()));
+        return new Covoiturage(dto.getId(), dto.getDuree(), dto.getDistance(), dto.getNbPlaces(), AdresseMapper.toEntity(dto.getAdresseDepart()), AdresseMapper.toEntity(dto.getAdresseArrivee()), dto.getDate(), organisateur, VehiculeMapper.toEntity(dto.getVehicule()));
     }
 }

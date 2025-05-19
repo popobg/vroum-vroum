@@ -1,5 +1,6 @@
 package demo.vroum_vroum.services;
 
+import demo.vroum_vroum.entities.Adresse;
 import demo.vroum_vroum.entities.Collaborateur;
 import demo.vroum_vroum.entities.Covoiturage;
 import demo.vroum_vroum.repositories.CollaborateurRepository;
@@ -18,20 +19,25 @@ import java.util.Optional;
  */
 @Service
 public class CovoiturageService {
+    /** Messages d'erreur */
+    private final String DATE_ERROR_MESSAGE = "La date-heure du covoiturage doit être ultérieure à la date-heure actuelle.";
+
     /** Covoiturage repository */
     private final CovoiturageRepository covoiturageRepository;
 
     /** Collaborateur repository */
     private final CollaborateurRepository collaborateurRepository;
+    private final AdresseService adresseService;
 
     /**
      * Constructeur CovoiturageService
      * @param covoiturageRepository repository de l'entité Covoiturage
      */
     @Autowired
-    public CovoiturageService(CovoiturageRepository covoiturageRepository, CollaborateurRepository collaborateurRepository) {
+    public CovoiturageService(CovoiturageRepository covoiturageRepository, CollaborateurRepository collaborateurRepository, AdresseService adresseService) {
         this.covoiturageRepository = covoiturageRepository;
         this.collaborateurRepository = collaborateurRepository;
+        this.adresseService = adresseService;
     }
 
     /**
@@ -44,22 +50,23 @@ public class CovoiturageService {
      * @param dateDepart date-heure de départ
      * @return liste de covoiturages
      */
-    public List<Covoiturage> getCovoitDisponiblesByAdressesDate(String villeDepart, String codePostalDepart, String villeArrivee, String codePostalArrivee, LocalDateTime dateDepart) throws IllegalArgumentException {
-        if (villeDepart.isEmpty()
-                || codePostalDepart.isEmpty()
-                || villeArrivee.isEmpty()
-                || codePostalArrivee.isEmpty()) {
-            throw new IllegalArgumentException("Vous devez fournir une ville de départ, un code postal de départ, une ville d'arrivée et un code postal d'arrivée.");
+    public List<Covoiturage> getCovoitDisponiblesByAdressesDate(String villeDepart, String codePostalDepart, String villeArrivee, String codePostalArrivee, LocalDateTime dateDepart) {
+        // Check validité des infomations liées à l'adresse
+        String checkAdresseDepart = adresseService.checkChampsAdresse(new Adresse(villeDepart, codePostalDepart));
+
+        if (!checkAdresseDepart.isEmpty()) {
+            throw new IllegalArgumentException("Ville départ : " + checkAdresseDepart);
         }
 
-        if (!Validator.matchCodePostalFormat(codePostalDepart)
-                || !Validator.matchCodePostalFormat(codePostalArrivee)) {
-            throw new IllegalArgumentException("Le code postal doit être composé de 5 nombres.");
+        String checkAdresseArrivee = adresseService.checkChampsAdresse(new Adresse(villeArrivee, codePostalArrivee));
+
+        if (!checkAdresseArrivee.isEmpty()) {
+            throw new IllegalArgumentException("Ville d'arrivée : " + checkAdresseDepart);
         }
 
         // On ne peut rechercher que des covoiturages à venir
         if (!Validator.matchDateUlterieure(dateDepart)) {
-            throw new IllegalArgumentException("La date de départ recherchée doit être ultérieure à la date et heure actuelle.");
+            throw new IllegalArgumentException(DATE_ERROR_MESSAGE);
         }
 
         return covoiturageRepository.findCovoitDisponiblesByAdressesDate(villeDepart, codePostalDepart, villeArrivee, codePostalArrivee, dateDepart);
@@ -69,9 +76,8 @@ public class CovoiturageService {
      * Méthode de service récupérant un covoiturage à partir de son Id
      * @param id Id du covoiturage
      * @return un covoiturage ou null si pas de covoiturage trouvé à cet Id
-     * @throws EntityNotFoundException aucune entité correspondante à cet Id
      */
-    public Covoiturage getCovoiturageById(int id) throws EntityNotFoundException {
+    public Covoiturage getCovoiturageById(int id) {
         Optional<Covoiturage> optCovoit = covoiturageRepository.findById(id);
 
         if (optCovoit.isEmpty()) {
@@ -91,7 +97,7 @@ public class CovoiturageService {
     }
 
     /**
-     * Méthode de service récupérant les covoiturages postés par le collaborateur organisateur
+     * Méthode de service récupérant les covoiturages organisés par un collaborateur spécifique
      * @param organisateur collaborateur organisateur du covoiturage
      * @return liste de covoiturages
      */
@@ -99,22 +105,49 @@ public class CovoiturageService {
         return covoiturageRepository.findByOrganisateur(organisateur);
     }
 
-    public Boolean creerAnnonceCovoit(Covoiturage covoiturage) {
-        if (!Validator.matchDateUlterieure(covoiturage.getDate())) {
-            throw new IllegalArgumentException("La date-heure du covoiturage doit être ultérieure à la date-heure actuelle.");
+    /**
+     * Méthode de service permettant de persister un objet Covoiturage en base de données
+     * @param covoiturage un objet Covoiturage
+     * @return true si l'ajout en BDD est un succès, sinon false
+     */
+    public Boolean sauvegarderAnnonceCovoit(Covoiturage covoiturage) {
+        // Check les champs date, code postal et voiture
+        String check = checkChampsCovoiturage(covoiturage);
+        if (!check.isEmpty()) {
+            throw new UnsupportedOperationException(check);
         }
 
-        if (covoiturage.getVehicule().getCollaborateur().getId() != covoiturage.getOrganisateur().getId()) {
-            throw new IllegalArgumentException("L'organisateur du covoiturage ne peut pas utiliser le véhicule d'un autre collaborateur.");
-        }
+        // On cherche si les adresses existent déjà en base
 
-        if (!Validator.matchCodePostalFormat(covoiturage.getAdresseDepart().getCodePostal())
-                || !Validator.matchCodePostalFormat(covoiturage.getAdresseArrivee().getCodePostal())) {
-            throw new IllegalArgumentException("Le code postal doit être composé de 5 nombres.");
-        }
+        // On cherche si le véhicule existe déjà en base
+
 
         // Sauvegarde du covoiturage en base de données
         covoiturageRepository.save(covoiturage);
+        return true;
+    }
+
+    /**
+     * Méthode de service permettant de modifier un objet Covoiturage existant en base de données,
+     * à condition que celui-ci n'ait pas déjà de réservation
+     * @param covoiturage un objet Covoiturage existant
+     * @return true si la modification est un succès, sinon false
+     */
+    public Boolean modifierAnnonceCovoit(Covoiturage covoiturage) {
+        // Si l'ID n'existe pas en BDD, une exception sera levée
+        Covoiturage covoitExistant = getCovoiturageById(covoiturage.getId());
+
+        if (!covoitExistant.getCollaborateurs().isEmpty()) {
+            throw new UnsupportedOperationException("Vous ne pouvez pas modifier une annonce pour un covoiturage comportant déjà des réservations.");
+        }
+
+        if (covoitExistant.getOrganisateur().getId() != covoiturage.getOrganisateur().getId()) {
+            throw new UnsupportedOperationException("Vous ne pouvez pas changer l'organisateur d'un covoiturage.");
+        }
+
+        // Sauvegarde et check des champs de saisie via la même méthode que celle de création des entités
+        sauvegarderAnnonceCovoit(covoiturage);
+
         return true;
     }
 
@@ -130,7 +163,7 @@ public class CovoiturageService {
 
         // Impossible d'annuler si le covoit est déjà passé
         if (!Validator.matchDateUlterieure(covoit.getDate())) {
-            throw new IllegalArgumentException("Impossible d'annuler un covoiturage dont la date-heure de départ est déjà passée !");
+            throw new UnsupportedOperationException(DATE_ERROR_MESSAGE);
         }
 
         try {
@@ -159,21 +192,21 @@ public class CovoiturageService {
         Covoiturage covoit = this.getCovoiturageById(idCovoit);
 
         if (!Validator.matchDateUlterieure(covoit.getDate())) {
-            throw new IllegalArgumentException("Impossible de réserver un covoiturage dont la date-heure de départ est déjà passée !");
+            throw new UnsupportedOperationException(DATE_ERROR_MESSAGE);
         }
 
         int nbPlaces = covoit.getNbPlaces();
 
         if (nbPlaces == 0) {
-            throw new IllegalArgumentException("Impossible de réserver un covoiturage qui n'a plus de places disponibles.");
+            throw new UnsupportedOperationException("Ce covoiturage ne présente plus de places disponibles.");
         }
 
         if (covoit.getCollaborateurs().contains(passager)) {
-            throw new IllegalArgumentException("Vous êtes déjà inscrit dans ce coivoiturage.");
+            throw new UnsupportedOperationException("Vous êtes déjà inscrit dans ce coivoiturage.");
         }
 
         if (covoit.getOrganisateur().getId() == passager.getId()) {
-            throw new IllegalArgumentException("Vous ne pouvez pas vous inscrire en tant que passager dans un covoiturage dont vous êtes le conducteur.");
+            throw new UnsupportedOperationException("Vous ne pouvez pas vous inscrire en tant que passager dans un covoiturage dont vous êtes le conducteur.");
         }
 
         try {
@@ -193,5 +226,49 @@ public class CovoiturageService {
         catch (Exception e) {
             return false;
         }
+    }
+
+    public Boolean supprimerAnnonceCovoit(int idCovoit, int idOrganisateur) {
+        Covoiturage covoit = this.getCovoiturageById(idCovoit);
+
+        if (covoit.getOrganisateur().getId() != idOrganisateur) {
+            throw new IllegalCallerException("Seul l'organisateur du covoiturage peut le supprimer.");
+        }
+
+        covoiturageRepository.delete(covoit);
+        return true;
+    }
+
+    /*
+     * METHODES PRIVEES
+     */
+
+    /**
+     * Méthode privée de vérification des champs de l'objet Covoiturage à sa création ou modification
+     * @param covoiturage objet Covoiturage
+     * @return Message d'erreur ou String vide
+     */
+    private String checkChampsCovoiturage(Covoiturage covoiturage) {
+        if (!Validator.matchDateUlterieure(covoiturage.getDate())) {
+           return DATE_ERROR_MESSAGE;
+        }
+
+        if (covoiturage.getVehicule().getCollaborateur().getId() != covoiturage.getOrganisateur().getId()) {
+            return "Le véhicule doit appartenir au collaborateur organisateur du covoiturage.";
+        }
+
+        String champAdresseDepart = adresseService.checkChampsAdresse(covoiturage.getAdresseDepart());
+
+        if (!champAdresseDepart.isEmpty()) {
+            return champAdresseDepart;
+        }
+
+        String champAdresseArrivee = adresseService.checkChampsAdresse(covoiturage.getAdresseArrivee());
+
+        if (!champAdresseArrivee.isEmpty()) {
+            return champAdresseArrivee;
+        }
+
+        return "";
     }
 }
