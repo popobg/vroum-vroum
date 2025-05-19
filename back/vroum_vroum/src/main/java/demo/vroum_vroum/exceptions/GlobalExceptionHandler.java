@@ -86,7 +86,7 @@ public class GlobalExceptionHandler {
         log.error("Internal server error: ", ex);
 
         Map<String, String> response = new HashMap<>();
-        response.put("Erreur", "EntityNotFoundException");
+        response.put("Erreur", "Internal server error");
         response.put("message", StringUtils.isEmpty(ex.getMessage()) ? DEFAULT_GENERAL_ERROR_MESSAGE : ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
