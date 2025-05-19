@@ -1,44 +1,51 @@
-package demo.vroum_vroum.entities;
+package demo.vroum_vroum.dto;
 
-import jakarta.persistence.*;
-
-import java.io.Serializable;
+import demo.vroum_vroum.entities.Collaborateur;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 /**
- * Entité Véhicule
+ * DTO de l'entité Vehicule
  */
-@Entity
-@Table(name = "VEHICULE")
-public class Vehicule implements Serializable {
+public class VehiculeDto {
     /** Identifiant unique et non modifiable du véhicule */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
     private int id;
 
     /** Immatriculation du véhicule */
-    @Column(name = "IMMATRICULATION")
+    @NotNull
     private String immatriculation;
 
     /** Marque du véhicule */
-    @Column(name = "MARQUE")
+    @NotNull
+    @Size(min = 1)
     private String marque;
 
     /** Modèle du véhicule */
-    @Column(name = "MODELE")
+    @NotNull
+    @Size(min = 1)
     private String modele;
 
     /** Nombre de places dans le véhicule */
-    @Column(name = "NB_PLACES")
+    @NotNull
+    @Size(min = 2)
     private int nbPlaces;
 
     /** Collaborateur possédant ce véhicule */
-    @ManyToOne
-    @JoinColumn(name = "ID_COLLABORATEUR")
-    private Collaborateur collaborateur;
+    private Collaborateur conducteur;
 
     /** Constructeur vide */
-    public Vehicule() {}
+    public VehiculeDto() {}
+
+    /**
+     * Constructeur avec informations lite
+     * @param id identifiant
+     * @param nbPlaces nombre places
+     * @param modele modèle
+     * @param marque marque
+     */
+    public VehiculeDto(int id, int nbPlaces, String modele, String marque) {
+        this(id, nbPlaces, modele, marque, null, null);
+    }
 
     /**
      * Constructeur
@@ -46,9 +53,9 @@ public class Vehicule implements Serializable {
      * @param modele modèle
      * @param marque marque
      * @param immatriculation immatriculation
-     * @param conducteur collaborateur conducteur du véhicule
+     * @param conducteur collaborateur conducteur
      */
-    public Vehicule(int nbPlaces, String modele, String marque, String immatriculation, Collaborateur conducteur) {
+    public VehiculeDto(int nbPlaces, String modele, String marque, String immatriculation, Collaborateur conducteur) {
         this(0, nbPlaces, modele, marque, immatriculation, conducteur);
     }
 
@@ -59,15 +66,15 @@ public class Vehicule implements Serializable {
      * @param modele modèle
      * @param marque marque
      * @param immatriculation immatriculation
-     * @param conducteur collaborateur conducteur du véhicule
+     * @param conducteur collaborateur conducteur
      */
-    public Vehicule(int id, int nbPlaces, String modele, String marque, String immatriculation, Collaborateur conducteur) {
+    public VehiculeDto(int id, int nbPlaces, String modele, String marque, String immatriculation, Collaborateur conducteur) {
         this.id = id;
         this.nbPlaces = nbPlaces;
         this.modele = modele;
         this.marque = marque;
         this.immatriculation = immatriculation;
-        this.collaborateur = conducteur;
+        this.conducteur = conducteur;
     }
 
     /**
@@ -154,30 +161,15 @@ public class Vehicule implements Serializable {
      * Getter
      * @return collaborateur possédant le véhicule
      */
-    public Collaborateur getCollaborateur() {
-        return collaborateur;
+    public Collaborateur getConducteur() {
+        return conducteur;
     }
 
     /**
      * Setter
-     * @param collaborateur collaborateur possédant le véhicule
+     * @param conducteur collaborateur possédant le véhicule
      */
-    public void setCollaborateur(Collaborateur collaborateur) {
-        this.collaborateur = collaborateur;
-    }
-
-    /**
-     * Méthode formant une chaîne de caractères à partir des informations de l'entité
-     * @return String
-     */
-    @Override
-    public String toString() {
-        return "Vehicule{" +
-                "id=" + id +
-                ", immatriculation='" + immatriculation + '\'' +
-                ", marque='" + marque + '\'' +
-                ", modele='" + modele + '\'' +
-                ", nbPlaces=" + nbPlaces +
-                '}';
+    public void setConducteur(Collaborateur conducteur) {
+        this.conducteur = conducteur;
     }
 }

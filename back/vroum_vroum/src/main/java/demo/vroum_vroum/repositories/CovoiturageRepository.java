@@ -34,8 +34,15 @@ public interface CovoiturageRepository extends JpaRepository<Covoiturage, Intege
 
     /**
      * Requête récupérant les covoiturages dont le collaborateur passé en paramètre est passager
-     * @param collaborateur passager
+     * @param collaborateur passager du covoiturage
      * @return liste de covoiturages
      */
     public List<Covoiturage> findByCollaborateursContaining(Collaborateur collaborateur);
+
+    /**
+     * Requête récupérant les covoiturages dont le collaborateur passé en paramètre en l'organisateur
+     * @param collaborateur organisateur du covoiturage
+     * @return liste de covoiturages
+     */
+    public List<Covoiturage> findByOrganisateur(Collaborateur collaborateur);
 }

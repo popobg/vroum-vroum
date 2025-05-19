@@ -1,6 +1,8 @@
 package demo.vroum_vroum.dto;
 
 
+import jakarta.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -13,25 +15,31 @@ public class CovoiturageDto implements Serializable {
     private int id;
 
     /** Date et heure du covoiturage */
+    @NotNull
     private LocalDateTime date;
 
     /** Adresse dto de départ du covoiturage */
+    @NotNull
     private AdresseDto adresseDepart;
 
     /** Adresse dto d'arrivée du covoiturage */
+    @NotNull
     private AdresseDto adresseArrivee;
 
-    /** Distance estimée du trajet */
+    /** Distance estimée du trajet (en kilomètres) */
     private int distance;
 
-    /** Durée estimée du trajet */
+    /** Durée estimée du trajet (en minutes) */
     private int duree;
+
+    /** Nombre de places passagers disponibles dans le covoiturage */
+    private int nbPlaces;
 
     /** Collaborateur organisateur (conducteur) du covoiturage */
     private CollaborateurLiteDto organisateur;
 
     /** Véhicule utilisé par l'organisateur pour ce covoiturage */
-    private VehiculeLiteDto vehicule;
+    private VehiculeDto vehicule;
 
     /** Collaborateurs passagers du covoiturage */
     private Set<CollaborateurLiteDto> passagers;
@@ -39,13 +47,14 @@ public class CovoiturageDto implements Serializable {
     /** Constructeur vide */
     public CovoiturageDto() {}
 
-    public CovoiturageDto(int id, LocalDateTime date, AdresseDto adresseDepart, AdresseDto adresseArrivee, int distance, int duree, CollaborateurLiteDto orga, VehiculeLiteDto vehicule, Set<CollaborateurLiteDto> passagers) {
+    public CovoiturageDto(int id, LocalDateTime date, AdresseDto adresseDepart, AdresseDto adresseArrivee, int distance, int duree, int nbPlaces, CollaborateurLiteDto orga, VehiculeDto vehicule, Set<CollaborateurLiteDto> passagers) {
         this.id = id;
         this.date = date;
         this.adresseDepart = adresseDepart;
         this.adresseArrivee = adresseArrivee;
         this.distance = distance;
         this.duree = duree;
+        this.nbPlaces = nbPlaces;
         this.organisateur = orga;
         this.vehicule = vehicule;
         this.passagers = passagers;
@@ -149,6 +158,22 @@ public class CovoiturageDto implements Serializable {
 
     /**
      * Getter
+     * @return nombre de places
+     */
+    public int getNbPlaces() {
+        return nbPlaces;
+    }
+
+    /**
+     * Setter
+     * @param nbPlaces nombre de places
+     */
+    public void setNbPlaces(int nbPlaces) {
+        this.nbPlaces = nbPlaces;
+    }
+
+    /**
+     * Getter
      * @return collaborateur lite dto organisateur
      */
     public CollaborateurLiteDto getOrganisateur() {
@@ -167,7 +192,7 @@ public class CovoiturageDto implements Serializable {
      * Getter
      * @return véhicule
      */
-    public VehiculeLiteDto getVehicule() {
+    public VehiculeDto getVehicule() {
         return vehicule;
     }
 
@@ -175,7 +200,7 @@ public class CovoiturageDto implements Serializable {
      * Setter
      * @param vehicule véhicule
      */
-    public void setVehicule(VehiculeLiteDto vehicule) {
+    public void setVehicule(VehiculeDto vehicule) {
         this.vehicule = vehicule;
     }
 

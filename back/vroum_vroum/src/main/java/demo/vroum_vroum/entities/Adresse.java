@@ -1,9 +1,12 @@
 package demo.vroum_vroum.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.text.Collator;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
@@ -29,10 +32,12 @@ public class Adresse implements Serializable, Comparable<Adresse> {
     private String rue;
 
     /** Code postal associé à l'adresse */
+    @NotNull
     @Column(name = "CODE_POSTAL")
     private String codePostal;
 
     /** Ville associée à l'adresse */
+    @NotNull
     @Column(name = "VILLE")
     private String ville;
 
@@ -44,10 +49,19 @@ public class Adresse implements Serializable, Comparable<Adresse> {
     @OneToMany(mappedBy = "adresseArrivee")
     private Set<Covoiturage> covoituragesArrivee;
 
+    {
+        covoituragesDepart = new HashSet<>();
+        covoituragesArrivee = new HashSet<>();
+    }
+
     /**
      * Constructeur vide
      */
     public Adresse() {}
+
+    public Adresse(String numero, String rue, String codePostal, String ville) {
+        this(0, numero, rue, codePostal, ville);
+    }
 
     /**
      * Constructeur Adresse
@@ -209,5 +223,37 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      */
     public void setVille(String ville) {
         this.ville = ville;
+    }
+
+    /**
+     * Getter
+     * @return covoituragesDepart
+     */
+    public Set<Covoiturage> getCovoituragesDepart() {
+        return covoituragesDepart;
+    }
+
+    /**
+     * Setter
+     * @param covoituragesDepart covoituragesDepart
+     */
+    public void setCovoituragesDepart(Set<Covoiturage> covoituragesDepart) {
+        this.covoituragesDepart = covoituragesDepart;
+    }
+
+    /**
+     * Getter
+     * @return covoituragesArrivee
+     */
+    public Set<Covoiturage> getCovoituragesArrivee() {
+        return covoituragesArrivee;
+    }
+
+    /**
+     * Setter
+     * @param covoituragesArrivee covoituragesArrivee
+     */
+    public void setCovoituragesArrivee(Set<Covoiturage> covoituragesArrivee) {
+        this.covoituragesArrivee = covoituragesArrivee;
     }
 }

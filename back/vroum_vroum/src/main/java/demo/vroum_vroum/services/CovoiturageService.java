@@ -54,9 +54,10 @@ public class CovoiturageService {
 
         if (!Validator.matchCodePostalFormat(codePostalDepart)
                 || !Validator.matchCodePostalFormat(codePostalArrivee)) {
-            throw new IllegalArgumentException("Le code postal doit faire 5 caractères.");
+            throw new IllegalArgumentException("Le code postal doit être composé de 5 nombres.");
         }
 
+        // On ne peut rechercher que des covoiturages à venir
         if (!Validator.matchDateUlterieure(dateDepart)) {
             throw new IllegalArgumentException("La date de départ recherchée doit être ultérieure à la date et heure actuelle.");
         }
@@ -87,6 +88,34 @@ public class CovoiturageService {
      */
     public List<Covoiturage> getMesReservationsCovoit(Collaborateur collaborateur) {
         return covoiturageRepository.findByCollaborateursContaining(collaborateur);
+    }
+
+    /**
+     * Méthode de service récupérant les covoiturages postés par le collaborateur organisateur
+     * @param organisateur collaborateur organisateur du covoiturage
+     * @return liste de covoiturages
+     */
+    public List<Covoiturage> getMesAnnoncesCovoit(Collaborateur organisateur) {
+        return covoiturageRepository.findByOrganisateur(organisateur);
+    }
+
+    public Boolean creerAnnonceCovoit(Covoiturage covoiturage) {
+        if (!Validator.matchDateUlterieure(covoiturage.getDate())) {
+            throw new IllegalArgumentException("La date-heure du covoiturage doit être ultérieure à la date-heure actuelle.");
+        }
+
+        if (covoiturage.getVehicule().getCollaborateur().getId() != covoiturage.getOrganisateur().getId()) {
+            throw new IllegalArgumentException("L'organisateur du covoiturage ne peut pas utiliser le véhicule d'un autre collaborateur.");
+        }
+
+        if (!Validator.matchCodePostalFormat(covoiturage.getAdresseDepart().getCodePostal())
+                || !Validator.matchCodePostalFormat(covoiturage.getAdresseArrivee().getCodePostal())) {
+            throw new IllegalArgumentException("Le code postal doit être composé de 5 nombres.");
+        }
+
+        // Sauvegarde du covoiturage en base de données
+        covoiturageRepository.save(covoiturage);
+        return true;
     }
 
     /**

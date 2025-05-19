@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -40,7 +41,7 @@ public class Covoiturage implements Serializable {
     @Column(name = "DISTANCE")
     private int distance;
 
-    /** Durée estimée du trajet (en secondes) */
+    /** Durée estimée du trajet (en minutes) */
     @Column(name = "DUREE")
     private int duree;
 
@@ -65,7 +66,6 @@ public class Covoiturage implements Serializable {
 
     /**
      * Constructeur
-     * @param id identifiant du covoiturage
      * @param duree durée estimée du covoiturage
      * @param distance distance du covoiturage
      * @param nbPlaces nombre de places passagers
@@ -73,7 +73,34 @@ public class Covoiturage implements Serializable {
      * @param adresseDepart adresse de départ
      * @param date date et heure du départ
      */
-    public Covoiturage(int id, int duree, int distance, int nbPlaces, Adresse adresseArrivee, Adresse adresseDepart, LocalDateTime date) {
+    /**
+     * Constructeur
+     * @param duree durée estimée du covoiturage
+     * @param distance distance du covoiturage
+     * @param nbPlaces nombre de places passagers
+     * @param adresseArrivee adresse d'arrivée
+     * @param adresseDepart adresse de départ
+     * @param date date et heure du départ
+     * @param organisateur collaborateur organisateur du covoiturage
+     * @param vehicule véhicule utilisé par l'organisateur
+     */
+    public Covoiturage(int duree, int distance, int nbPlaces, Adresse adresseDepart, Adresse adresseArrivee, LocalDateTime date, Collaborateur organisateur, Vehicule vehicule) {
+        this(0, duree, distance, nbPlaces, adresseDepart, adresseArrivee, date, organisateur, vehicule, new HashSet<>());
+    }
+
+    /**
+     * Constructeur
+     * @param id identifiant du covoiturage
+     * @param duree durée estimée du covoiturage
+     * @param distance distance du covoiturage
+     * @param nbPlaces nombre de places passagers
+     * @param adresseArrivee adresse d'arrivée
+     * @param adresseDepart adresse de départ
+     * @param date date et heure du départ
+     * @param organisateur collaborateur organisateur du covoiturage
+     * @param vehicule véhicule utilisé par l'organisateur
+     */
+    public Covoiturage(int id, int duree, int distance, int nbPlaces, Adresse adresseDepart, Adresse adresseArrivee, LocalDateTime date, Collaborateur organisateur, Vehicule vehicule, Set<Collaborateur> collaborateurs) {
         this.id = id;
         this.duree = duree;
         this.distance = distance;
@@ -81,6 +108,9 @@ public class Covoiturage implements Serializable {
         this.adresseArrivee = adresseArrivee;
         this.adresseDepart = adresseDepart;
         this.date = date;
+        this.organisateur = organisateur;
+        this.vehicule = vehicule;
+        this.collaborateurs = collaborateurs;
     }
 
     public int getId() {

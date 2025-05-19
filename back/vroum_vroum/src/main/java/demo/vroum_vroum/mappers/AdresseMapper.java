@@ -14,4 +14,13 @@ public class AdresseMapper {
     public static AdresseDto toDto(Adresse adresse) {
         return new AdresseDto(adresse.getId(), adresse.getNumero(), adresse.getRue(), adresse.getCodePostal(), adresse.getVille());
     }
+
+    /**
+     * Méthode permettant de mapper un objet AdresseDto vers un objet Adresse
+     * @param dto adresse dto
+     * @return une adresse
+     */
+    public static Adresse toEntity(AdresseDto dto) {
+        return new Adresse(dto.getNumero(), dto.getRue(), dto.getCodePostal(), dto.getNomVille());
+    }
 }

@@ -1,6 +1,7 @@
 package demo.vroum_vroum.mappers;
 
 import demo.vroum_vroum.dto.CovoiturageDto;
+import demo.vroum_vroum.entities.Collaborateur;
 import demo.vroum_vroum.entities.Covoiturage;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,7 @@ public class CovoiturageMapper {
      * @return un Covoiturage dto
      */
     public static CovoiturageDto toDto(Covoiturage covoiturage) {
-        return new CovoiturageDto(covoiturage.getId(), covoiturage.getDate(), AdresseMapper.toDto(covoiturage.getAdresseDepart()), AdresseMapper.toDto(covoiturage.getAdresseArrivee()), covoiturage.getDistance(), covoiturage.getDuree(), CollaborateurMapper.toLiteDto(covoiturage.getOrganisateur()), VehiculeMapper.toDto(covoiturage.getVehicule()), CollaborateurMapper.toLiteDtos(covoiturage.getCollaborateurs()));
+        return new CovoiturageDto(covoiturage.getId(), covoiturage.getDate(), AdresseMapper.toDto(covoiturage.getAdresseDepart()), AdresseMapper.toDto(covoiturage.getAdresseArrivee()), covoiturage.getDistance(), covoiturage.getDuree(), covoiturage.getNbPlaces(), CollaborateurMapper.toLiteDto(covoiturage.getOrganisateur()), VehiculeMapper.toDto(covoiturage.getVehicule()), CollaborateurMapper.toLiteDtos(covoiturage.getCollaborateurs()));
     }
 
     /**
@@ -41,7 +42,7 @@ public class CovoiturageMapper {
      * @param dto CovoiturageDto
      * @return un objet Covoiturage
      */
-    public static Covoiturage toEntity(CovoiturageDto dto) {
-        return new Covoiturage();
+    public static Covoiturage toEntity(CovoiturageDto dto, Collaborateur organisateur) {
+        return new Covoiturage(dto.getDuree(), dto.getDistance(), dto.getNbPlaces(), AdresseMapper.toEntity(dto.getAdresseDepart()), AdresseMapper.toEntity(dto.getAdresseArrivee()), dto.getDate(), organisateur, VehiculeMapper.toEntity(dto.getVehicule()));
     }
 }

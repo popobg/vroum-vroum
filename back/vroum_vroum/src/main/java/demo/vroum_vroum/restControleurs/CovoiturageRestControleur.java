@@ -6,6 +6,7 @@ import demo.vroum_vroum.exceptions.UserNotFoundException;
 import demo.vroum_vroum.mappers.CovoiturageMapper;
 import demo.vroum_vroum.services.CollaborateurService;
 import demo.vroum_vroum.services.CovoiturageService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -63,16 +64,16 @@ public class CovoiturageRestControleur {
      * @return un covoiturage dto (ou null si l'ID ne correspond à aucun covoiturage)
      */
     @GetMapping("/{id}")
-    public ResponseEntity<CovoiturageDto> getById(@PathVariable int id) {
+    public ResponseEntity<CovoiturageDto> getCovoitById(@PathVariable int id) {
         return ResponseEntity.ok(CovoiturageMapper.toDto(covoiturageService.getCovoiturageById(id)));
     }
 
     /**
-     * Méthode retournant les covoiturages auxquels participe l'utilisateur connecté.
+     * Méthode retournant les covoiturages auxquels participe l'utilisateur connecté
      * @return une liste de covoiturages dto
      */
     @GetMapping("/reservations")
-    public ResponseEntity<List<CovoiturageDto>> getMesReservations() throws UserNotFoundException {
+    public ResponseEntity<List<CovoiturageDto>> getMesReservationsCovoit() {
         Collaborateur currentUser = collaborateurService.getCurrentUser();
 
         if (currentUser == null) {
@@ -83,12 +84,61 @@ public class CovoiturageRestControleur {
     }
 
     /**
+     * Méthode retournant les covoiturages proposés par l'utilisateur connecté
+     * @return une liste de covoiturages dto
+     */
+    @GetMapping("/annonces")
+    public ResponseEntity<List<CovoiturageDto>> getMesAnnoncesCovoit() {
+        Collaborateur currentUser = collaborateurService.getCurrentUser();
+
+        if (currentUser == null) {
+            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel afficher les annonces de covoiturage.");
+        }
+
+        return ResponseEntity.ok(CovoiturageMapper.toDtos(covoiturageService.getMesAnnoncesCovoit(currentUser)));
+    }
+
+    /**
+     * Méthode permettant de créer une annonce de covoiturage à venir.
+     * L'utilisateur connecté est l'organisateur du covoiturage.
+     * @param covoiturageDto nouvel objet CovoiturageDto à ajouter en base
+     * @return true si l'ajout est un succès, sinon false
+     */
+    @PostMapping("/annonces")
+    public ResponseEntity<Boolean> addAnnonceCovoit(CovoiturageDto covoiturageDto) {
+        Collaborateur currentUser = collaborateurService.getCurrentUser();
+
+        if (currentUser == null) {
+            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel créer une annonce de covoiturage.");
+        }
+
+        return ResponseEntity.ok(covoiturageService.creerAnnonceCovoit(CovoiturageMapper.toEntity(covoiturageDto, currentUser)));
+    }
+
+    /**
+     * Méthode permettant de modifier une annonce de covoiturage à venir.
+     * L'organisateur du covoiturage doit être l'utilisateur connecté.
+     * @param covoiturageDto objet CovoiturageDto à modifier
+     * @return true si la modification est un succès, sinon false
+     */
+    @PutMapping("/annonces")
+    public ResponseEntity<Boolean> updateAnnonceCovoit(CovoiturageDto covoiturageDto) {
+        Collaborateur currentUser = collaborateurService.getCurrentUser();
+
+        if (currentUser == null) {
+            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel modifier l'annonce de covoiturage.");
+        }
+
+        return ResponseEntity.ok(covoiturageService.modifierAnnonceCovoit(CovoiturageMapper.toEntity(covoiturageDto, currentUser)));
+    }
+
+    /**
      * Méthode permettant d'annuler une réservation de covoiturage faite par un passager
      * @param id Id du covoiturage
      * @return true si l'annulation est un succès, sinon false
      */
     @PutMapping("/reservations/annuler/{id}")
-    public ResponseEntity<Boolean> annulerReservation(@PathVariable int id) throws Exception {
+    public ResponseEntity<Boolean> annulerReservation(@PathVariable int id) {
         Collaborateur currentUser = collaborateurService.getCurrentUser();
 
         if (currentUser == null) {
@@ -112,5 +162,22 @@ public class CovoiturageRestControleur {
         }
 
         return ResponseEntity.ok(covoiturageService.reserverCovoit(id, currentUser));
+    }
+
+    /**
+     * Méthode permettant de supprimer une annonce de covoiturage à venir.
+     * L'organisateur du covoiturage doit être l'utilisateur connecté.
+     * @param id identifiant du covoiturage à supprimer
+     * @return true si la suppression est un succès, sinon false
+     */
+    @DeleteMapping("/annonces/{id}")
+    public ResponseEntity<Boolean> deleteAnnonceCovoit(@PathVariable int id) {
+        Collaborateur currentUser = collaborateurService.getCurrentUser();
+
+        if (currentUser == null) {
+            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel supprimer ce covoiturage.");
+        }
+
+        return ResponseEntity.ok(covoiturageService.supprimerAnnonceCovoit(id));
     }
 }
