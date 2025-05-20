@@ -3,6 +3,7 @@ package demo.vroum_vroum.entities;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -13,9 +14,9 @@ public class Reservation implements Serializable {
     @Column(name = "ID")
     private int id;
     @Column(name = "DATE_DEPART")
-    private Date dateDepart;
+    private LocalDateTime dateDepart;
     @Column(name = "DATE_RETOUR")
-    private Date dateRetour;
+    private LocalDateTime dateRetour;
     @ManyToOne
     @JoinColumn(name = "ID_COLLABORATEUR")
     private Collaborateur collaborateur;
@@ -25,7 +26,7 @@ public class Reservation implements Serializable {
 
     public Reservation() {}
 
-    public Reservation(int id, Date dateDepart, Date dateRetour) {
+    public Reservation(int id, LocalDateTime dateDepart, LocalDateTime dateRetour) {
         this.id = id;
         this.dateDepart = dateDepart;
         this.dateRetour = dateRetour;
@@ -39,19 +40,19 @@ public class Reservation implements Serializable {
         this.id = id;
     }
 
-    public Date getDateDepart() {
+    public LocalDateTime getDateDepart() {
         return dateDepart;
     }
 
-    public void setDateDepart(Date dateDepart) {
+    public void setDateDepart(LocalDateTime dateDepart) {
         this.dateDepart = dateDepart;
     }
 
-    public Date getDateRetour() {
+    public LocalDateTime getDateRetour() {
         return dateRetour;
     }
 
-    public void setDateRetour(Date dateRetour) {
+    public void setDateRetour(LocalDateTime dateRetour) {
         this.dateRetour = dateRetour;
     }
 
