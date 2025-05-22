@@ -31,7 +31,7 @@ pipeline {
             }
             post {
                 always {
-                    junit 'target/truc/*.xml'
+                    junit 'target/test-classes/demo/vroum_vroum/*'
                 }
             }
         }
@@ -54,7 +54,7 @@ pipeline {
             steps {
                 sh '''
                 echo "Déploiement réussi vers $env.SRV_DEPLOY"
-                scp target/*.war user@${env.SRV_DEPLOY}:/opt/tomcat/webapps/
+                scp target/*.jar user@${env.SRV_DEPLOY}:/opt/tomcat/webapps/
                 '''
             }
         }
