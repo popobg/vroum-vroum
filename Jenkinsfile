@@ -8,14 +8,14 @@ pipeline {
 
     environment {
         SONARQUBE_ENV = 'SonarQube 1'
-        SONAR_PROJECT_KEY = 'JAVA-fil-rouge'
-        SRV_DEPLOY = '192.168.1.100'
+        SONAR_PROJECT_KEY = 'Vroum_Vroum'
+        SRV_DEPLOY = '172.29.86.140'
     }
 
     stages {
         stage('Clonage du dépôt') {
             steps {
-                git 'https://github.com/octocat/Hello-World.git'
+                git 'https://github.com/popobg/vroum-vroum.git'
             }
         }
 

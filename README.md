@@ -9,3 +9,7 @@ Application de covoiturage professionnel
 - [Loïc Mayran](https://github.com/MayranL)
 - [Maxence Ogier](https://github.com/X3nc3)
 - [Pauline Bouyssou](https://github.com/popobg)
+
+#### SonarQube
+User = admin
+Password = mdpProjetfilerouge4!
