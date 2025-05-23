@@ -8,8 +8,8 @@ pipeline {
 
     environment {
         SONARQUBE_ENV = 'SonarQube 1'
-        SONAR_PROJECT_KEY = 'JAVA-fil-rouge'
-        SRV_DEPLOY = 'ggg'
+        SONAR_PROJECT_KEY = 'vroum_vroum'
+        SRV_DEPLOY = ''
     }
 
     stages {
