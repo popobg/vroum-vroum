@@ -9,7 +9,7 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'SonarQube 1'
         SONAR_PROJECT_KEY = 'vroum_vroum'
-        DEPLOY_PATH = '~/deploy_dir/'
+        DEPLOY_PATH = "deploy_dir/"
     }
 
     stages {
