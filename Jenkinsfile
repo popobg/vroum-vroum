@@ -9,30 +9,18 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'SonarQube 1'
         SONAR_PROJECT_KEY = 'vroum_vroum'
-        SRV_DEPLOY = ''
+        DEPLOY_PATH = "deploy_dir/"
     }
 
     stages {
-        stage('Clonage du dépôt') {
-            steps {
-                git 'https://github.com/popobg/vroum-vroum.git'
-            }
-        }
-
-        stage('Lister les fichiers') {
-            steps {
-                sh 'ls -la && cat README'
-            }
-        }
-
         stage('Tests unitaires') {
             steps {
                 echo "======================> mvn test"
-                sh 'mvn test back/vroum_vroum'
+                sh 'mvn -B -f back/vroum_vroum/pom.xml -Dmaven.repo.local=.m2 test'
             }
             post {
                 always {
-                    junit 'back/vroum_vroum/target/test-classes/demo/vroum_vroum/*'
+                    junit 'back/vroum_vroum/target/surefire-reports/*.xml'
                 }
             }
         }
@@ -40,30 +28,36 @@ pipeline {
         stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv("${env.SONARQUBE_ENV}") {
-                    sh "mvn sonar:sonar -Dsonar.projectKey=${env.SONAR_PROJECT_KEY}"
+                    sh "mvn -f back/vroum_vroum/pom.xml sonar:sonar -Dmaven.repo.local=.m2 -Duser.home=~ -Dsonar.projectKey=${env.SONAR_PROJECT_KEY}"
                 }
             }
         }
 
-        stage('Validation manuelle pour déploiement') {
+        stage('Packaging') {
             steps {
-                input message: 'Souhaitez-vous déployer en staging ?'
+                sh "mvn -f back/vroum_vroum/pom.xml -Dmaven.repo.local=.m2 package"
             }
         }
 
+        // stage('Validation manuelle pour déploiement') {
+        //     steps {
+        //         input message: 'Souhaitez-vous déployer en staging ?'
+        //     }
+        // }
+
         stage('deploiement') {
             steps {
-                sh '''
-                echo "Déploiement réussi vers $env.SRV_DEPLOY"
-                scp target/*.jar user@${env.SRV_DEPLOY}:/opt/tomcat/webapps/
-                '''
+                sh "rm -rf ${env.DEPLOY_PATH}"
+                sh "mkdir ${env.DEPLOY_PATH}"
+                sh "cp back/vroum_vroum/target/*.jar ${env.DEPLOY_PATH}"
+                sh "echo Déploiement réussi vers ${env.DEPLOY_PATH}"
             }
         }
     }
 
     post {
         success {
-            echo "La pipeline terminée avec succès"
+            echo "Pipeline terminée avec succès"
         }
         failure {
             echo "La pipeline a échoué"
