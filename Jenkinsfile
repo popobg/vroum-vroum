@@ -46,6 +46,7 @@ pipeline {
                 // scp back/vroum_vroum/target/*.jar user@${env.SRV_DEPLOY}:/opt/tomcat/webapps/
                 // '''
                 sh "echo Déploiement réussi vers ${env.SRV_DEPLOY}"
+                sh "scp back/vroum_vroum/target/*.jar user@${env.SRV_DEPLOY}:/opt/tomcat/webapps/"
             }
         }
     }
