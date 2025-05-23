@@ -13,25 +13,16 @@ pipeline {
     }
 
     stages {
-        stage('Clonage du dépôt') {
-            steps {
-                git 'https://github.com/popobg/vroum-vroum.git'
-            }
-        }
-
-        stage('Lister les fichiers') {
-            steps {
-                sh 'ls -la && cat README'
-            }
-        }
-
         stage('Tests unitaires') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/test-classes/demo/vroum_vroum/*'
+            dir(back/vroum_vroum) {
+                steps {
+                    echo "======================> mvn test"
+                    sh 'mvn -B -Dmaven.repo.local=.m2 test'
+                }
+                post {
+                    always {
+                        junit 'target/surefire-reports/*.xml'
+                    }
                 }
             }
         }
