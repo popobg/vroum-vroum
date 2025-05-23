@@ -27,12 +27,12 @@ pipeline {
 
         stage('Tests unitaires') {
             steps {
-                echo "mvn test"
-                sh 'mvn test'
+                echo "======================> mvn test"
+                sh 'mvn test back/vroum_vroum'
             }
             post {
                 always {
-                    junit 'target/test-classes/demo/vroum_vroum/*'
+                    junit 'back/vroum_vroum/target/test-classes/demo/vroum_vroum/*'
                 }
             }
         }
