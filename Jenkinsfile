@@ -27,6 +27,7 @@ pipeline {
 
         stage('Tests unitaires') {
             steps {
+                echo "mvn test"
                 sh 'mvn test'
             }
             post {
