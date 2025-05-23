@@ -33,6 +33,12 @@ pipeline {
             }
         }
 
+        stage('Packaging') {
+            steps {
+                sh "mvn -f back/vroum_vroum/pom.xml package"
+            }
+        }
+
         // stage('Validation manuelle pour déploiement') {
         //     steps {
         //         input message: 'Souhaitez-vous déployer en staging ?'
