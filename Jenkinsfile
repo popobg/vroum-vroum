@@ -9,7 +9,7 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'SonarQube 1'
         SONAR_PROJECT_KEY = 'vroum_vroum'
-        SRV_DEPLOY = '172.29.86.140'
+        SRV_DEPLOY = '172.20.249.201'
     }
 
     stages {
