@@ -14,15 +14,13 @@ pipeline {
 
     stages {
         stage('Tests unitaires') {
-            dir(back/vroum_vroum) {
-                steps {
-                    echo "======================> mvn test"
-                    sh 'mvn -B -Dmaven.repo.local=.m2 test'
-                }
-                post {
-                    always {
-                        junit 'target/surefire-reports/*.xml'
-                    }
+            steps {
+                echo "======================> mvn test"
+                sh 'mvn -B -f back/vroum_vroum/pom.xml -Dmaven.repo.local=.m2 test'
+            }
+            post {
+                always {
+                    junit 'back/vroum_vroum/target/surefire-reports/*.xml'
                 }
             }
         }
@@ -30,7 +28,7 @@ pipeline {
         stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv("${env.SONARQUBE_ENV}") {
-                    sh "mvn sonar:sonar -Dsonar.projectKey=${env.SONAR_PROJECT_KEY}"
+                    sh "mvn -f back/vroum_vroum/pom.xml sonar:sonar -Dsonar.projectKey=${env.SONAR_PROJECT_KEY}"
                 }
             }
         }
@@ -45,7 +43,7 @@ pipeline {
             steps {
                 sh '''
                 echo "Déploiement réussi vers $env.SRV_DEPLOY"
-                scp target/*.jar user@${env.SRV_DEPLOY}:/opt/tomcat/webapps/
+                scp back/vroum_vroum/target/*.jar user@${env.SRV_DEPLOY}:/opt/tomcat/webapps/
                 '''
             }
         }
@@ -53,7 +51,7 @@ pipeline {
 
     post {
         success {
-            echo "La pipeline terminée avec succès"
+            echo "Pipeline terminée avec succès"
         }
         failure {
             echo "La pipeline a échoué"
