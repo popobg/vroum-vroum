@@ -47,10 +47,6 @@ pipeline {
 
         stage('deploiement') {
             steps {
-                // sh '''
-                // echo "Déploiement réussi vers $env.SRV_DEPLOY"
-                // scp back/vroum_vroum/target/*.jar user@${env.SRV_DEPLOY}:/opt/tomcat/webapps/
-                // '''
                 sh "rm -rf ${env.DEPLOY_PATH}"
                 sh "mkdir ${env.DEPLOY_PATH}"
                 sh "cp back/vroum_vroum/target/*.jar ${env.DEPLOY_PATH}"
