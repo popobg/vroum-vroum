@@ -9,7 +9,7 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'SonarQube 1'
         SONAR_PROJECT_KEY = 'vroum_vroum'
-        SRV_DEPLOY = '172.20.249.201'
+        //SRV_DEPLOY = '172.20.249.201'
     }
 
     stages {
@@ -32,7 +32,7 @@ pipeline {
                 }
             }
         }
-
+        /*
         stage('Validation manuelle pour déploiement') {
             steps {
                 input message: 'Souhaitez-vous déployer en staging ?'
@@ -42,11 +42,11 @@ pipeline {
         stage('deploiement') {
             steps {
                 sh '''
-                echo "Déploiement réussi vers {$env.SRV_DEPLOY}"
+                echo "Déploiement réussi vers $env.SRV_DEPLOY"
                 scp back/vroum_vroum/target/*.jar user@${env.SRV_DEPLOY}:/opt/tomcat/webapps/
                 '''
             }
-        }
+        }*/
     }
 
     post {
