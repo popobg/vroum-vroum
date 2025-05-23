@@ -35,7 +35,7 @@ pipeline {
 
         stage('Packaging') {
             steps {
-                sh "mvn -f back/vroum_vroum/pom.xml package"
+                sh "mvn -f back/vroum_vroum/pom.xml -Dmaven.repo.local=.m2 package"
             }
         }
 
