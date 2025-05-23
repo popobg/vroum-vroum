@@ -9,7 +9,7 @@ pipeline {
     environment {
         SONARQUBE_ENV = 'SonarQube 1'
         SONAR_PROJECT_KEY = 'vroum_vroum'
-        SRV_DEPLOY = '172.29.86.140'
+        DEPLOY_PATH = '~/deploy_dir/'
     }
 
     stages {
@@ -45,8 +45,10 @@ pipeline {
                 // echo "Déploiement réussi vers $env.SRV_DEPLOY"
                 // scp back/vroum_vroum/target/*.jar user@${env.SRV_DEPLOY}:/opt/tomcat/webapps/
                 // '''
-                sh "echo Déploiement réussi vers ${env.SRV_DEPLOY}"
-                sh "scp back/vroum_vroum/target/*.jar user@${env.SRV_DEPLOY}:/opt/tomcat/webapps/"
+                sh "rm -rf ${env.DEPLOY_PATH}"
+                sh "mkdir ${env.DEPLOY_PATH}"
+                sh "cp back/vroum_vroum/target/*.jar ${env.DEPLOY_PATH}"
+                sh "echo Déploiement réussi vers ${env.DEPLOY_PATH}"
             }
         }
     }
