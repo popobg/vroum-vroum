@@ -22,7 +22,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         // Routes collaborateur, réservation, etc. : accès aux utilisateurs authentifiés
-                        .requestMatchers("/collaborateur/**").authenticated()
+//                        .requestMatchers("/collaborateur/**").authenticated()
+                        .requestMatchers("/collaborateur/login").permitAll()
+                        .requestMatchers("/collaborateur/me").authenticated()
                         .requestMatchers("/reservation/**").authenticated()
                         .requestMatchers("/covoiturage/**").authenticated()
                         .requestMatchers("/vehicule/**").authenticated()
@@ -32,9 +34,10 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-                .formLogin(form -> form
-                        .defaultSuccessUrl("/collaborateur/me", true)  // Redirection après login
-                )
+//                .formLogin(form -> form
+//                        .defaultSuccessUrl("/collaborateur/me", true)  // Redirection après login
+//                )
+                .formLogin(form -> form.disable())
                 .logout(logout -> logout
                         .logoutSuccessUrl("/")  // URL après déconnexion
                         .permitAll()
