@@ -48,8 +48,9 @@ public class CollaborateurService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Collaborateur collaborateur = collaborateurRepository.findByPseudo(username);
+
         if (collaborateur == null) {
-            throw new RuntimeException("Collaborateur not found");
+            throw new UsernameNotFoundException("Collaborateur inconnu");
         }
 
         // Déterminer le rôle en fonction du champ "admin"
