@@ -1,0 +1,17 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label>Pseudo:</label>
+    <input formControlName="pseudo" />
+  </div>
+
+  <div>
+    <label>Mot de passe:</label>
+    <input type="password" formControlName="password" />
+  </div>
+
+  <div *ngIf="errorMessage" style="color:red">{{ errorMessage }}</div>
+
+  <button type="submit" [disabled]="loading">
+    {{ loading ? 'Connexion...' : 'Se connecter' }}
+  </button>
+</form>
