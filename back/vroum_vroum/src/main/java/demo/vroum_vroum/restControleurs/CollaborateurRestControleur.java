@@ -17,6 +17,9 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/collaborateur")
@@ -66,14 +69,5 @@ public class CollaborateurRestControleur {
     public ResponseEntity<Void> deleteCollaborateur(@PathVariable int id) {
         collaborateurService.deleteCollaborateur(id);
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String pseudo, @RequestParam String password) {
-        Optional<Collaborateur> collaborateur = collaborateurService.login(pseudo, password);
-        if (collaborateur.isPresent()) {
-            return ResponseEntity.ok("Connexion réussie");
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Identifiants incorrects");
     }
 }

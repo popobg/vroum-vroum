@@ -8,20 +8,27 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import demo.vroum_vroum.services.authenticationHandler.AuthenticationHandler;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
+    private final AuthenticationHandler authenticationHandler;
+
+    public SecurityConfig(AuthenticationHandler authenticationHandler) {
+        this.authenticationHandler = authenticationHandler;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // Routes collaborateur, réservation, etc. : accès aux utilisateurs authentifiés
+                        // Routes des controllers de l'application : accès aux utilisateurs authentifiés
                         .requestMatchers("/collaborateur/**").authenticated()
                         .requestMatchers("/reservation/**").authenticated()
                         .requestMatchers("/covoiturage/**").authenticated()
@@ -33,10 +40,11 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
                 .formLogin(form -> form
-                        .defaultSuccessUrl("/collaborateur/me", true)  // Redirection après login
+                        .defaultSuccessUrl("/collaborateur/me", true)                                   // Redirection après login
+                        .failureHandler(authenticationHandler.authenticationFailureHandler())           // Handler en cas d'erreur lors de l'authentification
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/")  // URL après déconnexion
+                        .logoutSuccessUrl("/")                                                          // URL après déconnexion
                         .permitAll()
                 );
 
