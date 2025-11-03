@@ -1,9 +1,11 @@
 package demo.vroum_vroum.dto;
 
+import java.io.Serializable;
+
 /**
  * Collaborateur DTO avec des informations allégées (lite)
  */
-public class CollaborateurLiteDto {
+public class CollaborateurLiteDto implements Serializable {
     /** Nom du collaborateur */
     private String nom;
 
