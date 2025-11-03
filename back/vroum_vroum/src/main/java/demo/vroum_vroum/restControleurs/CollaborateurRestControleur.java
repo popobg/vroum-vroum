@@ -3,7 +3,9 @@
 // ==============================
 package demo.vroum_vroum.restControleurs;
 
+import demo.vroum_vroum.dto.CollaborateurLiteDto;
 import demo.vroum_vroum.entities.Collaborateur;
+import demo.vroum_vroum.mappers.CollaborateurMapper;
 import demo.vroum_vroum.services.CollaborateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,13 +26,14 @@ public class CollaborateurRestControleur {
     private CollaborateurService collaborateurService;
 
     @GetMapping("/me")
-    public ResponseEntity<Collaborateur> getCurrentUser() {
+    public ResponseEntity<CollaborateurLiteDto> getCurrentUserLite() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
         Collaborateur currentUser = collaborateurService.findByPseudo(username);
         if (currentUser != null) {
-            return ResponseEntity.ok(currentUser);
+            CollaborateurLiteDto dto = CollaborateurMapper.toLiteDto(currentUser);
+            return ResponseEntity.ok(dto);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
