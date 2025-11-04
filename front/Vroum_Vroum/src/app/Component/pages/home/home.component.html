@@ -1,9 +1,11 @@
 <section>
   <h2>Bienvenue sur la page d'accueil !</h2>
 
-  <div *ngIf="collaborateur">
-    <p>Nom : {{ collaborateur.nom }}</p>
-    <p>Prénom : {{ collaborateur.prenom }}</p>
-    <p>Téléphone : {{ collaborateur.telephone }}</p>
-  </div>
+  @if (collaborateur) {
+    <div>
+      <p>Nom : {{ collaborateur.nom }}</p>
+      <p>Prénom : {{ collaborateur.prenom }}</p>
+      <p>Téléphone : {{ collaborateur.telephone }}</p>
+    </div>
+  }
 </section>
