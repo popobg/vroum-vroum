@@ -32,8 +32,8 @@ public class CovoiturageRestControleur {
     }
 
     @GetMapping("/tous")
-    public ResponseEntity<List<CovoiturageDto>> getTousLesCovoiturages() {
-        List<CovoiturageDto> covoitDtos = CovoiturageMapper.toDtos(covoiturageService.findAll());
+    public ResponseEntity<Set<CovoiturageDto>> getTousLesCovoiturages() {
+        Set<CovoiturageDto> covoitDtos = CovoiturageMapper.toDtos(covoiturageService.findAll());
         return ResponseEntity.ok(covoitDtos);
     }
 
