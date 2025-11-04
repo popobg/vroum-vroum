@@ -71,4 +71,13 @@ public class CollaborateurRestControleur {
         collaborateurService.deleteCollaborateur(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestParam String pseudo, @RequestParam String password) {
+        Optional<Collaborateur> collaborateur = collaborateurService.login(pseudo, password);
+        if (collaborateur.isPresent()) {
+            return ResponseEntity.ok("Connexion réussie");
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Identifiants incorrects");
+    }
 }

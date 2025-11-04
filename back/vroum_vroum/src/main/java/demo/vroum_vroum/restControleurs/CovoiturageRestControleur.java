@@ -17,6 +17,7 @@ import java.util.List;
 /**
  * REST controller des routes en lien avec le covoiturage
  */
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/covoiturage")
 public class CovoiturageRestControleur {
@@ -35,6 +36,12 @@ public class CovoiturageRestControleur {
     public CovoiturageRestControleur(CovoiturageService covoiturageService, CollaborateurService collaborateurService) {
         this.covoiturageService = covoiturageService;
         this.collaborateurService = collaborateurService;
+    }
+
+    @GetMapping("/tous")
+    public ResponseEntity<List<CovoiturageDto>> getTousLesCovoiturages() {
+        List<CovoiturageDto> covoitDtos = CovoiturageMapper.toDtos(covoiturageService.findAll());
+        return ResponseEntity.ok(covoitDtos);
     }
 
     /**

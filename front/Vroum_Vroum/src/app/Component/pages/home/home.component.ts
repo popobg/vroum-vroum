@@ -26,7 +26,5 @@ export class HomeComponent implements OnInit {
       next: (user) => this.collaborateur = user,
       error: (err) => console.error('Non authentifié', err)
     });
-
   }
-
 }

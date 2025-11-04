@@ -34,6 +34,10 @@ public class CovoiturageService {
         this.collaborateurRepository = collaborateurRepository;
     }
 
+    public List<Covoiturage> findAll() {
+        return covoiturageRepository.findAll();
+    }
+
     /**
      * Méthode permettant de récupérer la liste des covoiturages pour lesquels il reste des places disponibles
      * à partir de la ville et cp de départ, de la ville et cp d'arrivée et de la date du départ.
