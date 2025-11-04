@@ -4,11 +4,11 @@ import demo.vroum_vroum.dto.ReservationDto;
 import demo.vroum_vroum.entities.Collaborateur;
 import demo.vroum_vroum.entities.Reservation;
 import demo.vroum_vroum.exceptions.Controle;
-import demo.vroum_vroum.exceptions.UserNotFoundException;
 import demo.vroum_vroum.mappers.ReservationMapper;
 import demo.vroum_vroum.services.CollaborateurService;
 import demo.vroum_vroum.services.ReservationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  REST controller des routes en lien avec la reservation de véhicule de service
+ *  REST controller des routes en lien avec la réservation de véhicule de service
  */
 @RestController
 @RequestMapping("/reservation")
@@ -30,78 +30,88 @@ public class ReservationRestControleur {
 
     /**
      * Constructeur ReservationRestControlleur
-     * @param reservationService service pour la reservation
+     *
+     * @param reservationService service pour la réservation
      * @param collaborateurService service pour les collaborateurs
      */
-    @Autowired
     public ReservationRestControleur(ReservationService reservationService, CollaborateurService collaborateurService) {
         this.reservationService = reservationService;
         this.collaborateurService = collaborateurService;
     }
 
+    /**
+     * Récupère toutes les réservations de véhicules de service.
+     *
+     * @return liste de réservations
+     */
     @GetMapping
-    public List<Reservation> getAllReservations() {
-       Iterable<Reservation> reservations = reservationService.findAll();
-       List<Reservation> reservationList = new ArrayList<>();
-       for (Reservation reservation : reservations) {
-           reservationList.add(reservation);
-       }
-       return reservationList;
+    public ResponseEntity<List<ReservationDto>> getAllReservations() {
+      return ResponseEntity.ok(ReservationMapper.toDtos(reservationService.findAll()));
     }
 
+    /**
+     * Récupère une réservation de véhicule de service à partir de son Id.
+     *
+     * @param id id de la réservation
+     * @return une réservation
+     * @throws EntityNotFoundException statut 404 : réservation non trouvée
+     */
     @GetMapping("{id}")
-    public Reservation getReservationById(@PathVariable int id) throws Controle {
-        return reservationService.findById(id);
+    public ResponseEntity<Reservation> getReservationById(@PathVariable int id) throws EntityNotFoundException {
+        return ResponseEntity.ok(reservationService.findById(id));
     }
 
     /**
-     * Méthode retournant les reservations de l'utilisateur connecté.
+     * Récupère les reservations d'un utilisateur.
+     *
      * @return une liste de réservation dto
-     * @throws UserNotFoundException UserNotFoundException
+     * @throws EntityNotFoundException 404 : collaborateur non trouvé
      */
-    @GetMapping("/reservationsVehicule")
-    public ResponseEntity<List<ReservationDto>> getReservationVehicule()  throws UserNotFoundException {
-        Collaborateur cureentUser = collaborateurService.getCurrentUser();
-
-        if (cureentUser == null) {
-            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel afficher les réservations de véhicule de service.");
-        }
-
-        return  ResponseEntity.ok(ReservationMapper.toDtos(reservationService.getMesReservationVehicule(cureentUser)));
+    @GetMapping("/vehicule")
+    public ResponseEntity<List<ReservationDto>> getReservationsVehicule(int idCollaborateur) throws EntityNotFoundException {
+        return  ResponseEntity.ok(ReservationMapper.toDtos(reservationService.getMesReservationsVehicule(idCollaborateur)));
     }
 
     /**
-     * Méthode permettant d'annuler une réservation de véhicule faite par un collaborateur
-     * @param id Id de la reservation
-     */
-    @PutMapping("/reservationsVehicule/annuler/{id}")
-    public ResponseEntity<String> annulerReservation(@PathVariable int id) throws Exception {
-        Collaborateur currentUser = collaborateurService.getCurrentUser();
-
-        if (currentUser == null) {
-            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel annuler une réservation de véhicule.");
-        }else {
-            reservationService.annulerReservationVehicule(id, currentUser);
-        }
-
-        return ResponseEntity.ok("Reservation annulé avec succès");
-    }
-
-    /**
-     * Méthode permettant de créer une reservation de véhicule
+     * Crée une reservation de véhicule.
+     *
      * @param reservation reservation à créer
-     * @return message de validation
-     * @throws Controle
+     * @return statut 204 si l'opération s'est déroulée avec succès, sinon erreur 500
      */
-    @PostMapping("/reservationVehicule")
-    public ResponseEntity<String> postReservation(@RequestBody Reservation reservation) throws Controle {
+    @PostMapping("/vehicule")
+    public ResponseEntity<Void> postReservation(@RequestBody Reservation reservation) {
         reservationService.create(reservation);
-        return ResponseEntity.ok("Reservation crée avec succès");
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
-    public ResponseEntity<String> putReservation(@RequestBody Reservation reservation) throws Controle {
+    /**
+     * Met-à-jour les informations d'une réservation de véhicule.
+     *
+     * @param reservation réservation avec informations modifiées
+     * @return statut 204 si l'opération s'est déroulée avec succès, sinon erreur 500
+     * @throws EntityNotFoundException 404 : réservation non trouvée
+     */
+    @PutMapping("/vehicule")
+    public ResponseEntity<Void> putReservation(@RequestBody Reservation reservation) throws EntityNotFoundException {
         reservationService.update(reservation);
-        return ResponseEntity.ok("Le département " + reservation.getId() + " à etait modifiée");
+        return ResponseEntity.noContent().build();
+    }
+
+
+    /**
+     * Annule une réservation de véhicule de service faite par un collaborateur.
+     *
+     * @param idReservation Id de la réservation
+     * @param idCollaborateur Id du collaborateur
+     * @return statut HTTP 204 si l'annulation a eu lieu avec succès, sinon 404 ou 500
+     * @throws EntityNotFoundException Collaborateur ou réservation non trouvé.s
+     * @throws IllegalArgumentException conditions d'annulation non respectées
+     * @throws Exception opération échouée
+     */
+    @PutMapping("/vehicule/annuler/{id}")
+    public ResponseEntity<Void> cancelReservation(@PathVariable int idReservation, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
+        reservationService.annulerReservationVehicule(idReservation, idCollaborateur);
+
+        return ResponseEntity.noContent().build();
     }
 }
