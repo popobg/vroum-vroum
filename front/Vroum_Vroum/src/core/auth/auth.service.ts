@@ -1,20 +1,53 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8080/collaborateur';
+  private baseUrl = 'http://localhost:8080';
 
-  constructor(private http: HttpClient) {}
+  // Statut d'authentification de l'utilisateur
+  // true = connecté, false = non connecté
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  login(pseudo: string, password: string): Observable<string> {
-    const params = new HttpParams()
-      .set('pseudo', pseudo)
-      .set('password', password);
+  constructor(private http: HttpClient) { }
 
-    return this.http.post(this.baseUrl + '/login', null, { params, responseType: 'text' });
+  login(pseudo: string, password: string): Observable<any> {
+    const body = new URLSearchParams();
+    body.set('pseudo', pseudo)
+    body.set('password', password);
+
+    return this.http.post(`${this.baseUrl}/api/auth/login`, body.toString(), {
+      headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+      withCredentials: true
+    }
+    ).pipe(
+      tap({
+        next: () => {
+          console.log("Authentification réussie !");
+          this.isAuthenticatedSubject.next(true);   // Passe à true si la réponse est OK (200, 204, etc)
+        },
+        error: () => {
+          console.error("Echec d'authentification.");
+          this.isAuthenticatedSubject.next(false);
+        }
+      })
+    );
+  }
+
+  logout(): Observable<any> {
+    return this.http.post(`${this.baseUrl}/api/auth/logout`, {}, { withCredentials: true })
+    .pipe(
+      tap({
+        next: () => {
+          console.log("Déconnexion réussie !");
+          this.isAuthenticatedSubject.next(false);   // Passe à true si la réponse est OK (200, 204, etc)
+        },
+        error: err => console.error("Déconnexion échouée : ", err)
+      })
+    );
   }
 }
