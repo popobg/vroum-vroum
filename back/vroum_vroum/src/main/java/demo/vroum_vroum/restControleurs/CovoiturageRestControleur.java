@@ -93,7 +93,7 @@ public class CovoiturageRestControleur {
      * @throws IllegalArgumentException 400 : conditions d'annulation non respectées
      * @throws Exception 500 : erreur lors de l'opération
      */
-    @PutMapping("/reservations/{id}")
+    @PutMapping("/reservations/annuler/{id}")
     public ResponseEntity<Void> annulerReservation(@PathVariable int idReservation, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
         covoiturageService.annulerReservationCovoit(idReservation, idCollaborateur);
 
@@ -111,7 +111,7 @@ public class CovoiturageRestControleur {
      * @throws IllegalArgumentException 400 : conditions de réservation non satisfaites
      * @throws Exception 500 : erreur lors de l'opération
      */
-    @PutMapping("/reservations/{id}")
+    @PutMapping("/reservations/reserver/{id}")
     public ResponseEntity<Void> reserverCovoit(@PathVariable int idReservation, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
         covoiturageService.reserverCovoit(idReservation, idCollaborateur);
 
