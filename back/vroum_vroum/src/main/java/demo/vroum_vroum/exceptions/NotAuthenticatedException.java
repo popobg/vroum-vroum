@@ -3,9 +3,9 @@ package demo.vroum_vroum.exceptions;
 /**
  * Classe d'exception personnalisée si l'application ne trouve pas l'utilisateur connecté
  */
-public class UserNotFoundException extends RuntimeException {
+public class NotAuthenticatedException extends RuntimeException {
     /** Constructeur sans argument */
-    public UserNotFoundException() {
+    public NotAuthenticatedException() {
         super("Utilisateur non connecté");
     }
 
@@ -13,7 +13,7 @@ public class UserNotFoundException extends RuntimeException {
      * Constructeur
      * @param message message d'erreur personnalisé
      */
-    public UserNotFoundException(String message) {
+    public NotAuthenticatedException(String message) {
         super(message);
     }
 }
