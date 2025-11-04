@@ -9,48 +9,44 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import demo.vroum_vroum.services.authenticationHandler.AuthenticationHandler;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.List;
-
+/**
+ * Classe de configuration Spring Security
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final AuthenticationHandler authenticationHandler;
-
-    public SecurityConfig(AuthenticationHandler authenticationHandler) {
-        this.authenticationHandler = authenticationHandler;
-    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth
-                        // Routes collaborateur, réservation, etc. : accès aux utilisateurs authentifiés
-                        .requestMatchers("/collaborateur/login").permitAll()
-                        .requestMatchers("/collaborateur/me").authenticated()
-                        .requestMatchers("/reservation/**").authenticated()
-                        .requestMatchers("/covoiturage/**").authenticated()
-                        .requestMatchers("/vehicule/**").authenticated()
-                        .requestMatchers("/vehiculeService/**").authenticated()
-                        .anyRequest().permitAll()
-                )
-                .httpBasic(Customizer.withDefaults())
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())
-                .formLogin(form -> form.disable())
-                .logout(logout -> logout
-                        .logoutSuccessUrl("/")  // URL après déconnexion
-                        .permitAll()
-                );
+            .csrf(Customizer.withDefaults()) // ✅ enable CSRF protection (important with cookies)
+            .cors(Customizer.withDefaults())
+            .authorizeHttpRequests(auth -> auth
+                // Routes collaborateur, réservation, etc. : accès aux utilisateurs authentifiés
+                .requestMatchers("/api/auth/**", "/login", "/logout").permitAll()
+                .anyRequest().authenticated()
+            )
+            .httpBasic(Customizer.withDefaults())
+            .formLogin(form -> form
+                .loginProcessingUrl("/api/auth/login")
+                .usernameParameter("pseudo")
+                .passwordParameter("password")
+                .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_OK))
+                .failureHandler(AuthenticationHandler.authenticationFailureHandler()))
+            .logout(logout -> logout
+                .logoutUrl("/api/auth/logout")
+                .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_OK))
+                .logoutSuccessUrl("/")  // URL après déconnexion
+                .deleteCookies("JSESSIONID")
+                .permitAll()
+            );
 
         return http.build();
     }
@@ -62,22 +58,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance(); // Ou BCryptPasswordEncoder()
-    }
-
-    // Configuration CORS
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));     // adresse du front
-        config.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.OPTIONS.name()));
-        config.setAllowedHeaders(List.of("*"));
-        config.setExposedHeaders(List.of("Authorization", "XSRF-TOKEN"));
-        config.setAllowCredentials(true); // pour accepter de recevoir des cookies
-        config.setExposedHeaders(List.of("Authorization"));
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
+        return new BCryptPasswordEncoder();
     }
 }
