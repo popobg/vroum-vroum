@@ -7,7 +7,8 @@ import { CovoitService, Covoiturage } from '../../../../core/covoit/covoit.servi
   selector: 'app-recherche-covoit',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './recherche.covoit.component.html'
+  templateUrl: './recherche.covoit.component.html',
+  styleUrls: ['./recherche.covoit.component.css']
 })
 export class RechercheCovoitComponent {
   covoiturages: Covoiturage[] = [];

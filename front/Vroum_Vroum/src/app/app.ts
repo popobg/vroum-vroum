@@ -11,11 +11,12 @@ import { CommonModule } from '@angular/common'; // <-- ajouté
   styleUrls: ['./app.css']
 })
 export class App {
-  protected readonly title = signal('Vroum_Vroum');
+  protected readonly title = signal('');
 
   constructor(private router: Router) {}
 
   showNavbar(): boolean {
-    return this.router.url !== '/login';
+    const hiddenRoutes = ['/login', '/old-login'];
+    return !hiddenRoutes.includes(this.router.url);
   }
 }

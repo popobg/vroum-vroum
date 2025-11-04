@@ -1,9 +1,25 @@
-<section>
-  <h2>Bienvenue sur la page d'accueil !</h2>
+<div class="page-wrapper">
+  <div class="animated-bg"></div>
 
-  <div *ngIf="collaborateur">
-    <p>Nom : {{ collaborateur.nom }}</p>
-    <p>Prénom : {{ collaborateur.prenom }}</p>
-    <p>Téléphone : {{ collaborateur.telephone }}</p>
+  <div class="content-card" *ngIf="collaborateur; else loading">
+    <h1>Bonjour, {{ collaborateur.prenom }} 👋</h1>
+    <p class="subtitle">Ravi de vous revoir sur <span>Vroum Vroum</span></p>
+
+    <div class="info-box">
+      <h3>Profil collaborateur</h3>
+      <p><strong>Nom :</strong> {{ collaborateur.nom }}</p>
+      <p><strong>Prénom :</strong> {{ collaborateur.prenom }}</p>
+      <p><strong>Téléphone :</strong> {{ collaborateur.telephone }}</p>
+    </div>
+
+    <a routerLink="/covoit" class="cta">Voir les covoiturages</a>
+    <a routerLink="/login" class="logout">Se déconnecter</a>
   </div>
-</section>
+
+  <ng-template #loading>
+    <div class="loading">
+      <div class="loader"></div>
+      <p>Chargement...</p>
+    </div>
+  </ng-template>
+</div>

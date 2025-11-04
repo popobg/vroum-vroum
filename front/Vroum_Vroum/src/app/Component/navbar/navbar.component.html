@@ -1,14 +1,15 @@
-<nav style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #ccc;">
-  <div style="display: flex; align-items: center; gap: 1rem;">
-    <div class="dropdown">
-      <button class="dropbtn">Menu covoit ⬇</button>
-      <div class="dropdown-content">
-        <a routerLink="/rechercher-covoit">Rechercher un covoit</a>
-        <a routerLink="/mes-reservations">Mes covoits réservés</a>
-        <a routerLink="/mes-organisations">Mes covoits organisés</a>
-      </div>
-    </div>
+<nav class="navbar">
+  <div class="left">
+    <a routerLink="/home" class="home-btn">🏠 Accueil</a>
   </div>
 
-  <a routerLink="/login" style="margin-left: auto;">Déconnexion</a>
+  <div class="center">
+    <a routerLink="/rechercher-covoit">Rechercher un covoit</a>
+    <a routerLink="/mes-reservations">Mes covoits réservés</a>
+    <a routerLink="/mes-organisations">Mes covoits organisés</a>
+  </div>
+
+  <div class="right">
+    <a routerLink="/login" class="logout">Déconnexion</a>
+  </div>
 </nav>

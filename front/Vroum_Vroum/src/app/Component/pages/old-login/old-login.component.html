@@ -1,0 +1,22 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+  <h1>Vroum_Vroum</h1>
+  <div>
+    <label>Pseudo:</label>
+    <input formControlName="pseudo" />
+  </div>
+
+  <div>
+    <label>Mot de passe:</label>
+    <input type="password" formControlName="password" />
+  </div>
+
+  <div *ngIf="errorMessage" style="color:red">{{ errorMessage }}</div>
+
+  <button routerLink="/login" style="margin-top: 1rem;">
+    Ce n’est pas la vraie page de login 🤡
+  </button>
+
+  <button type="submit" [disabled]="loading">
+    {{ loading ? 'Connexion...' : 'Se connecter' }}
+  </button>
+</form>

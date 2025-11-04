@@ -1,0 +1,146 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: #0a192f;
+  overflow: hidden;
+}
+
+.login-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Fond animé */
+.animated-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 20%, #43cea2, #185a9d);
+  overflow: hidden;
+  z-index: 0;
+}
+
+.animated-bg::before, .animated-bg::after {
+  content: '';
+  position: absolute;
+  width: 150%;
+  height: 150%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+  animation: moveBg 20s linear infinite;
+}
+
+.animated-bg::after {
+  animation-delay: -10s;
+}
+
+@keyframes moveBg {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-10%, -10%) rotate(180deg); }
+  100% { transform: translate(0, 0) rotate(360deg); }
+}
+
+/* Carte login */
+.login-card {
+  position: relative;
+  z-index: 1;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  padding: 2.5rem 3rem;
+  width: 360px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  animation: fadeIn 1s ease;
+}
+
+h1 {
+  margin-bottom: 0.5rem;
+  color: #43cea2;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  margin-bottom: 2rem;
+  color: #cce3de;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-group {
+  text-align: left;
+}
+
+label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus {
+  background: rgba(255,255,255,0.3);
+  box-shadow: 0 0 10px #43cea2;
+}
+
+button {
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #43cea2, #185a9d);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(67,206,162,0.4);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+}
+
+.footer {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.footer a {
+  color: #43cea2;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

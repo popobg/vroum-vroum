@@ -1,48 +1,38 @@
-<h2>Rechercher un covoiturage</h2>
+<div class="page-wrapper">
+  <div class="animated-bg"></div>
 
-<form (ngSubmit)="rechercher()" style="margin-bottom: 20px;">
-  <div>
-    <label>Ville de départ :</label>
-    <input [(ngModel)]="filtres.villedep" name="villedep" placeholder="Ex : Paris" />
-    <label>Code postal départ :</label>
-    <input [(ngModel)]="filtres.cpdep" name="cpdep" placeholder="75000" />
+  <div class="content-card">
+    <h1>Rechercher un covoiturage 🚗</h1>
+    <p class="subtitle">Choisissez votre destination et partez ensemble</p>
+
+    <form (ngSubmit)="rechercher()" class="form">
+      <div class="row">
+        <input [(ngModel)]="filtres.villedep" name="villedep" placeholder="Ville de départ">
+        <input [(ngModel)]="filtres.cpdep" name="cpdep" placeholder="Code postal">
+      </div>
+      <div class="row">
+        <input [(ngModel)]="filtres.villearr" name="villearr" placeholder="Ville d’arrivée">
+        <input [(ngModel)]="filtres.cparr" name="cparr" placeholder="Code postal arrivée">
+      </div>
+      <div class="row">
+        <input type="datetime-local" [(ngModel)]="filtres.date" name="date">
+      </div>
+      <button type="submit">Rechercher</button>
+    </form>
+
+    <p *ngIf="erreurMessage" class="erreur">{{ erreurMessage }}</p>
+
+    <div *ngIf="covoiturages.length > 0" class="resultats">
+      <div class="covoit-card" *ngFor="let c of covoiturages">
+        <div class="trajet">
+          <span>{{ c.adresseDepart?.nomVille }}</span>
+          <span class="fleche">→</span>
+          <span>{{ c.adresseArrivee?.nomVille }}</span>
+        </div>
+        <p><strong>Date :</strong> {{ c.date | date:'short' }}</p>
+        <p><strong>Conducteur :</strong> {{ c.organisateur?.prenom }} {{ c.organisateur?.nom }}</p>
+        <p><strong>Véhicule :</strong> {{ c.vehicule?.marque }} {{ c.vehicule?.modele }}</p>
+      </div>
+    </div>
   </div>
-
-  <div>
-    <label>Ville d'arrivée :</label>
-    <input [(ngModel)]="filtres.villearr" name="villearr" placeholder="Ex : Lyon" />
-    <label>Code postal arrivée :</label>
-    <input [(ngModel)]="filtres.cparr" name="cparr" placeholder="69000" />
-  </div>
-
-  <div>
-    <label>Date de départ :</label>
-    <input type="datetime-local" [(ngModel)]="filtres.date" name="date" />
-  </div>
-
-  <button type="submit">Rechercher</button>
-</form>
-
-<p *ngIf="erreurMessage" style="color: red;">{{ erreurMessage }}</p>
-
-<table *ngIf="covoiturages.length > 0" border="1" cellpadding="5" cellspacing="0">
-  <thead>
-  <tr>
-    <th>Départ</th>
-    <th>Arrivée</th>
-    <th>Date</th>
-    <th>Conducteur</th>
-    <th>Véhicule</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let c of covoiturages">
-    <td>{{ c.adresseDepart?.nomVille }} ({{ c.adresseDepart?.codePostal }})</td>
-    <td>{{ c.adresseArrivee?.nomVille }} ({{ c.adresseArrivee?.codePostal }})</td>
-    <td>{{ c.date | date:'short' }}</td>
-    <td>{{ c.organisateur?.prenom }} {{ c.organisateur?.nom }}</td>
-    <td>{{ c.vehicule?.marque }} {{ c.vehicule?.modele }}</td>
-  </tr>
-  </tbody>
-</table>
-
+</div>
