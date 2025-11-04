@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../core/auth/auth.service';
-import { UserService} from '../../../core/auth/user.service';
+import { AuthService } from '../../../../core/auth/auth.service';
+import { UserService} from '../../../../core/auth/user.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({
