@@ -4,8 +4,8 @@ import demo.vroum_vroum.dto.CovoiturageDto;
 import demo.vroum_vroum.entities.Covoiturage;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Mapper objet Covoiturage - objet CovoiturageDto
@@ -26,8 +26,8 @@ public class CovoiturageMapper {
      * @param covoiturages liste de Covoiturage
      * @return une liste de CovoiturageDto
      */
-    public static List<CovoiturageDto> toDtos(List<Covoiturage> covoiturages) {
-        List<CovoiturageDto> dtos = new ArrayList<>();
+    public static Set<CovoiturageDto> toDtos(Set<Covoiturage> covoiturages) {
+        Set<CovoiturageDto> dtos = new HashSet<>();
 
         for (Covoiturage covoiturage : covoiturages) {
             dtos.add(toDto(covoiturage));

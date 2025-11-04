@@ -2,16 +2,14 @@ package demo.vroum_vroum.services;
 
 import demo.vroum_vroum.entities.Collaborateur;
 import demo.vroum_vroum.entities.Covoiturage;
-import demo.vroum_vroum.repositories.CollaborateurRepository;
 import demo.vroum_vroum.repositories.CovoiturageRepository;
 import demo.vroum_vroum.utils.Validator;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Service en lien avec le covoiturage
@@ -21,17 +19,15 @@ public class CovoiturageService {
     /** Covoiturage repository */
     private final CovoiturageRepository covoiturageRepository;
 
-    /** Collaborateur repository */
-    private final CollaborateurRepository collaborateurRepository;
+    private final CollaborateurService collaborateurService;
 
     /**
      * Constructeur CovoiturageService
      * @param covoiturageRepository repository de l'entité Covoiturage
      */
-    @Autowired
-    public CovoiturageService(CovoiturageRepository covoiturageRepository, CollaborateurRepository collaborateurRepository) {
+    public CovoiturageService(CovoiturageRepository covoiturageRepository, CollaborateurService collaborateurService) {
         this.covoiturageRepository = covoiturageRepository;
-        this.collaborateurRepository = collaborateurRepository;
+        this.collaborateurService = collaborateurService;
     }
 
     public List<Covoiturage> findAll() {
@@ -48,7 +44,7 @@ public class CovoiturageService {
      * @param dateDepart date-heure de départ
      * @return liste de covoiturages
      */
-    public List<Covoiturage> getCovoitDisponiblesByAdressesDate(String villeDepart, String codePostalDepart, String villeArrivee, String codePostalArrivee, LocalDateTime dateDepart) throws IllegalArgumentException {
+    public Set<Covoiturage> getCovoitDisponiblesByAdressesDate(String villeDepart, String codePostalDepart, String villeArrivee, String codePostalArrivee, LocalDateTime dateDepart) throws IllegalArgumentException {
         if (villeDepart.isEmpty()
                 || codePostalDepart.isEmpty()
                 || villeArrivee.isEmpty()
@@ -69,7 +65,7 @@ public class CovoiturageService {
     }
 
     /**
-     * Méthode de service récupérant un covoiturage à partir de son Id
+     * Méthode de service récupérant un covoiturage à partir de son Id.
      * @param id Id du covoiturage
      * @return un covoiturage ou null si pas de covoiturage trouvé à cet Id
      * @throws EntityNotFoundException aucune entité correspondante à cet Id
@@ -85,22 +81,26 @@ public class CovoiturageService {
     }
 
     /**
-     * Méthode de service récupérant les covoiturages d'un passager
+     * Méthode de service récupérant les covoiturages d'un passager.
      * @param collaborateur collaborateur passager
      * @return liste de covoiturages
      */
-    public List<Covoiturage> getMesReservationsCovoit(Collaborateur collaborateur) {
-        return covoiturageRepository.findByCollaborateursContaining(collaborateur);
+    public Set<Covoiturage> getMesReservationsCovoit(int idCollaborateur) throws EntityNotFoundException {
+        Collaborateur collaborateur = collaborateurService.getCollaborateurById(idCollaborateur);
+
+        return collaborateur.getCovoiturages();
     }
 
     /**
      * Méthode permettant de supprimer une réservation de covoiturage pour un passager
      * @param idCovoit Id du covoiturage
-     * @param passager Id du collaborateur passager
-     * @return true si la suppression est un succès, false sinon
+     * @param idCollaborateur Id du collaborateur passager
+     * @throws EntityNotFoundException collaborateur ou covoit non trouvé
+     * @throws IllegalArgumentException conditions d'annulation non respectées
+     * @throws Exception erreur lors de l'opération
      */
-    public Boolean annulerReservationCovoit(int idCovoit, Collaborateur passager) {
-        // Check de l'ID dans la méthode getCovoiturageById
+    public void annulerReservationCovoit(int idCovoit, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
+        Collaborateur passager = collaborateurService.getCollaborateurById(idCollaborateur);
         Covoiturage covoit = this.getCovoiturageById(idCovoit);
 
         // Impossible d'annuler si le covoit est déjà passé
@@ -108,29 +108,26 @@ public class CovoiturageService {
             throw new IllegalArgumentException("Impossible d'annuler un covoiturage dont la date-heure de départ est déjà passée !");
         }
 
-        try {
-            // On supprime le passager du covoit et le covoit des réservations du passager
-            covoit.getCollaborateurs().remove(passager);
-            passager.getCovoiturages().remove(covoit);
+        // On supprime le passager du covoit
+        covoit.getCollaborateurs().remove(passager);
+        // On supprime le covoit des réservations du passager
+        passager.getCovoiturages().remove(covoit);
 
-            // On sauvegarde les modifications en BDD
-            covoiturageRepository.save(covoit);
-            collaborateurRepository.save(passager);
-
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
+        // On sauvegarde les modifications en BDD
+        covoiturageRepository.save(covoit);
+        collaborateurService.updateCollaborateur(passager);
     }
 
     /**
      * Méthode permettant d'ajouter un passager à un covoiturage disponible
      * @param idCovoit Id du covoiturage
-     * @param passager Id du passager
-     * @return true si la réservation est un succès, sinon false
+     * @param idCollaborateur Id du passager
+     * @throws EntityNotFoundException collaborateur ou covoit non trouvé
+     * @throws IllegalArgumentException conditions de réservation non respectées
+     * @throws Exception erreur lors de l'opération
      */
-    public Boolean reserverCovoit(int idCovoit, Collaborateur passager) {
+    public void reserverCovoit(int idCovoit, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
+        Collaborateur passager = collaborateurService.getCollaborateurById(idCollaborateur);
         Covoiturage covoit = this.getCovoiturageById(idCovoit);
 
         if (!Validator.matchDateUlterieure(covoit.getDate())) {
@@ -151,22 +148,15 @@ public class CovoiturageService {
             throw new IllegalArgumentException("Vous ne pouvez pas vous inscrire en tant que passager dans un covoiturage dont vous êtes le conducteur.");
         }
 
-        try {
-            // On ajoute le passager au covoit et le covoit à la liste des covoiturages du passager
-            covoit.getCollaborateurs().add(passager);
-            passager.getCovoiturages().add(covoit);
-            // Une place en moins dans le covoit !
-            nbPlaces--;
-            covoit.setNbPlaces(nbPlaces);
+        // On ajoute le passager au covoit et le covoit à la liste des covoiturages du passager
+        covoit.getCollaborateurs().add(passager);
+        passager.getCovoiturages().add(covoit);
+        // Une place en moins dans le covoit !
+        nbPlaces--;
+        covoit.setNbPlaces(nbPlaces);
 
-            // On sauvegarde les modifications en BDD
-            covoiturageRepository.save(covoit);
-            collaborateurRepository.save(passager);
-
-            return true;
-        }
-        catch (Exception e) {
-            return false;
-        }
+        // On sauvegarde les modifications en BDD
+        covoiturageRepository.save(covoit);
+        collaborateurService.updateCollaborateur(passager);
     }
 }

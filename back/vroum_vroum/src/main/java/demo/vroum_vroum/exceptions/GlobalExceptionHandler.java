@@ -65,12 +65,12 @@ public class GlobalExceptionHandler {
      * @param ex exception levée lorsque l'utilisateur connecté n'a pas pu être reconnu
      * @return réponse contenant le message d'erreur informant que l'utilisateur connecté n'a pas pu être reconnu
      */
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleUserNotFoundException(UserNotFoundException ex) {
-        log.error("UserNotFoundException", ex);
+    @ExceptionHandler(NotAuthenticatedException.class)
+    public ResponseEntity<Map<String, String>> handleNoUserAuthenticatedException(NotAuthenticatedException ex) {
+        log.error("NotAuthenticatedException", ex);
 
         Map<String, String> response = new HashMap<>();
-        response.put("Erreur", "UserNotFoundException");
+        response.put("Erreur", "NotAuthenticatedException");
         response.put("message", StringUtils.isEmpty(ex.getMessage()) ? DEFAULT_USER_NOT_FOUND_ERROR_MESSAGE : ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);

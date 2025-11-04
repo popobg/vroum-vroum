@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.io.Serializable;
 import java.text.Collator;
 import java.util.*;
 
@@ -13,7 +12,7 @@ import java.util.*;
  */
 @Entity
 @Table(name = "COLLABORATEUR")
-public class Collaborateur implements UserDetails, Comparable<Collaborateur>, Serializable {
+public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
     /** Identifiant unique et non modifiable du collaborateur */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +30,6 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur>, Se
     /** Adresse du collaborateur */
     @Column(name = "ADRESSE")
     private String adresse;
-
 
     /** Adresse email du collaborateur */
     @Column(name = "EMAIL")

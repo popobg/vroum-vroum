@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Repository de l'entité Covoiturage
@@ -30,10 +31,10 @@ public interface CovoiturageRepository extends JpaRepository<Covoiturage, Intege
     and covoit.adresseArrivee.ville = :nomVilleArrivee
     and covoit.adresseArrivee.codePostal = :codePostalArrivee
 """)
-    public List<Covoiturage> findCovoitDisponiblesByAdressesDate(String nomVilleDepart, String codePostalDepart, String nomVilleArrivee, String codePostalArrivee, LocalDateTime dateMin);
+    public Set<Covoiturage> findCovoitDisponiblesByAdressesDate(String nomVilleDepart, String codePostalDepart, String nomVilleArrivee, String codePostalArrivee, LocalDateTime dateMin);
 
     /**
-     * Requête récupérant les covoiturages dont le collaborateur passé en paramètre est passager
+     * Requête récupérant les covoiturages dont le collaborateur passé en paramètre est passager.
      * @param collaborateur passager
      * @return liste de covoiturages
      */

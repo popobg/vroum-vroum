@@ -1,18 +1,16 @@
 package demo.vroum_vroum.restControleurs;
 
 import demo.vroum_vroum.dto.CovoiturageDto;
-import demo.vroum_vroum.entities.Collaborateur;
-import demo.vroum_vroum.exceptions.UserNotFoundException;
 import demo.vroum_vroum.mappers.CovoiturageMapper;
-import demo.vroum_vroum.services.CollaborateurService;
 import demo.vroum_vroum.services.CovoiturageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 /**
  * REST controller des routes en lien avec le covoiturage
@@ -24,18 +22,13 @@ public class CovoiturageRestControleur {
     /** Service concernant le covoiturage */
     private final CovoiturageService covoiturageService;
 
-    /** Service concernant les collaborateurs */
-    private final CollaborateurService collaborateurService;
-
     /**
      * Constructeur CovoiturageRestControleur
      * @param covoiturageService service pour le covoiturage
      * @param collaborateurService service pour les collaborateurs
      */
-    @Autowired
-    public CovoiturageRestControleur(CovoiturageService covoiturageService, CollaborateurService collaborateurService) {
+    public CovoiturageRestControleur(CovoiturageService covoiturageService) {
         this.covoiturageService = covoiturageService;
-        this.collaborateurService = collaborateurService;
     }
 
     @GetMapping("/tous")
@@ -45,79 +38,83 @@ public class CovoiturageRestControleur {
     }
 
     /**
-     * Méthode retournant les covoiturages disponibles pour les informations saisies
+     * Récupère les covoiturages disponibles pour les informations saisies.
+     *
      * @param nomVilleDepart nomm ville départ
      * @param codePostalDepart code postal départ
      * @param nomVilleArrivee nom ville arrivée
      * @param codePostalArrivee code postal arrivée
      * @param dateDepart date minimale du départ
-     * @return une liste de covoiturages dto (ou une liste vide si aucun covoiturage ne correspond aux critères)
+     * @return un set de covoiturages dto (ou une liste vide si aucun covoiturage ne correspond aux critères)
+     * @throws IllegalArgumentException 400 : conditions de recherche non satisfaites
      */
     @GetMapping("/rechercher")
-    public ResponseEntity<List<CovoiturageDto>> getCovoitDisponiblesByAdressesDate(
+    public ResponseEntity<Set<CovoiturageDto>> getCovoitDisponiblesByAdressesDate(
             @RequestParam("villedep") String nomVilleDepart,
             @RequestParam("cpdep") String codePostalDepart,
             @RequestParam("villearr") String nomVilleArrivee,
             @RequestParam("cparr") String codePostalArrivee,
-            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateDepart)
+            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateDepart) throws IllegalArgumentException
     {
         return ResponseEntity.ok(CovoiturageMapper.toDtos(covoiturageService.getCovoitDisponiblesByAdressesDate(nomVilleDepart.toLowerCase(),codePostalDepart.toLowerCase(), nomVilleArrivee.toLowerCase(), codePostalArrivee.toLowerCase(), dateDepart)));
     }
 
     /**
-     * Méthode retournant les informations d'un covoiturage
+     * Récupère les informations d'un covoiturage.
+     *
      * @param id Id du covoiturage recherché
      * @return un covoiturage dto (ou null si l'ID ne correspond à aucun covoiturage)
+     * @throws EntityNotFoundException 404 : covoiturage non trouvé
      */
     @GetMapping("/{id}")
-    public ResponseEntity<CovoiturageDto> getById(@PathVariable int id) {
+    public ResponseEntity<CovoiturageDto> getById(@PathVariable int id) throws EntityNotFoundException {
         return ResponseEntity.ok(CovoiturageMapper.toDto(covoiturageService.getCovoiturageById(id)));
     }
 
     /**
-     * Méthode retournant les covoiturages auxquels participe l'utilisateur connecté.
-     * @return une liste de covoiturages dto
+     * Récupère les covoiturages auxquels participe un collaborateur.
+     *
+     * @param idCollaborateur id du collaborateur passager
+     * @return set de covoiturages dto
+     * @throws EntityNotFoundException 404 : collaborateur non trouvé
      */
     @GetMapping("/reservations")
-    public ResponseEntity<List<CovoiturageDto>> getMesReservations() throws UserNotFoundException {
-        Collaborateur currentUser = collaborateurService.getCurrentUser();
-
-        if (currentUser == null) {
-            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel afficher les réservations de covoiturage.");
-        }
-
-        return ResponseEntity.ok(CovoiturageMapper.toDtos(covoiturageService.getMesReservationsCovoit(currentUser)));
+    public ResponseEntity<Set<CovoiturageDto>> getMesReservations(int idCollaborateur) throws EntityNotFoundException {
+        return ResponseEntity.ok(CovoiturageMapper.toDtos(covoiturageService.getMesReservationsCovoit(idCollaborateur)));
     }
 
     /**
-     * Méthode permettant d'annuler une réservation de covoiturage faite par un passager
-     * @param id Id du covoiturage
-     * @return true si l'annulation est un succès, sinon false
+     * Annule une réservation de covoiturage faite par un passager collaborateur.
+     *
+     * @param idReservation Id de la réservation de covoiturage
+     * @param idCollaborateur Id du collaborateur passager
+     * @return réponse 204 si l'annulation a été faite avec succès, sinon 404 ou 500
+     * @throws EntityNotFoundException 404 : collaborateur ou covoit non trouvé
+     * @throws IllegalArgumentException 400 : conditions d'annulation non respectées
+     * @throws Exception 500 : erreur lors de l'opération
      */
     @PutMapping("/reservations/annuler/{id}")
-    public ResponseEntity<Boolean> annulerReservation(@PathVariable int id) throws Exception {
-        Collaborateur currentUser = collaborateurService.getCurrentUser();
+    public ResponseEntity<Void> annulerReservation(@PathVariable int idReservation, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
+        covoiturageService.annulerReservationCovoit(idReservation, idCollaborateur);
 
-        if (currentUser == null) {
-            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel annuler une réservation de covoiturage.");
-        }
-
-        return ResponseEntity.ok(covoiturageService.annulerReservationCovoit(id, currentUser));
+        // Statut 204 si annulation OK
+        return ResponseEntity.noContent().build();
     }
 
     /**
-     * Méthode permettant de réserver un covoiturage disponible en tant que passager
-     * @param id Id du covoiturage
-     * @return true si la réservation est un succès, sinon false
+     * Réserve un covoiturage disponible en tant que passager collaborateur.
+     *
+     * @param idReservation id covoit
+     * @param idCollaborateur id collaborateur passager
+     * @return statut 204 si l'opération s'est déroulée avec succès, sinon 404 ou 400
+     * @throws EntityNotFoundException 404 : covoit ou collaborateur non trouvé
+     * @throws IllegalArgumentException 400 : conditions de réservation non satisfaites
+     * @throws Exception 500 : erreur lors de l'opération
      */
-    @PutMapping("/reserver/{id}")
-    public ResponseEntity<Boolean> reserverCovoit(@PathVariable int id) {
-        Collaborateur currentUser = collaborateurService.getCurrentUser();
+    @PutMapping("/reservations/reserver/{id}")
+    public ResponseEntity<Void> reserverCovoit(@PathVariable int idReservation, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
+        covoiturageService.reserverCovoit(idReservation, idCollaborateur);
 
-        if (currentUser == null) {
-            throw new UserNotFoundException("Pas d'utilisateur connecté pour lequel réserver un covoiturage.");
-        }
-
-        return ResponseEntity.ok(covoiturageService.reserverCovoit(id, currentUser));
+        return ResponseEntity.noContent().build();
     }
 }
