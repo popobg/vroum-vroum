@@ -28,8 +28,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // Routes des controllers de l'application : accès aux utilisateurs authentifiés
-                        .requestMatchers("/collaborateur/**").authenticated()
+                        // Routes collaborateur, réservation, etc. : accès aux utilisateurs authentifiés
+                        .requestMatchers("/collaborateur/login").permitAll()
+                        .requestMatchers("/collaborateur/me").authenticated()
                         .requestMatchers("/reservation/**").authenticated()
                         .requestMatchers("/covoiturage/**").authenticated()
                         .requestMatchers("/vehicule/**").authenticated()
@@ -39,12 +40,9 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-                .formLogin(form -> form
-                        .defaultSuccessUrl("/collaborateur/me", true)                                   // Redirection après login
-                        .failureHandler(authenticationHandler.authenticationFailureHandler())           // Handler en cas d'erreur lors de l'authentification
-                )
+                .formLogin(form -> form.disable())
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/")                                                          // URL après déconnexion
+                        .logoutSuccessUrl("/")  // URL après déconnexion
                         .permitAll()
                 );
 
