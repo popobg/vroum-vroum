@@ -2,13 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-/* ---------- MODELS ---------- */
 export interface Adresse {
   id: number;
   numero: string;
   rue: string;
   codePostal: string;
-  nomVille: string;
+  ville: string; // correspond au @Column(name = "VILLE") du back
 }
 
 export interface CollaborateurLite {
@@ -33,8 +32,8 @@ export interface Covoiturage {
   organisateur: CollaborateurLite;
   vehicule: VehiculeLite;
   passagers: CollaborateurLite[];
+  nbPlaces?: number; // optionnel, si tu veux gérer les places restantes
 }
-/* ---------------------------- */
 
 @Injectable({
   providedIn: 'root'

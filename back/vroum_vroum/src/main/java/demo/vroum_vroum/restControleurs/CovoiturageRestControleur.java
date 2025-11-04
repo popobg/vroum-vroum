@@ -49,15 +49,23 @@ public class CovoiturageRestControleur {
      * @throws IllegalArgumentException 400 : conditions de recherche non satisfaites
      */
     @GetMapping("/rechercher")
-    public ResponseEntity<Set<CovoiturageDto>> getCovoitDisponiblesByAdressesDate(
-            @RequestParam("villedep") String nomVilleDepart,
-            @RequestParam("cpdep") String codePostalDepart,
-            @RequestParam("villearr") String nomVilleArrivee,
-            @RequestParam("cparr") String codePostalArrivee,
-            @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateDepart) throws IllegalArgumentException
-    {
-        return ResponseEntity.ok(CovoiturageMapper.toDtos(covoiturageService.getCovoitDisponiblesByAdressesDate(nomVilleDepart.toLowerCase(),codePostalDepart.toLowerCase(), nomVilleArrivee.toLowerCase(), codePostalArrivee.toLowerCase(), dateDepart)));
+    public ResponseEntity<Set<CovoiturageDto>> rechercherCovoiturages(
+            @RequestParam(value = "villedep", required = false) String villeDep,
+            @RequestParam(value = "cpdep", required = false) String cpDep,
+            @RequestParam(value = "villearr", required = false) String villeArr,
+            @RequestParam(value = "cparr", required = false) String cpArr,
+            @RequestParam(value = "date", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateDepart
+    ) {
+        Set<CovoiturageDto> result = CovoiturageMapper.toDtos(
+                covoiturageService.rechercherCovoiturages(
+                        villeDep, cpDep, villeArr, cpArr, dateDepart
+                )
+        );
+        return ResponseEntity.ok(result);
     }
+
+
 
     /**
      * Récupère les informations d'un covoiturage.

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Service en lien avec le covoiturage
@@ -45,25 +46,42 @@ public class CovoiturageService {
      * @param dateDepart date-heure de départ
      * @return liste de covoiturages
      */
-    public Set<Covoiturage> getCovoitDisponiblesByAdressesDate(String villeDepart, String codePostalDepart, String villeArrivee, String codePostalArrivee, LocalDateTime dateDepart) throws IllegalArgumentException {
-        if (villeDepart.isEmpty()
-                || codePostalDepart.isEmpty()
-                || villeArrivee.isEmpty()
-                || codePostalArrivee.isEmpty()) {
-            throw new IllegalArgumentException("Vous devez fournir une ville de départ, un code postal de départ, une ville d'arrivée et un code postal d'arrivée.");
-        }
+//    public Set<Covoiturage> getCovoitDisponiblesByAdressesDate(String villeDepart, String codePostalDepart, String villeArrivee, String codePostalArrivee, LocalDateTime dateDepart) throws IllegalArgumentException {
+//        if (villeDepart.isEmpty()
+//                || codePostalDepart.isEmpty()
+//                || villeArrivee.isEmpty()
+//                || codePostalArrivee.isEmpty()) {
+//            throw new IllegalArgumentException("Vous devez fournir une ville de départ, un code postal de départ, une ville d'arrivée et un code postal d'arrivée.");
+//        }
+//
+//        if (!Validator.matchCodePostalFormat(codePostalDepart)
+//                || !Validator.matchCodePostalFormat(codePostalArrivee)) {
+//            throw new IllegalArgumentException("Le code postal doit faire 5 caractères.");
+//        }
+//
+//        if (!Validator.matchDateUlterieure(dateDepart)) {
+//            throw new IllegalArgumentException("La date de départ recherchée doit être ultérieure à la date et heure actuelle.");
+//        }
+//
+//        return covoiturageRepository.findCovoitDisponiblesByAdressesDate(villeDepart, codePostalDepart, villeArrivee, codePostalArrivee, dateDepart);
+//    }
 
-        if (!Validator.matchCodePostalFormat(codePostalDepart)
-                || !Validator.matchCodePostalFormat(codePostalArrivee)) {
-            throw new IllegalArgumentException("Le code postal doit faire 5 caractères.");
-        }
+    public Set<Covoiturage> getCovoitDisponiblesByAdressesDate(
+            String villeDepart,
+            String codePostalDepart,
+            String villeArrivee,
+            String codePostalArrivee,
+            LocalDateTime dateDepart) {
 
-        if (!Validator.matchDateUlterieure(dateDepart)) {
-            throw new IllegalArgumentException("La date de départ recherchée doit être ultérieure à la date et heure actuelle.");
-        }
-
-        return covoiturageRepository.findCovoitDisponiblesByAdressesDate(villeDepart, codePostalDepart, villeArrivee, codePostalArrivee, dateDepart);
+        return covoiturageRepository.findAll().stream()
+                .filter(c -> villeDepart.isEmpty() || c.getAdresseDepart().getVille().equalsIgnoreCase(villeDepart))
+                .filter(c -> codePostalDepart.isEmpty() || c.getAdresseDepart().getCodePostal().equals(codePostalDepart))
+                .filter(c -> villeArrivee.isEmpty() || c.getAdresseArrivee().getVille().equalsIgnoreCase(villeArrivee))
+                .filter(c -> codePostalArrivee.isEmpty() || c.getAdresseArrivee().getCodePostal().equals(codePostalArrivee))
+                .filter(c -> dateDepart == null || !c.getDate().isBefore(dateDepart))
+                .collect(Collectors.toSet());
     }
+
 
     /**
      * Méthode de service récupérant un covoiturage à partir de son Id.
@@ -160,4 +178,41 @@ public class CovoiturageService {
         covoiturageRepository.save(covoit);
         collaborateurService.updateCollaborateur(passager);
     }
+
+    /**
+     * Recherche des covoiturages selon les critères facultatifs.
+     * Tous les paramètres peuvent être null ou vides.
+     */
+    public Set<Covoiturage> rechercherCovoiturages(
+            String villeDep,
+            String cpDep,
+            String villeArr,
+            String cpArr,
+            LocalDateTime dateDepart
+    ) {
+        // Récupération de tous les covoiturages
+        Set<Covoiturage> tous = new HashSet<>(covoiturageRepository.findAll());
+
+        // Filtrage en mémoire — simple et efficace pour commencer
+        return tous.stream()
+                .filter(c -> villeDep == null || villeDep.isEmpty() ||
+                        (c.getAdresseDepart() != null &&
+                                c.getAdresseDepart().getVille() != null &&
+                                c.getAdresseDepart().getVille().toLowerCase().contains(villeDep.toLowerCase())))
+                .filter(c -> cpDep == null || cpDep.isEmpty() ||
+                        (c.getAdresseDepart() != null &&
+                                c.getAdresseDepart().getCodePostal() != null &&
+                                c.getAdresseDepart().getCodePostal().toLowerCase().contains(cpDep.toLowerCase())))
+                .filter(c -> villeArr == null || villeArr.isEmpty() ||
+                        (c.getAdresseArrivee() != null &&
+                                c.getAdresseArrivee().getVille() != null &&
+                                c.getAdresseArrivee().getVille().toLowerCase().contains(villeArr.toLowerCase())))
+                .filter(c -> cpArr == null || cpArr.isEmpty() ||
+                        (c.getAdresseArrivee() != null &&
+                                c.getAdresseArrivee().getCodePostal() != null &&
+                                c.getAdresseArrivee().getCodePostal().toLowerCase().contains(cpArr.toLowerCase())))
+                .filter(c -> dateDepart == null || !c.getDate().isBefore(dateDepart))
+                .collect(Collectors.toSet());
+    }
+
 }

@@ -23,26 +23,39 @@
   <button type="submit">Rechercher</button>
 </form>
 
+<!-- Message d'erreur ou d'absence de résultat -->
 <p *ngIf="erreurMessage" style="color: red;">{{ erreurMessage }}</p>
 
+<!-- Tableau des résultats -->
 <table *ngIf="covoiturages.length > 0" border="1" cellpadding="5" cellspacing="0">
   <thead>
   <tr>
     <th>Départ</th>
     <th>Arrivée</th>
     <th>Date</th>
+    <th>Distance (km)</th>
+    <th>Durée (min)</th>
+    <th>Places</th>
     <th>Conducteur</th>
     <th>Véhicule</th>
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let c of covoiturages">
-    <td>{{ c.adresseDepart?.nomVille }} ({{ c.adresseDepart?.codePostal }})</td>
-    <td>{{ c.adresseArrivee?.nomVille }} ({{ c.adresseArrivee?.codePostal }})</td>
+    <td>
+      {{ c.adresseDepart.numero }} {{ c.adresseDepart.rue }},
+      {{ c.adresseDepart.codePostal }} {{ c.adresseDepart.ville }}
+    </td>
+    <td>
+      {{ c.adresseArrivee.numero }} {{ c.adresseArrivee.rue }},
+      {{ c.adresseArrivee.codePostal }} {{ c.adresseArrivee.ville }}
+    </td>
     <td>{{ c.date | date:'short' }}</td>
-    <td>{{ c.organisateur?.prenom }} {{ c.organisateur?.nom }}</td>
+    <td>{{ c.distance }}</td>
+    <td>{{ c.duree }}</td>
+    <td>{{ c.vehicule ? c.vehicule.id : 'N/A' }}</td>
+    <td>{{ c.organisateur?.nom || 'N/A' }}</td>
     <td>{{ c.vehicule?.marque }} {{ c.vehicule?.modele }}</td>
   </tr>
   </tbody>
 </table>
-
