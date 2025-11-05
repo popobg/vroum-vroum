@@ -31,11 +31,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // enable CSRF protection (important with cookies)
+            .csrf(csrf -> csrf.disable()) // CSRF : complément d'authentification (en plus des cookies)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                // Routes collaborateur, réservation, etc. : accès aux utilisateurs authentifiés
-                .requestMatchers("/api/auth/**", "/login", "/logout").permitAll()
+                .requestMatchers("/api/auth/**", "/login").permitAll()
+                // Toutes les routes à part les routes de login nécessitent d'être authentifiés
                 .anyRequest().authenticated()
             )
             .httpBasic(Customizer.withDefaults())
@@ -56,6 +56,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // Configuration CORS
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
