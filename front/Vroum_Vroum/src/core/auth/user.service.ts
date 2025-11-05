@@ -18,6 +18,6 @@ export class UserService {
 
 	// get connected user
 	getProfile(): Observable<Collaborateur> {
-		return this.http.get<Collaborateur>(`${this.baseUrl}/collaborateur/me`, { withCredentials: true });
+		return this.http.get<Collaborateur>(`${this.baseUrl}/me`, { withCredentials: true });
 	}
 }
