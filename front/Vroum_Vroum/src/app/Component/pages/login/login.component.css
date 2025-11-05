@@ -1,3 +1,10 @@
+/* nouvelles variables de couleur pour faciliter l'ajustement */
+:root {
+  --accent-green: #43cea2;
+  --accent-blue:  #185a9d;
+  --card-bg:      rgba(255,255,255,0.65);
+  --subtitle-color: #cce3de;
+}
 body, html {
   height: 100%;
   margin: 0;
@@ -18,17 +25,20 @@ body, html {
 .animated-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 20% 20%, #43cea2, #185a9d);
+  /* dégradé d'origine, gardé vif */
+  background: radial-gradient(circle at 20% 20%, rgba(67,206,162,0.95), rgba(24,90,157,0.95));
   overflow: hidden;
-  z-index: 0;
+  z-index:0;
 }
 
-.animated-bg::before, .animated-bg::after {
+.animated-bg::before,
+.animated-bg::after {
   content: '';
   position: absolute;
   width: 150%;
   height: 150%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1), transparent 70%);
+  /* overlay sombre (évite d'éclaircir le fond) */
+  background: radial-gradient(circle, rgba(0,0,0,0.18), transparent 70%);
   animation: moveBg 20s linear infinite;
 }
 
@@ -46,26 +56,27 @@ body, html {
 .login-card {
   position: relative;
   z-index: 1;
-  background: rgba(255,255,255,0.1);
-  backdrop-filter: blur(15px);
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
   border-radius: 20px;
   padding: 2.5rem 3rem;
   width: 360px;
   text-align: center;
-  color: white;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  color: white; /* texte principal blanc pour la majorité */
+  box-shadow: 0 8px 25px rgba(0,0,0,0.35);
   animation: fadeIn 1s ease;
 }
 
 h1 {
   margin-bottom: 0.5rem;
-  color: #43cea2;
+  color: var(--accent-green); /* titre coloré */
   letter-spacing: 1px;
+  text-shadow: 0 6px 18px rgba(0,0,0,0.5); /* pour bien trancher */
 }
 
 .subtitle {
   margin-bottom: 2rem;
-  color: #cce3de;
+  color: var(--subtitle-color);
 }
 
 .login-form {
@@ -89,22 +100,21 @@ input {
   padding: 0.8rem;
   border: none;
   border-radius: 8px;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.06);
   color: white;
   outline: none;
   transition: 0.3s;
 }
-
 input:focus {
-  background: rgba(255,255,255,0.3);
-  box-shadow: 0 0 10px #43cea2;
+  background: rgba(255,255,255,0.18);
+  box-shadow: 0 0 10px rgba(67,206,162,0.25);
 }
 
 button {
   padding: 0.8rem;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(135deg, #43cea2, #185a9d);
+  background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
   color: white;
   font-weight: 600;
   cursor: pointer;
