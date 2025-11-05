@@ -31,10 +31,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // CSRF : complément d'authentification (en plus des cookies)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/login").permitAll()
+                .requestMatchers("/api/auth/**", "/login", "/logout").permitAll()
+                .requestMatchers(HttpMethod.GET, "/csrf/token").permitAll()
                 // Toutes les routes à part les routes de login nécessitent d'être authentifiés
                 .anyRequest().authenticated()
             )
@@ -46,7 +46,7 @@ public class SecurityConfig {
                 .successHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_OK))
                 .failureHandler(AuthenticationHandler.authenticationFailureHandler()))
             .logout(logout -> logout
-                .logoutUrl("/api/auth/logout")
+                .logoutUrl("/logout")
                 .logoutSuccessHandler((req, res, auth) -> res.setStatus(HttpServletResponse.SC_OK))
                 .logoutSuccessUrl("/")  // URL après déconnexion
                 .deleteCookies("JSESSIONID")
@@ -60,11 +60,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setAllowCredentials(true); // very important for cookies
-        config.setExposedHeaders(List.of("Authorization")); // optional
+        config.setAllowedOrigins(List.of("http://localhost:4200"));     // adresse du front
+        config.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.OPTIONS.name()));
+        config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization", "XSRF-TOKEN"));
+        config.setAllowCredentials(true); // pour accepter de recevoir des cookies
+        config.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

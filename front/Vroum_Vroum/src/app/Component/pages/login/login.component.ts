@@ -3,6 +3,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { MyHttpClient } from '../../../http-client';
 
 @Component({
   selector: 'app-login',
@@ -16,11 +17,13 @@ export class LoginComponent {
   loginForm;
   loading = false;
   errorMessage = '';
+  backendUrl = 'http://localhost:8080';
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private http: MyHttpClient
   ) {
     this.loginForm = this.fb.group({
       pseudo: ['', [Validators.required, Validators.minLength(1)]],
@@ -36,15 +39,12 @@ export class LoginComponent {
       next: () => {
         this.loading = false;
 
-        console.log("Authentification réussie !");
-
         // Redirection vers la page d'accueil du site
         this.router.navigateByUrl('/home');
       },
-      error: (err) => {
+      error: () => {
         this.loading = false;
-        console.error("Erreur d'authentification");
-        this.errorMessage = err.error || 'Identifiants incorrects';
+        this.errorMessage ='Identifiants incorrects';
       }
     });
   }

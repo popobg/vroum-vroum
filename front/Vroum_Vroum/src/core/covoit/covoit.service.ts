@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { MyHttpClient } from '../../app/http-client';
 
 export interface Adresse {
   id: number;
@@ -35,27 +36,18 @@ export interface Covoiturage {
   passagers: CollaborateurLite[];
 }
 
+/**
+ * Classe de service gérant les méthodes liées au covoiturage
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class CovoitService {
-  private apiUrl = 'http://localhost:8080/covoiturage';
-
-  constructor(private http: HttpClient) {}
-
-  private getAuthHeaders(): HttpHeaders {
-    const pseudo = localStorage.getItem('pseudo') || '';
-    const password = localStorage.getItem('password') || '';
-    return new HttpHeaders({
-      Authorization: 'Basic ' + btoa(`${pseudo}:${password}`)
-    });
-  }
+  constructor(private http: MyHttpClient) {}
 
   // Récupère tous les covoiturages (utilisé pour afficher la liste initiale)
   getTous(): Observable<Covoiturage[]> {
-    return this.http.get<Covoiturage[]>(`${this.apiUrl}/tous`, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.get(`/covoiturage/tous`);
   }
 
   rechercher(villedep: string, cpdep: string, villearr: string, cparr: string, date: string): Observable<Covoiturage[]> {
@@ -66,10 +58,7 @@ export class CovoitService {
       .set('cparr', cparr)
       .set('date', date);
 
-    return this.http.get<Covoiturage[]>(`${this.apiUrl}/rechercher`, {
-      headers: this.getAuthHeaders(),
-      params
-    });
+    return this.http.get(`/covoiturage/rechercher`, params);
   }
 
   getMesReservations(idCollaborateur: number): Observable<Covoiturage[]> {

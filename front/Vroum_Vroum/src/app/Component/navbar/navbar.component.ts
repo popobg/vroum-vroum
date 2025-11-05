@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Observable } from 'rxjs';
+import { MyHttpClient } from '../../http-client';
 
 @Component({
   selector: 'app-navbar',
@@ -14,7 +15,8 @@ import { Observable } from 'rxjs';
 export class NavbarComponent {
   isAuthenticated$: Observable<boolean>;
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService,
+      private http: MyHttpClient) {
     this.isAuthenticated$ = this.authService.isAuthenticated$;
   }
 

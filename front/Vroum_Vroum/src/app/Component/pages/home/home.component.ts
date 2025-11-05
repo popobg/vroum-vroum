@@ -25,11 +25,15 @@ export class HomeComponent implements OnInit {
     // Propriété indiquant si l'utilisateur est connecté ou non
     this.isAuthenticated$ = this.authService.isAuthenticated$;
 
-    if (!this.isAuthenticated$) return;
-
-    this.userService.getProfile().subscribe({
-      next: (user) => this.collaborateur = user,
-      error: (err) => console.error('Non authentifié', err)
+    this.isAuthenticated$.subscribe(isAuth => {
+      if (isAuth) {
+        this.userService.getProfile().subscribe({
+          next: (user) => this.collaborateur = user,
+          error: (err) => console.error('Non authentifié', err)
+        });
+      } else {
+        this.collaborateur = undefined;
+      }
     });
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { MyHttpClient } from '../../app/http-client';
 
 export interface Collaborateur {
 	nom: string;
@@ -8,16 +8,20 @@ export interface Collaborateur {
 	telephone: string;
 }
 
+/**
+ * Classe de service gérant les requêtes liées à l'utilisateur (ou collaborateur) de l'application.
+ */
 @Injectable({
 	providedIn: 'root'
 })
 export class UserService {
-	private baseUrl = 'http://localhost:8080/collaborateur';
+	constructor(private http: MyHttpClient) { }
 
-	constructor(private http: HttpClient) { }
-
-	// get connected user
+	/**
+	 * Méthode permettant de récupérer l'utilisateur connecté
+	 * @returns un observable de l'objet Collaborateur
+	 */
 	getProfile(): Observable<Collaborateur> {
-		return this.http.get<Collaborateur>(`${this.baseUrl}/me`, { withCredentials: true });
+		return this.http.get(`/collaborateur/me`);
 	}
 }
