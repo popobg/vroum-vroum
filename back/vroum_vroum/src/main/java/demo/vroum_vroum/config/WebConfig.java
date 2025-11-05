@@ -13,12 +13,12 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")                                  // behavior defined for all routes of the app
-                        .allowedOrigins("https://localhost:4200")           // address of the front app
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")     // http methods allowed
+                registry.addMapping("**")                                  // behavior defined for all routes of the app
+                        .allowedOrigins("http://localhost:4200")           // address of the front app
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")     // http methods allowed
                         .allowedHeaders("*")                                // allow all headers
                         .exposedHeaders("Authorization")                    // headers visible to JS
-                        .allowCredentials(true);                            // for cookies/sessions
+                        .allowCredentials(true);                            // needed for session cookies
             }
         };
     }

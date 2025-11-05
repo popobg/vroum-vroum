@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -26,7 +27,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(Customizer.withDefaults()) // ✅ enable CSRF protection (important with cookies)
+            .csrf(csrf -> csrf.disable()) // enable CSRF protection (important with cookies)
             .cors(Customizer.withDefaults())
             .authorizeHttpRequests(auth -> auth
                 // Routes collaborateur, réservation, etc. : accès aux utilisateurs authentifiés
@@ -58,6 +59,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        // For development
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }
