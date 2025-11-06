@@ -63,9 +63,7 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of("http://localhost:4200"));     // adresse du front
         config.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name(), HttpMethod.OPTIONS.name()));
         config.setAllowedHeaders(List.of("*"));
-        config.setExposedHeaders(List.of("Authorization", "XSRF-TOKEN"));
         config.setAllowCredentials(true); // pour accepter de recevoir des cookies
-        config.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
