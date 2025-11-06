@@ -3,7 +3,8 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Observable } from 'rxjs';
-import { CollaborateurLite, UserService } from '../../../core/auth/user.service';
+import { UserService } from '../../../core/auth/user.service';
+import { CollaborateurLite } from '../../Model/CollaborateurLite';
 
 @Component({
   selector: 'app-navbar',

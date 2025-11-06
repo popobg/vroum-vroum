@@ -2,39 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MyHttpClient } from '../../app/http-client';
-
-export interface Adresse {
-  id: number;
-  numero: string;
-  rue: string;
-  codePostal: string;
-  nomVille: string;
-}
-
-export interface CollaborateurLite {
-  nom: string;
-  prenom: string;
-  telephone: string;
-}
-
-export interface VehiculeLite {
-  id: number;
-  marque: string;
-  modele: string;
-}
-
-export interface Covoiturage {
-  id: number;
-  date: string;
-  adresseDepart: Adresse;
-  adresseArrivee: Adresse;
-  nbPlaces: number;
-  distance: number;
-  duree: number;
-  organisateur: CollaborateurLite;
-  vehicule: VehiculeLite;
-  passagers: CollaborateurLite[];
-}
+import { Covoiturage } from '../../app/Model/Covoiturage';
 
 /**
  * Classe de service gérant les méthodes liées au covoiturage
@@ -43,11 +11,14 @@ export interface Covoiturage {
   providedIn: 'root'
 })
 export class CovoitService {
+  baseUrl: string = "/covoiturage";
+  reservationUrl: string = this.baseUrl + "/reservations";
+
   constructor(private http: MyHttpClient) {}
 
   // Récupère tous les covoiturages (utilisé pour afficher la liste initiale)
   getTous(): Observable<Covoiturage[]> {
-    return this.http.get(`/covoiturage/tous`);
+    return this.http.get(`${this.baseUrl}/tous`);
   }
 
   rechercher(villedep: string, cpdep: string, villearr: string, cparr: string, date: string): Observable<Covoiturage[]> {
@@ -58,31 +29,25 @@ export class CovoitService {
       .set('cparr', cparr)
       .set('date', date);
 
-    return this.http.get(`/covoiturage/rechercher`, params);
+    return this.http.get(`${this.baseUrl}/rechercher`, params);
   }
 
   getMesReservations(idCollaborateur: number): Observable<Covoiturage[]> {
-    return this.http.get<Covoiturage[]>(`${this.apiUrl}/reservations`, {
-      headers: this.getAuthHeaders(),
-      params: { idCollaborateur: idCollaborateur.toString() },
-      withCredentials: true
-    });
+    const params = new HttpParams().set('idCollaborateur', idCollaborateur);
+    return this.http.get(`${this.reservationUrl}`, params);
   }
 
   reserverCovoiturage(idCovoiturage: number, idCollaborateur: number): Observable<void> {
-    const url = `${this.apiUrl}/reservations/reserver/${idCovoiturage}/${idCollaborateur}`;
-    return this.http.put<void>(url, {}, {headers: this.getAuthHeaders(),withCredentials: true});
+    const url = `${this.reservationUrl}/reserver/${idCovoiturage}/${idCollaborateur}`;
+    return this.http.put(url, {});
   }
 
-
   annulerReservation(idReservation: number, idCollaborateur: number): Observable<void> {
-    const url = `${this.apiUrl}/reservations/annuler/${idReservation}/${idCollaborateur}`;
-    return this.http.put<void>(url, {}, { withCredentials: true });
+    const url = `${this.reservationUrl}/annuler/${idReservation}/${idCollaborateur}`;
+    return this.http.put(url, {});
   }
 
   getById(id: number): Observable<Covoiturage> {
-    return this.http.get<Covoiturage>(`${this.apiUrl}/${id}`, {
-      headers: this.getAuthHeaders()
-    });
+    return this.http.get(`${this.baseUrl}/${id}`);
   }
 }

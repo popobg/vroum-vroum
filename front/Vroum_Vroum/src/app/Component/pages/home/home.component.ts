@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UserService, CollaborateurLite } from '../../../../core/auth/user.service';
+import { UserService } from '../../../../core/auth/user.service';
 import { AuthService } from '../../../../core/auth/auth.service';
+import { CollaborateurLite } from '../../../Model/CollaborateurLite';
 
 @Component({
   selector: 'app-home',

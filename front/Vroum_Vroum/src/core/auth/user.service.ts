@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { MyHttpClient } from '../../app/http-client';
-
-export interface CollaborateurLite {
-	id: number;
-	nom: string;
-	prenom: string;
-	telephone: string;
-}
+import { CollaborateurLite } from '../../app/Model/CollaborateurLite';
 
 /**
  * Classe de service gérant les requêtes liées à l'utilisateur (ou collaborateur) de l'application.
