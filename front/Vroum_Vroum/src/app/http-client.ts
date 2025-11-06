@@ -9,8 +9,6 @@ import { Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class MyHttpClient {
-    // Jeton CSRF à injecter dans le header
-    csrfToken: string = "";
     // Adresse du front
     private baseUrl = 'http://localhost:8080'
 
@@ -36,24 +34,18 @@ export class MyHttpClient {
      * @returns retour de la requête (peut être vide - code 204)
      */
     post(url: string, data: any): any {
-        return new Observable((subscriber) => {
-            this.getCsrf().subscribe((body: any) => {
-                this.http.post(
-                    `${this.baseUrl}${url}`,
-                    data,
-                    {
-                        headers: new HttpHeaders({
-                            "Content-Type": "application/x-www-form-urlencoded",
-                            "X-CSRF-TOKEN": body.token
-                        }),
-                        withCredentials: true
-                    }
-                ).subscribe({
-                    next: (data) => subscriber.next(data),
-                    error: (err) => subscriber.error(err),
-                    complete: () => subscriber.complete()
-                });
-            });
+        return this.csrfRequestWrapper((token: string) => {
+            return this.http.post(
+                `${this.baseUrl}${url}`,
+                data,
+                {
+                    headers: new HttpHeaders({
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRF-TOKEN": token
+                    }),
+                    withCredentials: true
+                }
+            )
         });
     }
 
@@ -64,11 +56,19 @@ export class MyHttpClient {
      * @returns retour de la requête (peut être vide - code 204)
      */
     put(url: string, data: any): any {
-        return this.http.put(
-            `${this.baseUrl}${url}`,
-            data,
-            { headers: new HttpHeaders({ "Content-Type": "application/x-www-form-urlencoded", "X-CSRF-TOKEN": this.csrfToken }), withCredentials: true }
-        );
+        return this.csrfRequestWrapper((token: string) => {
+            return this.http.put(
+                `${this.baseUrl}${url}`,
+                data,
+                {
+                    headers: new HttpHeaders({
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRF-TOKEN": token
+                    }),
+                    withCredentials: true
+                }
+            );
+        });
     }
 
     /**
@@ -77,14 +77,33 @@ export class MyHttpClient {
      * @returns retour de la requête (peut être vide - code 204)
      */
     delete(url: string): any {
-        return this.http.delete(`${this.baseUrl}${url}`, { withCredentials: true });
+        return this.csrfRequestWrapper((token: string) => {
+            return this.http.delete(
+                `${this.baseUrl}${url}`,
+                {
+                    headers: new HttpHeaders({
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRF-TOKEN": token
+                    }),
+                    withCredentials: true
+                }
+            );
+        });
     }
 
     /**
-     * Méthode retournant le token CSRF de la session.
-     * @returns token CSRF
+     * Wrapper appelant la fonction reqWithCsrfToken censée exécuter une requête avec le token fourni.
+     * @returns Observable retourné par reqWithCsrfToken
      */
-    getCsrf() {
-        return this.http.get(`${this.baseUrl}/csrf/token`, { withCredentials: true });
+    private csrfRequestWrapper(reqWithCsrfToken: (csrfToken: string) => Observable<Object>) {
+        return new Observable((subscriber) => {
+            this.http.get(`${this.baseUrl}/csrf/token`, { withCredentials: true }).subscribe((body: any) => {
+                reqWithCsrfToken(body.token).subscribe({
+                    next: (data) => subscriber.next(data),
+                    error: (err) => subscriber.error(err),
+                    complete: () => subscriber.complete()
+                });
+            });
+        });
     }
 }
