@@ -24,9 +24,10 @@ export interface VehiculeLite {
 
 export interface Covoiturage {
   id: number;
-  date: string; // ISO string
+  date: string;
   adresseDepart: Adresse;
   adresseArrivee: Adresse;
+  nbPlaces: number;
   distance: number;
   duree: number;
   organisateur: CollaborateurLite;
@@ -71,9 +72,11 @@ export class CovoitService {
     });
   }
 
-  getMesReservations(): Observable<Covoiturage[]> {
+  getMesReservations(idCollaborateur: number): Observable<Covoiturage[]> {
     return this.http.get<Covoiturage[]>(`${this.apiUrl}/reservations`, {
-      headers: this.getAuthHeaders()
+      headers: this.getAuthHeaders(),
+      params: { idCollaborateur: idCollaborateur.toString() },
+      withCredentials: true
     });
   }
 
@@ -83,10 +86,9 @@ export class CovoitService {
   }
 
 
-  annulerReservation(id: number): Observable<boolean> {
-    return this.http.put<boolean>(`${this.apiUrl}/reservations/annuler/${id}`, {}, {
-      headers: this.getAuthHeaders()
-    });
+  annulerReservation(idReservation: number, idCollaborateur: number): Observable<void> {
+    const url = `${this.apiUrl}/reservations/annuler/${idReservation}/${idCollaborateur}`;
+    return this.http.put<void>(url, {}, { withCredentials: true });
   }
 
   getById(id: number): Observable<Covoiturage> {
