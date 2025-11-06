@@ -19,7 +19,10 @@ export const routes: Routes = [
     // Vérifie que l'utilisateur est connecté pour pouvoir accéder à cette route
     canActivate: [authGuard]
   },
-  { path: 'mes-reservations', component: ReservationCovoitComponent },
+  { path: 'mes-reservations',
+    component: ReservationCovoitComponent,
+    canActivate: [authGuard]
+  },
   // { path: 'mes-covoits-organises', component: MesCovoitsOrganisesComponent },
   {
     path: '**',
