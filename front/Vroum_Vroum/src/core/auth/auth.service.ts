@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { MyHttpClient } from '../../app/http-client';
+import { UserService } from './user.service';
 
 /**
  * Classe de service permettant de gérer l'authentification des utilisateurs à l'application.
@@ -9,12 +10,7 @@ import { MyHttpClient } from '../../app/http-client';
   providedIn: 'root'
 })
 export class AuthService {
-  // Statut d'authentification de l'utilisateur
-  // true = connecté, false = non connecté
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
-  isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-
-  constructor(private http: MyHttpClient) { }
+  constructor(private http: MyHttpClient, private userService: UserService) { }
 
   /**
    * Méthode permettant de se connecter à l'application.
@@ -33,11 +29,17 @@ export class AuthService {
       tap({
         next: () => {
           console.log("Authentification réussie !");
-          this.isAuthenticatedSubject.next(true);   // Passe à true si la réponse est OK (200, 204, etc)
+
+          // Récupération de l'utilisateur connecté
+          this.userService.getProfile().subscribe({
+            next: (data) => {
+              // Assignation au userSubject du service user
+              this.userService.setUser(data);
+            }
+          })
         },
         error: () => {
           console.error("Echec d'authentification.");
-          this.isAuthenticatedSubject.next(false);
         }
       })
     );
@@ -55,9 +57,9 @@ export class AuthService {
         tap({
           next: () => {
             console.log("Déconnexion réussie !");
-            this.isAuthenticatedSubject.next(false);   // Passe à true si la réponse est OK (200, 204, etc)
+
+            this.userService.clearUser();
           },
-          error: err => console.error("Déconnexion échouée : ", err)
         })
       );
   }

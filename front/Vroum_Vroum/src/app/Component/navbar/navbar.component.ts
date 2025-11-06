@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Observable } from 'rxjs';
-import { MyHttpClient } from '../../http-client';
+import { CollaborateurLite, UserService } from '../../../core/auth/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,15 +13,17 @@ import { MyHttpClient } from '../../http-client';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  isAuthenticated$: Observable<boolean>;
+  isAuthenticated: Observable<CollaborateurLite | null>;
 
-  constructor(private authService: AuthService,
-      private http: MyHttpClient) {
-    this.isAuthenticated$ = this.authService.isAuthenticated$;
+  constructor(private authService: AuthService, public userService: UserService, private router: Router) {
+    this.isAuthenticated = this.userService.userSubject;
   }
 
   logout() {
-    this.authService.logout().subscribe();
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigateByUrl("/home");
+      }
+    });
   }
-
 }

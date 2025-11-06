@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { MyHttpClient } from '../../app/http-client';
 
-export interface Collaborateur {
+export interface CollaborateurLite {
+	id: number;
 	nom: string;
 	prenom: string;
 	telephone: string;
@@ -15,13 +16,27 @@ export interface Collaborateur {
 	providedIn: 'root'
 })
 export class UserService {
+	public userSubject = new BehaviorSubject<CollaborateurLite | null>(null);
+
 	constructor(private http: MyHttpClient) { }
 
 	/**
 	 * Méthode permettant de récupérer l'utilisateur connecté
 	 * @returns un observable de l'objet Collaborateur
 	 */
-	getProfile(): Observable<Collaborateur> {
+	getProfile(): Observable<CollaborateurLite> {
 		return this.http.get(`/collaborateur/me`);
+	}
+
+	setUser(user: CollaborateurLite): void {
+		this.userSubject.next(user);
+	}
+
+	getUser(): CollaborateurLite | null {
+		return this.userSubject.value;
+	}
+
+	clearUser(): void {
+		this.userSubject.next(null);
 	}
 }

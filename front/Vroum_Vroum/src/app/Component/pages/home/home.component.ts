@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UserService, Collaborateur } from '../../../../core/auth/user.service';
+import { UserService, CollaborateurLite } from '../../../../core/auth/user.service';
 import { AuthService } from '../../../../core/auth/auth.service';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -13,26 +12,17 @@ import { Observable } from 'rxjs';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  collaborateur?: Collaborateur;
+  collaborateur?: CollaborateurLite | null;
   errorMessage = '';
-  // ! = dit à JS que la propriété sera initialisée avant d'être utilisée
-  isAuthenticated$!: Observable<boolean>;
 
   constructor(private userService: UserService, private authService: AuthService) {
   }
 
   ngOnInit() {
-    // Propriété indiquant si l'utilisateur est connecté ou non
-    this.isAuthenticated$ = this.authService.isAuthenticated$;
-
-    this.isAuthenticated$.subscribe(isAuth => {
-      if (isAuth) {
-        this.userService.getProfile().subscribe({
-          next: (user) => this.collaborateur = user,
-          error: (err) => console.error('Non authentifié', err)
-        });
-      } else {
-        this.collaborateur = undefined;
+    // Surveille les modifications du userSubject et récupère l'utilisateur s'il se connecte
+    this.userService.userSubject.subscribe({
+      next: (data) => {
+        this.collaborateur = data;
       }
     });
   }
