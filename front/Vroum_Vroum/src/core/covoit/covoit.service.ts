@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-/* ---------- MODELS ---------- */
 export interface Adresse {
   id: number;
   numero: string;
@@ -34,7 +33,6 @@ export interface Covoiturage {
   vehicule: VehiculeLite;
   passagers: CollaborateurLite[];
 }
-/* ---------------------------- */
 
 @Injectable({
   providedIn: 'root'
@@ -79,11 +77,11 @@ export class CovoitService {
     });
   }
 
-  reserver(id: number): Observable<boolean> {
-    return this.http.put<boolean>(`${this.apiUrl}/reserver/${id}`, {}, {
-      headers: this.getAuthHeaders()
-    });
+  reserverCovoiturage(idCovoiturage: number, idCollaborateur: number): Observable<void> {
+    const url = `${this.apiUrl}/reservations/reserver/${idCovoiturage}/${idCollaborateur}`;
+    return this.http.put<void>(url, {}, {headers: this.getAuthHeaders(),withCredentials: true});
   }
+
 
   annulerReservation(id: number): Observable<boolean> {
     return this.http.put<boolean>(`${this.apiUrl}/reservations/annuler/${id}`, {}, {

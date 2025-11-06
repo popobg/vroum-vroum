@@ -6,7 +6,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },
   {
     path: 'rechercher-covoit',
-    loadComponent: () => import("./Component/pages/covoit/recherche.covoit.component").then(m => m.RechercheCovoitComponent)
+    loadComponent: () => import("./Component/pages/recherche_covoit/recherche.covoit.component").then(m => m.RechercheCovoitComponent)
   },
   // { path: 'mes-covoits-reserves', component: MesCovoitsReservesComponent },
   // { path: 'mes-covoits-organises', component: MesCovoitsOrganisesComponent },

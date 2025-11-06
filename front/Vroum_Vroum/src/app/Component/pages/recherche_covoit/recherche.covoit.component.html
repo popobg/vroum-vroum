@@ -42,7 +42,25 @@
     <td>{{ c.date | date:'short' }}</td>
     <td>{{ c.organisateur?.prenom }} {{ c.organisateur?.nom }}</td>
     <td>{{ c.vehicule?.marque }} {{ c.vehicule?.modele }}</td>
+    <td>
+      <button (click)="ouvrirPopup(c)">Réserver</button> <!-- Bouton d'action -->
+    </td>
   </tr>
   </tbody>
 </table>
+
+<div *ngIf="popupVisible" class="popup-overlay">
+  <div class="popup-content">
+    <h3>Confirmation de réservation</h3>
+    <p><strong>Départ :</strong> {{ covoiturageSelectionne?.adresseDepart?.nomVille }} ({{ covoiturageSelectionne?.adresseDepart?.codePostal }})</p>
+    <p><strong>Arrivée :</strong> {{ covoiturageSelectionne?.adresseArrivee?.nomVille }} ({{ covoiturageSelectionne?.adresseArrivee?.codePostal }})</p>
+    <p><strong>Date :</strong> {{ covoiturageSelectionne?.date | date:'short' }}</p>
+    <p><strong>Conducteur :</strong> {{ covoiturageSelectionne?.organisateur?.prenom }} {{ covoiturageSelectionne?.organisateur?.nom }}</p>
+
+    <div class="popup-buttons">
+      <button (click)="validerReservation()">Valider</button>
+      <button (click)="fermerPopup()">Annuler</button>
+    </div>
+  </div>
+</div>
 

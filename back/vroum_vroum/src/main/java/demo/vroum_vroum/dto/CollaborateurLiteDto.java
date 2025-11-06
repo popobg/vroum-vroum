@@ -6,6 +6,8 @@ import java.io.Serializable;
  * Collaborateur DTO avec des informations allégées (lite)
  */
 public class CollaborateurLiteDto implements Serializable {
+    private int id;
+
     /** Nom du collaborateur */
     private String nom;
 
@@ -24,7 +26,8 @@ public class CollaborateurLiteDto implements Serializable {
      * @param prenom Prénom
      * @param telephone Numéro téléphone
      */
-    public CollaborateurLiteDto(String nom, String prenom, String telephone) {
+    public CollaborateurLiteDto(int id, String nom, String prenom, String telephone) {
+        this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.telephone = telephone;
@@ -76,5 +79,13 @@ public class CollaborateurLiteDto implements Serializable {
      */
     public void setTelephone(String telephone) {
         this.telephone = telephone;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -18,7 +18,7 @@ public class CollaborateurMapper {
      * @return un CollaborateurLiteDto
      */
     public static CollaborateurLiteDto toLiteDto(Collaborateur collaborateur) {
-        return new CollaborateurLiteDto(collaborateur.getNom(), collaborateur.getPrenom(), collaborateur.getTelephone());
+        return new CollaborateurLiteDto(collaborateur.getId(), collaborateur.getNom(), collaborateur.getPrenom(), collaborateur.getTelephone());
     }
 
     /**

@@ -31,15 +31,26 @@ export class LoginComponent {
 
   onSubmit() {
     const { pseudo, password } = this.loginForm.value;
+    this.loading = true;
 
+    //Appel pour vérifier login
     this.userService.login(pseudo!, password!).subscribe({
       next: () => {
-        this.loading = false;
-        // stocke le pseudo dans un service ou localStorage
-        localStorage.setItem('pseudo', pseudo!);
-        localStorage.setItem('password', password!);
+        //Une fois login réussi, récupérer le collaborateur courant
+        this.userService.getCurrentUser(pseudo!, password!).subscribe({
+          next: (user) => {
+            //Stocker l’utilisateur connecté dans le service et localStorage
+            this.userService.setUtilisateurConnecte(user);
 
-        this.router.navigateByUrl('/home');
+            this.loading = false;
+            this.router.navigateByUrl('/home'); // ou ta page principale
+          },
+          error: (err) => {
+            this.loading = false;
+            this.errorMessage = 'Impossible de récupérer les infos utilisateur.';
+            console.error(err);
+          }
+        });
       },
       error: (err) => {
         this.loading = false;
@@ -47,5 +58,6 @@ export class LoginComponent {
       }
     });
   }
+
 
 }
