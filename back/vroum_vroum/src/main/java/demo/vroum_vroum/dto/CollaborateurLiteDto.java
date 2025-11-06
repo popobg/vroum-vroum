@@ -44,6 +44,14 @@ public class CollaborateurLiteDto implements Serializable {
     }
 
     /**
+     * Setter
+     * @return id
+     */
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    /**
      * Getter
      * @return nom
      */
@@ -89,13 +97,5 @@ public class CollaborateurLiteDto implements Serializable {
      */
     public void setTelephone(String telephone) {
         this.telephone = telephone;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 }
