@@ -7,10 +7,10 @@ import { DatePipe, NgIf, NgFor } from '@angular/common';
   selector: 'app-reservation-covoit',
   standalone: true,
   imports: [DatePipe, NgIf, NgFor],
-  templateUrl: './reservation.covoit.component.html',
-  styleUrls: ['./reservation.covoit.component.css']
+  templateUrl: './reservation_covoit.component.html',
+  styleUrls: ['./reservation_covoit.component.css']
 })
-export class ReservationCovoitComponent implements OnInit {
+export class Reservation_covoitComponent implements OnInit {
   mesReservations: Covoiturage[] = [];
   utilisateurConnecte: any = null;
 

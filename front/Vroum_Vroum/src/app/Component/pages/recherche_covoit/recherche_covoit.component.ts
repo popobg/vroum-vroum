@@ -8,9 +8,9 @@ import { UserService } from '../../../../core/auth/user.service'
   selector: 'app-recherche-covoit',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './recherche.covoit.component.html'
+  templateUrl: './recherche_covoit.component.html'
 })
-export class RechercheCovoitComponent {
+export class Recherche_covoitComponent {
   covoiturages: Covoiturage[] = [];
   filtres = {
     villedep: '',
