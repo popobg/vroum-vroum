@@ -1,18 +1,14 @@
 package demo.vroum_vroum.restControleurs;
 
 import demo.vroum_vroum.dto.ReservationDto;
-import demo.vroum_vroum.entities.Collaborateur;
 import demo.vroum_vroum.entities.Reservation;
-import demo.vroum_vroum.exceptions.Controle;
 import demo.vroum_vroum.mappers.ReservationMapper;
-import demo.vroum_vroum.services.CollaborateurService;
 import demo.vroum_vroum.services.ReservationService;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,18 +21,14 @@ public class ReservationRestControleur {
     /** Service concernant la reservatio*/
     private final ReservationService reservationService;
 
-    /**Service concernant les collaborateurs */
-    private final CollaborateurService collaborateurService;
-
     /**
      * Constructeur ReservationRestControlleur
      *
      * @param reservationService service pour la réservation
      * @param collaborateurService service pour les collaborateurs
      */
-    public ReservationRestControleur(ReservationService reservationService, CollaborateurService collaborateurService) {
+    public ReservationRestControleur(ReservationService reservationService) {
         this.reservationService = reservationService;
-        this.collaborateurService = collaborateurService;
     }
 
     /**

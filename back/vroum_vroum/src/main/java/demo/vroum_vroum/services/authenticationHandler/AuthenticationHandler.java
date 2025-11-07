@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 public class AuthenticationHandler {
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
+    public static AuthenticationFailureHandler authenticationFailureHandler() {
         return (request, response, exception) -> {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");

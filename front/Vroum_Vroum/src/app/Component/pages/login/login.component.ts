@@ -3,25 +3,27 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/auth/auth.service';
-import { UserService} from '../../../../core/auth/user.service';
-import { HttpClientModule } from '@angular/common/http';
+import { MyHttpClient } from '../../../http-client';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent {
   loginForm;
   loading = false;
   errorMessage = '';
+  backendUrl = 'http://localhost:8080';
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService,
-    private router: Router
+    private authService: AuthService,
+    private router: Router,
+    private http: MyHttpClient
   ) {
     this.loginForm = this.fb.group({
       pseudo: ['', [Validators.required, Validators.minLength(1)]],
@@ -29,35 +31,21 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     const { pseudo, password } = this.loginForm.value;
     this.loading = true;
 
-    //Appel pour vérifier login
-    this.userService.login(pseudo!, password!).subscribe({
+    this.authService.login(pseudo!, password!).subscribe({
       next: () => {
-        //Une fois login réussi, récupérer le collaborateur courant
-        this.userService.getCurrentUser(pseudo!, password!).subscribe({
-          next: (user) => {
-            //Stocker l’utilisateur connecté dans le service et localStorage
-            this.userService.setUtilisateurConnecte(user);
-
-            this.loading = false;
-            this.router.navigateByUrl('/home'); // ou ta page principale
-          },
-          error: (err) => {
-            this.loading = false;
-            this.errorMessage = 'Impossible de récupérer les infos utilisateur.';
-            console.error(err);
-          }
-        });
-      },
-      error: (err) => {
         this.loading = false;
-        this.errorMessage = err.error || 'Identifiants incorrects';
+
+        // Redirection vers la page d'accueil du site
+        this.router.navigateByUrl('/home');
+      },
+      error: () => {
+        this.loading = false;
+        this.errorMessage ='Identifiants incorrects';
       }
     });
   }
-
-
 }

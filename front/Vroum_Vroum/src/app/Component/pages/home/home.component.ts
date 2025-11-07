@@ -1,30 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { UserService, Collaborateur } from '../../../../core/auth/user.service';
-import { HttpClientModule } from '@angular/common/http';
+import { UserService } from '../../../../core/auth/user.service';
+import { AuthService } from '../../../../core/auth/auth.service';
+import { CollaborateurLite } from '../../../Model/CollaborateurLite';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, HttpClientModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  collaborateur?: Collaborateur;
+  collaborateur?: CollaborateurLite | null;
   errorMessage = '';
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private authService: AuthService) {
+  }
 
   ngOnInit() {
-    const pseudo = localStorage.getItem('pseudo');
-    const password = localStorage.getItem('password');
-    if (!pseudo || !password) return;
-
-    this.userService.getCurrentUser(pseudo!, password!).subscribe({
-      next: (user) => this.collaborateur = user,
-      error: (err) => console.error('Non authentifié', err)
+    // Surveille les modifications du userSubject et récupère l'utilisateur s'il se connecte
+    this.userService.userSubject.subscribe({
+      next: (data) => {
+        this.collaborateur = data;
+      }
     });
   }
 }
