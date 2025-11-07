@@ -33,20 +33,12 @@ pipeline {
             }
         }
 
-        stage('Packaging') {
+        stage('deploiement') {
+            when {
+                branch 'main'
+            }
             steps {
                 sh "mvn -f back/vroum_vroum/pom.xml -Dmaven.repo.local=.m2 package"
-            }
-        }
-
-        // stage('Validation manuelle pour déploiement') {
-        //     steps {
-        //         input message: 'Souhaitez-vous déployer en staging ?'
-        //     }
-        // }
-
-        stage('deploiement') {
-            steps {
                 sh "rm -rf ${env.DEPLOY_PATH}"
                 sh "mkdir ${env.DEPLOY_PATH}"
                 sh "cp back/vroum_vroum/target/*.jar ${env.DEPLOY_PATH}"

@@ -3,25 +3,27 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../../core/auth/auth.service';
-import { UserService} from '../../../../core/auth/user.service';
-import { HttpClientModule } from '@angular/common/http';
+import { MyHttpClient } from '../../../http-client';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
+
 export class LoginComponent {
   loginForm;
   loading = false;
   errorMessage = '';
+  backendUrl = 'http://localhost:8080';
 
   constructor(
     private fb: FormBuilder,
-    private userService: UserService,
-    private router: Router
+    private authService: AuthService,
+    private router: Router,
+    private http: MyHttpClient
   ) {
     this.loginForm = this.fb.group({
       pseudo: ['', [Validators.required, Validators.minLength(1)]],
@@ -29,23 +31,21 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     const { pseudo, password } = this.loginForm.value;
+    this.loading = true;
 
-    this.userService.login(pseudo!, password!).subscribe({
+    this.authService.login(pseudo!, password!).subscribe({
       next: () => {
         this.loading = false;
-        // stocke le pseudo dans un service ou localStorage
-        localStorage.setItem('pseudo', pseudo!);
-        localStorage.setItem('password', password!);
 
+        // Redirection vers la page d'accueil du site
         this.router.navigateByUrl('/home');
       },
-      error: (err) => {
+      error: () => {
         this.loading = false;
-        this.errorMessage = err.error || 'Identifiants incorrects';
+        this.errorMessage ='Identifiants incorrects';
       }
     });
   }
-
 }

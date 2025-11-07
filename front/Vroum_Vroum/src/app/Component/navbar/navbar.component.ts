@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../core/auth/auth.service';
+import { Observable } from 'rxjs';
+import { UserService } from '../../../core/auth/user.service';
+import { CollaborateurLite } from '../../Model/CollaborateurLite';
 
 @Component({
   selector: 'app-navbar',
@@ -9,4 +13,18 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {}
+export class NavbarComponent {
+  isAuthenticated: Observable<CollaborateurLite | null>;
+
+  constructor(private authService: AuthService, public userService: UserService, private router: Router) {
+    this.isAuthenticated = this.userService.userSubject;
+  }
+
+  logout() {
+    this.authService.logout().subscribe({
+      next: () => {
+        this.router.navigateByUrl("/home");
+      }
+    });
+  }
+}

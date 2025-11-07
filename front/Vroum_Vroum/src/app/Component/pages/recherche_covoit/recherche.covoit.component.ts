@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CovoitService, Covoiturage } from '../../../../core/covoit/covoit.service';
+import { CovoitService } from '../../../../core/covoit/covoit.service';
+import { UserService } from '../../../../core/auth/user.service'
+import { Covoiturage } from '../../../Model/Covoiturage';
 
 @Component({
   selector: 'app-recherche-covoit',
@@ -11,6 +13,7 @@ import { CovoitService, Covoiturage } from '../../../../core/covoit/covoit.servi
   styleUrls: ['./recherche.covoit.component.css']
 })
 export class RechercheCovoitComponent {
+  /** VARIABLES ET CONSTANTES */
   covoiturages: Covoiturage[] = [];
   filtres = {
     villedep: '',
@@ -21,7 +24,20 @@ export class RechercheCovoitComponent {
   };
   erreurMessage = '';
 
-  constructor(private covoitService: CovoitService) {}
+  popupVisible = false;
+  covoiturageSelectionne: any = null;
+
+  /**
+   * Constructeur
+   * @param covoitService Service lié au covoiturage
+   * @param userService Service lié à l'utilisateur
+   */
+  constructor(private covoitService: CovoitService, private userService: UserService) {}
+
+  ngOnInit(): void {
+    // On affiche tous les covoiturages
+    this.chargerTous();
+  }
 
   // charge tous les covoiturages au démarrage
   chargerTous(): void {
@@ -37,7 +53,7 @@ export class RechercheCovoitComponent {
     });
   }
 
-  // recherche filtrée (utilisé par le formulaire)
+  // recherche filtrée (utilisée par le formulaire)
   rechercher(): void {
     // si tous les filtres sont vides, on recharge tout
     const allEmpty = !this.filtres.villedep && !this.filtres.cpdep && !this.filtres.villearr && !this.filtres.cparr && !this.filtres.date;
@@ -46,7 +62,7 @@ export class RechercheCovoitComponent {
       return;
     }
 
-    // date : si l'utilisateur n'a rien saisi, on envoie une date actuelle
+    // date : si l'utilisateur n'a rien saisi, on envoie la date actuelle
     const dateParam = this.filtres.date ? new Date(this.filtres.date).toISOString() : new Date().toISOString();
 
     this.covoitService.rechercher(
@@ -67,8 +83,39 @@ export class RechercheCovoitComponent {
     });
   }
 
-  ngOnInit(): void {
-    // au démarrage, on affiche tout
-    this.chargerTous();
+  ouvrirPopup(covoiturage: any) {
+    this.covoiturageSelectionne = covoiturage;
+    this.popupVisible = true;
+  }
+
+  fermerPopup() {
+    this.popupVisible = false;
+    this.covoiturageSelectionne = null;
+  }
+
+  validerReservation() {
+    if (!this.covoiturageSelectionne) return;
+
+    const utilisateur = this.userService.getUser();
+    console.log(utilisateur)
+
+    if (!utilisateur) {
+      alert('Veuillez vous connecter avant de réserver.');
+      return;
+    }
+
+    const idCovoiturage = this.covoiturageSelectionne.id;
+    const idCollaborateur = utilisateur.id;
+
+    this.covoitService.reserverCovoiturage(idCovoiturage, idCollaborateur).subscribe({
+      next: () => {
+        alert('Réservation confirmée !');
+        this.fermerPopup();
+      },
+      error: (err) => {
+        const message = err.error?.message || 'Erreur lors de la réservation.';
+        alert(message);
+      }
+    });
   }
 }

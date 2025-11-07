@@ -79,7 +79,7 @@ public class CovoiturageRestControleur {
      * @throws EntityNotFoundException 404 : collaborateur non trouvé
      */
     @GetMapping("/reservations")
-    public ResponseEntity<Set<CovoiturageDto>> getMesReservations(int idCollaborateur) throws EntityNotFoundException {
+    public ResponseEntity<Set<CovoiturageDto>> getMesReservations(@RequestParam int idCollaborateur) throws EntityNotFoundException {
         return ResponseEntity.ok(CovoiturageMapper.toDtos(covoiturageService.getMesReservationsCovoit(idCollaborateur)));
     }
 
@@ -93,13 +93,20 @@ public class CovoiturageRestControleur {
      * @throws IllegalArgumentException 400 : conditions d'annulation non respectées
      * @throws Exception 500 : erreur lors de l'opération
      */
-    @PutMapping("/reservations/annuler/{id}")
-    public ResponseEntity<Void> annulerReservation(@PathVariable int idReservation, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
-        covoiturageService.annulerReservationCovoit(idReservation, idCollaborateur);
+    @PutMapping("/reservations/annuler/{idReservation}/{idCollaborateur}")
+    public ResponseEntity<Void> annulerReservation(
+            @PathVariable int idReservation,
+            @PathVariable int idCollaborateur) {
 
-        // Statut 204 si annulation OK
-        return ResponseEntity.noContent().build();
+        try {
+            covoiturageService.annulerReservationCovoit(idReservation, idCollaborateur);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            e.printStackTrace(); // voir l’erreur exacte dans les logs
+            return ResponseEntity.status(500).build();
+        }
     }
+
 
     /**
      * Réserve un covoiturage disponible en tant que passager collaborateur.
@@ -111,10 +118,14 @@ public class CovoiturageRestControleur {
      * @throws IllegalArgumentException 400 : conditions de réservation non satisfaites
      * @throws Exception 500 : erreur lors de l'opération
      */
-    @PutMapping("/reservations/reserver/{id}")
-    public ResponseEntity<Void> reserverCovoit(@PathVariable int idReservation, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
-        covoiturageService.reserverCovoit(idReservation, idCollaborateur);
+    @PutMapping("/reservations/reserver/{idReservation}/{idCollaborateur}")
+    public ResponseEntity<Void> reserverCovoit(
+            @PathVariable int idReservation,
+            @PathVariable int idCollaborateur)
+            throws EntityNotFoundException, IllegalArgumentException, Exception {
 
+        covoiturageService.reserverCovoit(idReservation, idCollaborateur);
         return ResponseEntity.noContent().build();
     }
+
 }

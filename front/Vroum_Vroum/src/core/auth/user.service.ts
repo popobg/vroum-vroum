@@ -1,29 +1,36 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { MyHttpClient } from '../../app/http-client';
+import { CollaborateurLite } from '../../app/Model/CollaborateurLite';
 
-export interface Collaborateur {
-  nom: string;
-  prenom: string;
-  telephone: string;
-}
-
+/**
+ * Classe de service gérant les requêtes liées à l'utilisateur (ou collaborateur) de l'application.
+ */
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class UserService {
-  private baseUrl = 'http://localhost:8080/collaborateur';
+	public userSubject = new BehaviorSubject<CollaborateurLite | null>(null);
 
-  constructor(private http: HttpClient) {}
+	constructor(private http: MyHttpClient) { }
 
-  login(pseudo: string, password: string): Observable<string> {
-    return this.http.post(`${this.baseUrl}/login?pseudo=${pseudo}&password=${password}`, '', { responseType: 'text' });
-  }
+	/**
+	 * Méthode permettant de récupérer l'utilisateur connecté
+	 * @returns un observable de l'objet Collaborateur
+	 */
+	getProfile(): Observable<CollaborateurLite> {
+		return this.http.get(`/collaborateur/me`);
+	}
 
-  getCurrentUser(pseudo: string, password: string): Observable<Collaborateur> {
-    const headers = {
-      Authorization: 'Basic ' + btoa(`${pseudo}:${password}`)
-    };
-    return this.http.get<Collaborateur>(`${this.baseUrl}/me`, { headers });
-  }
+	setUser(user: CollaborateurLite): void {
+		this.userSubject.next(user);
+	}
+
+	getUser(): CollaborateurLite | null {
+		return this.userSubject.value;
+	}
+
+	clearUser(): void {
+		this.userSubject.next(null);
+	}
 }

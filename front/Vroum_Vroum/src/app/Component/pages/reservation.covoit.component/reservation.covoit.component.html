@@ -1,0 +1,44 @@
+<h2>Mes réservations</h2>
+
+<table *ngIf="mesReservations.length > 0; else noData" border="1">
+  <thead>
+  <tr>
+    <th>Date</th>
+    <th>Départ</th>
+    <th>Arrivée</th>
+    <th>Organisateur</th>
+    <th>Places</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let covoit of mesReservations">
+    <td>{{ covoit.date | date:'short' }}</td>
+    <td>{{ covoit.adresseDepart?.nomVille }} ({{ covoit.adresseDepart?.codePostal }})</td>
+    <td>{{ covoit.adresseArrivee?.nomVille }} ({{ covoit.adresseArrivee?.codePostal }})</td>
+    <td>{{ covoit.organisateur?.prenom }} {{ covoit.organisateur?.nom }}</td>
+    <td>{{ covoit.nbPlaces }}</td>
+    <td>
+      <button class="btn btn-danger btn-sm" (click)="ouvrirPopup(covoit)">Annuler</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<ng-template #noData>
+  <p>Aucune réservation trouvée.</p>
+</ng-template>
+
+<div class="popup-overlay" *ngIf="popupVisible">
+  <div class="popup">
+    <h3>Annuler la réservation</h3>
+
+    <p><strong>Date :</strong> {{ covoitSelectionne?.date | date:'short' }}</p>
+    <p><strong>Trajet :</strong> {{ covoitSelectionne?.adresseDepart?.nomVille }} → {{ covoitSelectionne?.adresseArrivee?.nomVille }}</p>
+    <p><strong>Conducteur :</strong> {{ covoitSelectionne?.organisateur?.prenom }} {{ covoitSelectionne?.organisateur?.nom }}</p>
+
+    <div class="popup-actions">
+      <button class="btn btn-secondary" (click)="fermerPopup()">Fermer</button>
+      <button class="btn btn-danger" (click)="confirmerAnnulation(covoitSelectionne)">Confirmer l'annulation</button>
+    </div>
+  </div>
+</div>
