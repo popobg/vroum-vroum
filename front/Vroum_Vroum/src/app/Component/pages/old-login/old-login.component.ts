@@ -32,20 +32,7 @@ export class OldLoginComponent {
   onSubmit() {
     const { pseudo, password } = this.loginForm.value;
 
-    this.userService.login(pseudo!, password!).subscribe({
-      next: () => {
-        this.loading = false;
-        // stocke le pseudo dans un service ou localStorage
-        localStorage.setItem('pseudo', pseudo!);
-        localStorage.setItem('password', password!);
 
-        this.router.navigateByUrl('/home');
-      },
-      error: (err) => {
-        this.loading = false;
-        this.errorMessage = err.error || 'Identifiants incorrects';
-      }
-    });
   }
 
 }
