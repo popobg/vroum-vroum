@@ -1,17 +1,85 @@
+/* Navbar responsive / cohérente avec le background animé */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background: linear-gradient(135deg, #185a9d, #43cea2);
-  color: white;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  position: relative;
+  z-index: 1100; /* devant le background animé */
+  background: rgba(2,10,25,0.72); /* fond sombre semi‑transparent */
+  border-bottom: 1px solid rgba(255,255,255,0.06); /* délimitation */
+  box-shadow: 0 6px 18px rgba(2,10,25,0.45); /* légère profondeur */
+  padding: 0.5rem 0.75rem;
+  transition: background .2s ease, box-shadow .2s ease;
+}
+.page-wrapper {
+  padding-top: 0; /* was 60px for fixed navbar */
+}
+/* Option : fond léger lors du scroll (ajoute la classe .scrolled via JS si besoin) */
+.navbar.scrolled {
+  backdrop-filter: blur(6px);
+  background: rgba(2,10,25,0.35);
 }
 
+/* Brand */
+.navbar .navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.navbar .brand-text {
+  font-weight: 700;
+  color: #eafff4;
+  letter-spacing: 0.4px;
+}
+
+/* Toggler (hamburger) */
+.navbar-toggler {
+  border-color: rgba(255,255,255,0.14);
+}
+.navbar-toggler-icon {
+  filter: invert(1) brightness(2); /* rend l'icône visible sur fond sombre */
+}
+
+/* Liens principaux */
+.navbar .nav-link {
+  color: rgba(255,255,255,0.92);
+  margin: 0 0.35rem;
+  transition: color .15s, transform .12s;
+  padding: .3rem .45rem;
+}
+
+
+
+/* Ajuster la couleur des liens pour contraste */
+.navbar .nav-link,
+.navbar .navbar-brand,
+.navbar .logout {
+  color: #eafff4 !important;
+}
+/* Bouton Déconnexion */
+.navbar .logout {
+  border-color: rgba(255,255,255,0.12);
+  color: #fff;
+  background: transparent;
+  padding: .35rem .6rem;
+}
+.navbar .logout:hover {
+  background: rgba(67,206,162,0.08);
+  border-color: rgba(67,206,162,0.34);
+}
+
+/* Collapse: fond et espacement sur mobile pour lisibilité */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background: rgba(2,10,25,0.6);
+    border-radius: 8px;
+    padding: .75rem;
+    margin-top: .45rem;
+  }
+  .navbar .nav-link { display: block; padding: .5rem 0; }
+}
+
+/* Petite amélioration d'accessibilité: agrandir l'aire cliquable des liens */
+.navbar .nav-link, .navbar .navbar-brand, .navbar .logout {
+  touch-action: manipulation;
+}
 .navbar a {
   color: white;
   text-decoration: none;
@@ -44,14 +112,4 @@
   align-items: center;
 }
 
-.logout {
-  background: rgba(255,255,255,0.15);
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  transition: 0.3s;
-}
 
-.logout:hover {
-  background: rgba(255,255,255,0.3);
-  color: #fff;
-}
