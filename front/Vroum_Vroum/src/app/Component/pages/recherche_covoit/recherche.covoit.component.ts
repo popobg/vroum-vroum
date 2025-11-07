@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CovoitService, Covoiturage } from '../../../../core/covoit/covoit.service';
+import { CovoitService } from '../../../../core/covoit/covoit.service';
 import { UserService } from '../../../../core/auth/user.service'
+import { Covoiturage } from '../../../Model/Covoiturage';
 
 @Component({
   selector: 'app-recherche-covoit',
@@ -11,6 +12,7 @@ import { UserService } from '../../../../core/auth/user.service'
   templateUrl: './recherche.covoit.component.html'
 })
 export class RechercheCovoitComponent {
+  /** VARIABLES ET CONSTANTES */
   covoiturages: Covoiturage[] = [];
   filtres = {
     villedep: '',
@@ -21,9 +23,20 @@ export class RechercheCovoitComponent {
   };
   erreurMessage = '';
 
-  constructor(
-    private covoitService: CovoitService,
-    private userService: UserService) {}
+  popupVisible = false;
+  covoiturageSelectionne: any = null;
+
+  /**
+   * Constructeur
+   * @param covoitService Service lié au covoiturage
+   * @param userService Service lié à l'utilisateur
+   */
+  constructor(private covoitService: CovoitService, private userService: UserService) {}
+
+  ngOnInit(): void {
+    // On affiche tous les covoiturages
+    this.chargerTous();
+  }
 
   // charge tous les covoiturages au démarrage
   chargerTous(): void {
@@ -39,7 +52,7 @@ export class RechercheCovoitComponent {
     });
   }
 
-  // recherche filtrée (utilisé par le formulaire)
+  // recherche filtrée (utilisée par le formulaire)
   rechercher(): void {
     // si tous les filtres sont vides, on recharge tout
     const allEmpty = !this.filtres.villedep && !this.filtres.cpdep && !this.filtres.villearr && !this.filtres.cparr && !this.filtres.date;
@@ -48,7 +61,7 @@ export class RechercheCovoitComponent {
       return;
     }
 
-    // date : si l'utilisateur n'a rien saisi, on envoie une date actuelle
+    // date : si l'utilisateur n'a rien saisi, on envoie la date actuelle
     const dateParam = this.filtres.date ? new Date(this.filtres.date).toISOString() : new Date().toISOString();
 
     this.covoitService.rechercher(
@@ -69,14 +82,6 @@ export class RechercheCovoitComponent {
     });
   }
 
-  ngOnInit(): void {
-    // au démarrage, on affiche tout
-    this.chargerTous();
-  }
-
-  popupVisible = false;
-  covoiturageSelectionne: any = null;
-
   ouvrirPopup(covoiturage: any) {
     this.covoiturageSelectionne = covoiturage;
     this.popupVisible = true;
@@ -90,8 +95,9 @@ export class RechercheCovoitComponent {
   validerReservation() {
     if (!this.covoiturageSelectionne) return;
 
-    const utilisateur = this.userService.getUtilisateurConnecte();
+    const utilisateur = this.userService.getUser();
     console.log(utilisateur)
+
     if (!utilisateur) {
       alert('Veuillez vous connecter avant de réserver.');
       return;

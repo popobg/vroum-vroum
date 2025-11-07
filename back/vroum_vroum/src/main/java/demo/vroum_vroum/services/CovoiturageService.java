@@ -113,6 +113,8 @@ public class CovoiturageService {
         covoit.getCollaborateurs().remove(passager);
         // On supprime le covoit des réservations du passager
         passager.getCovoiturages().remove(covoit);
+        // Une place disponible de plus dans le covoiturage !
+        covoit.setNbPlaces(covoit.getNbPlaces() + 1);
 
         // On sauvegarde les modifications en BDD
         covoiturageRepository.save(covoit);

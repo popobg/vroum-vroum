@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../../core/auth/user.service';
-import { CovoitService, Covoiturage } from '../../../../core/covoit/covoit.service';
+import { CovoitService } from '../../../../core/covoit/covoit.service';
 import { DatePipe, NgIf, NgFor } from '@angular/common';
+import { Covoiturage } from '../../../Model/Covoiturage';
+import { CollaborateurLite } from '../../../Model/CollaborateurLite';
 
 @Component({
   selector: 'app-reservation-covoit',
@@ -12,7 +14,7 @@ import { DatePipe, NgIf, NgFor } from '@angular/common';
 })
 export class ReservationCovoitComponent implements OnInit {
   mesReservations: Covoiturage[] = [];
-  utilisateurConnecte: any = null;
+  utilisateurConnecte!: CollaborateurLite;
 
   popupVisible = false;
   covoitSelectionne: Covoiturage | null = null;
@@ -23,12 +25,7 @@ export class ReservationCovoitComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.utilisateurConnecte = this.userService.getUtilisateurConnecte();
-    if (!this.utilisateurConnecte) {
-      console.error('Utilisateur non connecté !');
-      return;
-    }
-
+    this.utilisateurConnecte = this.userService.getUser()!;
     this.chargerReservations();
   }
 
@@ -50,10 +47,7 @@ export class ReservationCovoitComponent implements OnInit {
   }
 
   confirmerAnnulation(covoit: any) {
-    const idReservation = covoit.id;
-    const idCollaborateur = this.userService.getUtilisateurConnecte()!.id
-
-    this.covoitService.annulerReservation(idReservation, idCollaborateur).subscribe({
+    this.covoitService.annulerReservation(covoit.id, this.utilisateurConnecte.id).subscribe({
       next: () => {
         alert('Réservation annulée avec succès');
         this.chargerReservations();

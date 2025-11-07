@@ -1,2 +1,3 @@
 - Un user connecté à la fois.
 - CSRF désactivé dans config/SecurityConfig pour pouvoir tester facilement sur Postman les routes nécessitant une authentification. --> le réactiver une fois le front disponible.
+- Mettre les identifiants de connexion à la BDD dans un fichier .env non push sur git

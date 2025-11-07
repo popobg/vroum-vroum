@@ -1,17 +1,23 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <div>
-    <label>Pseudo:</label>
-    <input formControlName="pseudo" />
-  </div>
+<div>
+  <h2>Connexion</h2>
 
-  <div>
-    <label>Mot de passe:</label>
-    <input type="password" formControlName="password" />
-  </div>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="pseudo">Pseudo:</label>
+      <input type="text" id="pseudo" name = "pseudo" formControlName="pseudo" />
+    </div>
 
-  <div *ngIf="errorMessage" style="color:red">{{ errorMessage }}</div>
+    <div>
+      <label for="password">Mot de passe:</label>
+      <input type="password" id="password" name="password" formControlName="password" />
+    </div>
 
-  <button type="submit" [disabled]="loading">
-    {{ loading ? 'Connexion...' : 'Se connecter' }}
-  </button>
-</form>
+    @if (errorMessage) {
+      <p style="color:red">{{ errorMessage }}</p>
+    }
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Connexion en cours...' : 'Se connecter' }}
+    </button>
+  </form>
+</div>
