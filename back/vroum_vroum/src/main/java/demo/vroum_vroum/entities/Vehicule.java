@@ -1,5 +1,6 @@
 package demo.vroum_vroum.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -21,16 +22,18 @@ public class Vehicule implements Serializable {
     private int nbPlaces;
     @ManyToOne
     @JoinColumn(name = "ID_COLLABORATEUR")
+    @JsonBackReference
     private Collaborateur collaborateur;
 
     public Vehicule() {}
 
-    public Vehicule(int id, int nbPlaces, String modele, String marque, String immatriculation) {
+    public Vehicule(int id, int nbPlaces, String modele, String marque, String immatriculation, Collaborateur collaborateur) {
         this.id = id;
         this.nbPlaces = nbPlaces;
         this.modele = modele;
         this.marque = marque;
         this.immatriculation = immatriculation;
+        this.collaborateur = collaborateur;
     }
 
     public int getId() {
@@ -89,6 +92,7 @@ public class Vehicule implements Serializable {
                 ", marque='" + marque + '\'' +
                 ", modele='" + modele + '\'' +
                 ", nbPlaces=" + nbPlaces +
+                ", collaborateur=" + collaborateur +
                 '}';
     }
 }
