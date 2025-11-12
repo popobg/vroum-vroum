@@ -38,6 +38,7 @@ public class SecurityConfig {
                 // Toutes les routes à part les routes de login nécessitent d'être authentifiés
                 .anyRequest().authenticated()
             )
+            //.csrf(csrf -> csrf.disable())
             .httpBasic(Customizer.withDefaults())
             .formLogin(form -> form
                 .loginProcessingUrl("/api/auth/login")
@@ -52,6 +53,7 @@ public class SecurityConfig {
                 .deleteCookies("JSESSIONID")
                 .permitAll()
             );
+
 
         return http.build();
     }
