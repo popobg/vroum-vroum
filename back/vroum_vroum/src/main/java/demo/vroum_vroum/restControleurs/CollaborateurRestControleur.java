@@ -16,12 +16,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Optional;
 import java.util.Set;
 
+/**
+ * REST controller de l'entité Collaborateur.
+ */
 @RestController
 @RequestMapping("/collaborateur")
 public class CollaborateurRestControleur {
@@ -75,15 +76,13 @@ public class CollaborateurRestControleur {
 
     /**
      * Récupère les informations complètes d'un collaborateur.
-     * Réservé aux admins de l'application.
      *
      * @param id Id d'un collaborateur
      * @return l'entité Collaborateur demandée
      */
     @GetMapping("/{id}")
-    public ResponseEntity<CollaborateurDto> getCollaborateurById(@PathVariable int id) throws EntityNotFoundException {
+    public ResponseEntity<CollaborateurDto> getCollaborateurById(@PathVariable Integer id) throws EntityNotFoundException, IllegalArgumentException {
         Collaborateur collaborateur = collaborateurService.getCollaborateurById(id);
-
         return ResponseEntity.ok(CollaborateurMapper.toDto(collaborateur));
     }
 
@@ -105,13 +104,11 @@ public class CollaborateurRestControleur {
     /**
      * Met à jour les informations d'un collaborateur.
      *
-     * @param id Id du collaborateur à modifier
      * @param collaborateur le collaborateur avec informations modifiées
      * @return le collaborateur avec ses informations modifiées
      */
-    @PutMapping("/{id}")
-    public Collaborateur updateCollaborateur(@PathVariable int id, @RequestBody Collaborateur collaborateur) {
-        collaborateur.setId(id);
+    @PutMapping
+    public Collaborateur updateCollaborateur(@RequestBody Collaborateur collaborateur) throws EntityNotFoundException {
         return collaborateurService.saveCollaborateur(collaborateur);
     }
 
@@ -124,7 +121,7 @@ public class CollaborateurRestControleur {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteCollaborateur(@PathVariable int id) throws EntityNotFoundException, RuntimeException {
+    public ResponseEntity<Void> deleteCollaborateur(@PathVariable Integer id) throws EntityNotFoundException, IllegalArgumentException, RuntimeException {
         collaborateurService.deleteCollaborateur(id);
         // Réponse 204 : suppression effectuée avec succès
         return ResponseEntity.noContent().build();
@@ -146,14 +143,5 @@ public class CollaborateurRestControleur {
         collaborateurService.deleteCollaborateur(collaborateur.getId());
         // Réponse 204 : suppression effectuée avec succès
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String pseudo, @RequestParam String password) {
-        Optional<Collaborateur> collaborateur = collaborateurService.login(pseudo, password);
-        if (collaborateur.isPresent()) {
-            return ResponseEntity.ok("Connexion réussie");
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Identifiants incorrects");
     }
 }

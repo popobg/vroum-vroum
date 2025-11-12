@@ -125,8 +125,4 @@ public class CollaborateurService implements UserDetailsService {
     public Collaborateur saveCollaborateur(Collaborateur collaborateur) {
         return collaborateurRepository.save(collaborateur);
     }
-
-    public Optional<Collaborateur> login(String pseudo, String password) {
-        return collaborateurRepository.findByPseudoAndPassword(pseudo, password);
-    }
 }
