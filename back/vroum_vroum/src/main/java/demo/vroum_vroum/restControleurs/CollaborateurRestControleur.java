@@ -13,6 +13,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,13 +28,18 @@ public class CollaborateurRestControleur {
     /** Service de l'entité Collaborateur */
     private final CollaborateurService collaborateurService;
 
+    /** Classe de sécurité permettant d'encoder le mot de passe */
+    private final PasswordEncoder passwordEncoder;
+
     /**
      * Constructeur de la classe CollaborateurRestControleur
      *
      * @param collaborateurService service collaborateur
+     * @param passwordEncoder classe permettant l'encodage du mot de passe
      */
-    public CollaborateurRestControleur(CollaborateurService collaborateurService) {
+    public CollaborateurRestControleur(CollaborateurService collaborateurService, PasswordEncoder passwordEncoder) {
         this.collaborateurService = collaborateurService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -90,8 +96,10 @@ public class CollaborateurRestControleur {
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public Collaborateur addCollaborateur(@RequestBody Collaborateur collaborateur) {
-        return collaborateurService.saveCollaborateur(collaborateur);
+    public CollaborateurLiteDto addCollaborateur(@RequestBody Collaborateur collaborateur) {
+        String password = collaborateur.getPassword();
+        collaborateur.setPassword(passwordEncoder.encode(password));
+        return CollaborateurMapper.toLiteDto(collaborateurService.saveCollaborateur(collaborateur));
     }
 
     /**
