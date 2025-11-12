@@ -1,1 +1,35 @@
-<p>covoit-organises works!</p>
+<h2>Mes covoiturages organisés</h2>
+
+<div class="actions">
+  <button class="btn btn-primary" (click)="allerVersCreation()">
+    Publier une annonce
+  </button>
+</div>
+
+<table *ngIf="covoitsOrganises.length > 0; else noData" class="table">
+  <thead>
+  <tr>
+    <th>Date</th>
+    <th>Départ</th>
+    <th>Arrivée</th>
+    <th>Places dispo</th>
+    <th>Distance</th>
+    <th>Durée</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let covoit of covoitsOrganises">
+    <td>{{ covoit.date | date:'short' }}</td>
+    <td>{{ covoit.adresseDepart?.ville }} ({{ covoit.adresseDepart?.codePostal }})</td>
+    <td>{{ covoit.adresseArrivee?.ville }} ({{ covoit.adresseArrivee?.codePostal }})</td>
+    <td>{{ covoit.nbPlaces }}</td>
+    <td>{{ covoit.distance }} km</td>
+    <td>{{ covoit.duree | number }} min</td>
+  </tr>
+  </tbody>
+</table>
+
+<ng-template #noData>
+  <p>Aucun covoiturage organisé pour le moment.</p>
+</ng-template>
+
