@@ -18,6 +18,7 @@ import java.util.List;
  * - PUT /vehicule
  * - DELETE /vehicule/{id}
  */
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/vehicule")
 public class VehiculeRestControleur {
