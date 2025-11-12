@@ -1,7 +1,9 @@
 package demo.vroum_vroum.services;
 
+import demo.vroum_vroum.dto.CovoiturageDto;
 import demo.vroum_vroum.entities.Collaborateur;
 import demo.vroum_vroum.entities.Covoiturage;
+import demo.vroum_vroum.mappers.CovoiturageMapper;
 import demo.vroum_vroum.repositories.CovoiturageRepository;
 import demo.vroum_vroum.utils.Validator;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +31,63 @@ public class CovoiturageService {
     public CovoiturageService(CovoiturageRepository covoiturageRepository, CollaborateurService collaborateurService) {
         this.covoiturageRepository = covoiturageRepository;
         this.collaborateurService = collaborateurService;
+    }
+
+    /**
+     * Méthode de service récupérant les covoiturages organisés par un collaborateur.
+     *
+     * @param idCollaborateur identifiant du collaborateur organisateur
+     * @return liste de covoiturages organisés
+     */
+    public Set<Covoiturage> getMesCovoituragesOrganises(int idCollaborateur) throws EntityNotFoundException {
+        Collaborateur collaborateur = collaborateurService.getCollaborateurById(idCollaborateur);
+
+        // On filtre tous les covoiturages où l'organisateur est ce collaborateur
+        return covoiturageRepository.findByOrganisateur(collaborateur);
+    }
+
+
+    public void creerCovoiturage(int idCollaborateur, CovoiturageDto covoitDto) throws EntityNotFoundException {
+        Collaborateur organisateur = collaborateurService.getCollaborateurById(idCollaborateur);
+        Covoiturage covoit = CovoiturageMapper.toEntity(covoitDto);
+        covoit.setOrganisateur(organisateur);
+        covoiturageRepository.save(covoit);
+    }
+
+    /**
+     * Met à jour un covoiturage existant.
+     * @param id identifiant du covoiturage à modifier
+     * @param covoiturageDonnees nouvelles données du covoiturage
+     * @return le covoiturage modifié
+     * @throws EntityNotFoundException si le covoiturage n’existe pas
+     */
+    public Covoiturage modifierCovoiturage(int id, Covoiturage covoiturageDonnees) {
+        Covoiturage existant = covoiturageRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Covoiturage non trouvé avec l'id " + id));
+
+        // ⚙️ Mise à jour des champs pertinents
+        existant.setDate(covoiturageDonnees.getDate());
+        existant.setNbPlaces(covoiturageDonnees.getNbPlaces());
+        existant.setDistance(covoiturageDonnees.getDistance());
+        existant.setDuree(covoiturageDonnees.getDuree());
+        existant.setAdresseDepart(covoiturageDonnees.getAdresseDepart());
+        existant.setAdresseArrivee(covoiturageDonnees.getAdresseArrivee());
+        existant.setOrganisateur(covoiturageDonnees.getOrganisateur());
+        existant.setVehicule(covoiturageDonnees.getVehicule());
+
+        return covoiturageRepository.save(existant);
+    }
+
+    /**
+     * Supprime un covoiturage existant.
+     * @param id identifiant du covoiturage
+     * @throws EntityNotFoundException si aucun covoiturage n'est trouvé
+     */
+    public void supprimerCovoiturage(int id) {
+        if (!covoiturageRepository.existsById(id)) {
+            throw new EntityNotFoundException("Aucun covoiturage trouvé avec l'id " + id);
+        }
+        covoiturageRepository.deleteById(id);
     }
 
     public Set<Covoiturage> findAll() {
@@ -83,7 +142,6 @@ public class CovoiturageService {
 
     /**
      * Méthode de service récupérant les covoiturages d'un passager.
-     * @param collaborateur collaborateur passager
      * @return liste de covoiturages
      */
     public Set<Covoiturage> getMesReservationsCovoit(int idCollaborateur) throws EntityNotFoundException {

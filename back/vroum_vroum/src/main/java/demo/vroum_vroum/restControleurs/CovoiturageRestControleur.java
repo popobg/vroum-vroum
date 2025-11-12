@@ -25,11 +25,65 @@ public class CovoiturageRestControleur {
     /**
      * Constructeur CovoiturageRestControleur
      * @param covoiturageService service pour le covoiturage
-     * @param collaborateurService service pour les collaborateurs
      */
     public CovoiturageRestControleur(CovoiturageService covoiturageService) {
         this.covoiturageService = covoiturageService;
     }
+
+    /**
+     * Récupère les covoiturages organisés par un collaborateur.
+     *
+     * @param idCollaborateur id du collaborateur organisateur
+     * @return set de covoiturages dto
+     * @throws EntityNotFoundException 404 : collaborateur non trouvé
+     */
+    @GetMapping("/organises")
+    public ResponseEntity<Set<CovoiturageDto>> getMesCovoituragesOrganises(@RequestParam int idCollaborateur)
+            throws EntityNotFoundException {
+        return ResponseEntity.ok(
+                CovoiturageMapper.toDtos(covoiturageService.getMesCovoituragesOrganises(idCollaborateur))
+        );
+    }
+
+
+    @PostMapping("/creer")
+    public ResponseEntity<Void> creerCovoiturage(
+            @RequestParam int idCollaborateur,
+            @RequestBody CovoiturageDto covoitDto) throws EntityNotFoundException {
+
+        covoiturageService.creerCovoiturage(idCollaborateur, covoitDto);
+        return ResponseEntity.status(201).build();
+    }
+
+
+    @PutMapping("/modifier/{id}")
+    public ResponseEntity<CovoiturageDto> modifierCovoiturage(
+            @PathVariable int id,
+            @RequestBody CovoiturageDto covoiturageDto) {
+        try {
+            var covoiturageModifie = covoiturageService.modifierCovoiturage(id, CovoiturageMapper.toEntity(covoiturageDto));
+            return ResponseEntity.ok(CovoiturageMapper.toDto(covoiturageModifie));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @DeleteMapping("/supprimer/{id}")
+    public ResponseEntity<Void> supprimerCovoiturage(@PathVariable int id) {
+        try {
+            covoiturageService.supprimerCovoiturage(id);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 
     @GetMapping("/tous")
     public ResponseEntity<Set<CovoiturageDto>> getTousLesCovoiturages() {

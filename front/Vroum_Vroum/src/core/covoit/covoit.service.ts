@@ -21,6 +21,15 @@ export class CovoitService {
     return this.http.get(`${this.baseUrl}/tous`);
   }
 
+  getCovoitOrganises(idCollaborateur: number): Observable<Covoiturage[]> {
+    const params = new HttpParams().set('idCollaborateur', idCollaborateur);
+    return this.http.get(`${this.baseUrl}/organises`, params);
+  }
+
+  creerCovoiturage(idCollaborateur: number, covoitData: any): Observable<void> {
+    return this.http.post(`${this.baseUrl}/creer?idCollaborateur=${idCollaborateur}`, covoitData);
+  }
+
   rechercher(villedep: string, cpdep: string, villearr: string, cparr: string, date: string): Observable<Covoiturage[]> {
     const params = new HttpParams()
       .set('villedep', villedep)
