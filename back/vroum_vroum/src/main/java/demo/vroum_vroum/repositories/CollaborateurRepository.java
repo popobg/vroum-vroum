@@ -24,6 +24,4 @@ public interface CollaborateurRepository extends JpaRepository<Collaborateur, In
      * @return un collaborateur ou un optional vide
      */
     Optional<Collaborateur> findByPseudo(String pseudo);
-
-    Optional<Collaborateur> findByPseudoAndPassword(String pseudo, String password);
 }
