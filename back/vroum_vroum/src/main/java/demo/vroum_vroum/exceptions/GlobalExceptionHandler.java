@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.Map;
 public class GlobalExceptionHandler {
     // Messages d'erreur par défaut
     private static final String DEFAULT_ENTITY_NOT_FOUND_ERROR_MESSAGE = "L'entité demandée est introuvable dans la base de données.";
+    private static final String DEFAULT_TYPE_MISMATCH_ERROR_MESSAGE = "L'argument n'a pas le type attendu et la conversion implicite est impossible.";
     private static final String DEFAULT_ILLEGAL_ARGUMENTS_ERROR_MESSAGE = "Les données communiquées ne sont pas valides.";
     private static final String DEFAULT_USER_NOT_FOUND_ERROR_MESSAGE = "Aucun utilisateur connecté.";
     private static final String DEFAULT_GENERAL_ERROR_MESSAGE = "Une erreur interne s'est produite.";
@@ -56,6 +58,17 @@ public class GlobalExceptionHandler {
         Map<String, String> response = new HashMap<>();
         response.put("Erreur", "IllegalArgumentException");
         response.put("message", StringUtils.isEmpty(ex.getMessage()) ? DEFAULT_ILLEGAL_ARGUMENTS_ERROR_MESSAGE : ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, String>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        log.error("TypeMismatch", ex);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("Erreur", "TypeMismatchException");
+        response.put("message", StringUtils.isEmpty(ex.getMessage()) ? DEFAULT_TYPE_MISMATCH_ERROR_MESSAGE : ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
