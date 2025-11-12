@@ -26,7 +26,8 @@ import demo.vroum_vroum.repositories.CollaborateurRepository;
 import demo.vroum_vroum.utils.Utils;
 
 /**
- * Classe de tests d'intégration, testant service et controller de Collaborateur
+ * Classe de tests d'intégration, testant service et controller de Collaborateur.
+ * Bouchonnage avec Mockito au niveau du repository.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -71,6 +72,16 @@ public class CollaborateurRestControleurTest {
                 .andExpect(jsonPath("$[*].pseudo").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$[*].adresse").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$[*].email").doesNotHaveJsonPath());
+    }
+
+    @Test
+    @WithMockUser(username = "mmartin", password = "password2", roles = "USER")
+    void testGetAllCollaborateurs_shouldReturnEmptyList() throws Exception {
+        when(collaborateurRepo.findAllCollaborateurs()).thenReturn(new HashSet<>());
+
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", is(0)));
     }
 
     @Test
@@ -122,6 +133,13 @@ public class CollaborateurRestControleurTest {
 
         this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/4")).andDo(print())
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser(username = "mmartin", password = "password2", roles = "USER")
+    void testGetById_shouldReturn400_idIsNotANumber() throws Exception {
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/a"))
+               .andExpect(status().isBadRequest());
     }
 
     @Test
