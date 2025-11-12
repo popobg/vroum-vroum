@@ -3,6 +3,7 @@
 // ==============================
 package demo.vroum_vroum.restControleurs;
 
+import demo.vroum_vroum.dto.CollaborateurDto;
 import demo.vroum_vroum.dto.CollaborateurLiteDto;
 import demo.vroum_vroum.entities.Collaborateur;
 import demo.vroum_vroum.exceptions.NotAuthenticatedException;
@@ -80,11 +81,10 @@ public class CollaborateurRestControleur {
      * @return l'entité Collaborateur demandée
      */
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Collaborateur> getCollaborateurById(@PathVariable int id) throws EntityNotFoundException {
+    public ResponseEntity<CollaborateurDto> getCollaborateurById(@PathVariable int id) throws EntityNotFoundException {
         Collaborateur collaborateur = collaborateurService.getCollaborateurById(id);
 
-        return ResponseEntity.ok(collaborateur);
+        return ResponseEntity.ok(CollaborateurMapper.toDto(collaborateur));
     }
 
     /**
