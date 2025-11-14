@@ -39,7 +39,7 @@ public class VehiculeService implements Serializable {
     private StatutVehicule statut;
     @OneToMany(mappedBy = "vehiculeService")
     private List<Reservation> reservations;
-    @ManyToMany(mappedBy = "vehiculeServices")
+    @ManyToMany(mappedBy = "vehiculesService")
     private Set<Collaborateur> collaborateurs;
 
     {

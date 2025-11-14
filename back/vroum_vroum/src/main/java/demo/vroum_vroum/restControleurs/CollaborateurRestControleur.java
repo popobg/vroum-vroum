@@ -10,15 +10,19 @@ import demo.vroum_vroum.exceptions.NotAuthenticatedException;
 import demo.vroum_vroum.mappers.CollaborateurMapper;
 import demo.vroum_vroum.services.CollaborateurService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * REST controller de l'entité Collaborateur.
@@ -30,18 +34,13 @@ public class CollaborateurRestControleur {
     /** Service de l'entité Collaborateur */
     private final CollaborateurService collaborateurService;
 
-    /** Classe de sécurité permettant d'encoder le mot de passe */
-    private final PasswordEncoder passwordEncoder;
-
     /**
      * Constructeur de la classe CollaborateurRestControleur
      *
      * @param collaborateurService service collaborateur
-     * @param passwordEncoder classe permettant l'encodage du mot de passe
      */
     public CollaborateurRestControleur(CollaborateurService collaborateurService, PasswordEncoder passwordEncoder) {
         this.collaborateurService = collaborateurService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -50,7 +49,7 @@ public class CollaborateurRestControleur {
      * @return un collaborateur lite
      */
     @GetMapping("/me")
-    public ResponseEntity<CollaborateurLiteDto> getCurrentUserLite(@RequestParam(required = false) String pseudo) throws EntityNotFoundException, NotAuthenticatedException {
+    public ResponseEntity<CollaborateurLiteDto> getCurrentUserLite(@RequestParam(required = false) String pseudo) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
@@ -81,7 +80,7 @@ public class CollaborateurRestControleur {
      * @return l'entité Collaborateur demandée
      */
     @GetMapping("/{id}")
-    public ResponseEntity<CollaborateurDto> getCollaborateurById(@PathVariable Integer id) throws EntityNotFoundException, IllegalArgumentException {
+    public ResponseEntity<CollaborateurDto> getCollaborateurById(@PathVariable Integer id) throws EntityNotFoundException {
         Collaborateur collaborateur = collaborateurService.getCollaborateurById(id);
         return ResponseEntity.ok(CollaborateurMapper.toDto(collaborateur));
     }
@@ -90,26 +89,36 @@ public class CollaborateurRestControleur {
      * Ajoute un collaborateur (/utilisateur) à l'application.
      * Réservé aux admins de l'application.
      *
-     * @param collaborateur informations du nouveau collaborateur
-     * @return l'entité collaborateur créée
+     * @param collaborateurDto informations du nouveau collaborateur
+     * @param validationResult validation des champs du collaborateurDto
+     * @return le CollaborateurDto sauvegardé en BDD
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public CollaborateurLiteDto addCollaborateur(@RequestBody Collaborateur collaborateur) {
-        String password = collaborateur.getPassword();
-        collaborateur.setPassword(passwordEncoder.encode(password));
-        return CollaborateurMapper.toLiteDto(collaborateurService.saveCollaborateur(collaborateur));
+    public CollaborateurDto addCollaborateur(@Valid @RequestBody CollaborateurDto collaborateurDto, BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            throw new IllegalArgumentException(validationResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(", ")));
+        }
+
+        Collaborateur collaborateur = CollaborateurMapper.toEntity(collaborateurDto);
+        return CollaborateurMapper.toDto(collaborateurService.createCollaborateur(collaborateur));
     }
 
     /**
-     * Met à jour les informations d'un collaborateur.
+     * Met-à-jour les informations d'un collaborateur.
      *
-     * @param collaborateur le collaborateur avec informations modifiées
-     * @return le collaborateur avec ses informations modifiées
+     * @param collaborateurDto informations modifiées du collaborateur
+     * @param validationResult validation des champs du collaborateurDto
+     * @return le CollaborateurDto modifié
      */
     @PutMapping
-    public Collaborateur updateCollaborateur(@RequestBody Collaborateur collaborateur) throws EntityNotFoundException {
-        return collaborateurService.saveCollaborateur(collaborateur);
+    public CollaborateurDto updateCollaborateur(@Valid @RequestBody CollaborateurDto collaborateurDto, BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            throw new IllegalArgumentException(validationResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining(", ")));
+        }
+
+        Collaborateur collaborateur = CollaborateurMapper.toEntity(collaborateurDto);
+        return CollaborateurMapper.toDto(collaborateurService.updateCollaborateur(collaborateur));
     }
 
     /**
@@ -121,7 +130,7 @@ public class CollaborateurRestControleur {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteCollaborateur(@PathVariable Integer id) throws EntityNotFoundException, IllegalArgumentException, RuntimeException {
+    public ResponseEntity<Void> deleteCollaborateur(@PathVariable Integer id) {
         collaborateurService.deleteCollaborateur(id);
         // Réponse 204 : suppression effectuée avec succès
         return ResponseEntity.noContent().build();
@@ -136,7 +145,7 @@ public class CollaborateurRestControleur {
      * @throws RuntimeException
      */
     @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteUtilisateurConnecte() throws EntityNotFoundException, NotAuthenticatedException, RuntimeException {
+    public ResponseEntity<Void> deleteUtilisateurConnecte() {
         // Récupère l'utilisateur connecté
         Collaborateur collaborateur = collaborateurService.getCurrentUser();
 
