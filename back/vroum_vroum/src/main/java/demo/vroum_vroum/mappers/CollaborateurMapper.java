@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Mapper de l'entité Collaborateur vers Dtos de collaborateur
+ * Mapper entité Collaborateur - Dtos de collaborateur
  */
 @Component
 public class CollaborateurMapper {
@@ -43,7 +43,7 @@ public class CollaborateurMapper {
      * @return un CollaborateurDto
      */
     public static CollaborateurDto toDto(Collaborateur collaborateur) {
-        return new CollaborateurDto(collaborateur.getId(), collaborateur.getNom(), collaborateur.getPrenom(), collaborateur.getAdresse(), collaborateur.getEmail(), collaborateur.getTelephone(), collaborateur.getPseudo(), collaborateur.getPassword(), collaborateur.getAdmin());
+        return new CollaborateurDto(collaborateur.getId(), collaborateur.getNom(), collaborateur.getPrenom(), collaborateur.getAdresse(), collaborateur.getEmail(), collaborateur.getTelephone(), collaborateur.getPseudo(), null, collaborateur.getAdmin(), VehiculeMapper.toDtos(collaborateur.getVehicules()));
     }
 
     /**
@@ -68,5 +68,19 @@ public class CollaborateurMapper {
      */
     public static Collaborateur toEntity(CollaborateurDto collaborateurDto) {
         return new Collaborateur(collaborateurDto.getId(), collaborateurDto.getNom(), collaborateurDto.getPrenom(), collaborateurDto.getAdresse(), collaborateurDto.getEmail(), collaborateurDto.getTelephone(), collaborateurDto.getPseudo(), collaborateurDto.getPassword(), collaborateurDto.getAdmin());
+    }
+
+    /**
+     * Méthode permettant de convertir un CollaborateurLiteDto en Collaborateur
+     * @param collaborateurDto un CollaborateurLiteDto
+     * @return un collaborateur (entité)
+     */
+    public static Collaborateur liteToEntity(CollaborateurLiteDto collaborateurDto) {
+        Collaborateur collaborateur = new Collaborateur();
+        collaborateur.setId(collaborateurDto.getId());
+        collaborateur.setNom(collaborateurDto.getNom());
+        collaborateur.setPrenom(collaborateurDto.getPrenom());
+        collaborateur.setTelephone(collaborateurDto.getTelephone());
+        return collaborateur;
     }
 }

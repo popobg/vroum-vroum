@@ -27,6 +27,13 @@ public class Vehicule implements Serializable {
 
     public Vehicule() {}
 
+    public Vehicule(int nbPlaces, String modele, String marque, String immatriculation) {
+        this.nbPlaces = nbPlaces;
+        this.modele = modele;
+        this.marque = marque;
+        this.immatriculation = immatriculation;
+    }
+
     public Vehicule(int id, int nbPlaces, String modele, String marque, String immatriculation, Collaborateur collaborateur) {
         this.id = id;
         this.nbPlaces = nbPlaces;

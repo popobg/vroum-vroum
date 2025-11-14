@@ -23,4 +23,18 @@ public class Validator {
     public static boolean matchDateUlterieure(LocalDateTime date) {
         return date.isAfter(LocalDateTime.now());
     }
+
+    /**
+     * Vérifie que la chaîne de caractères répond au pattern suivant :
+     * - Au moins 8 caractères
+     * - Au moins une lettre majuscule et une lettre minuscule
+     * - Au moins un chiffre
+     * - Au moins un caractère spécial
+     * @param password
+     * @return
+     */
+    public static boolean isPasswordValid(String password) {
+    String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+    return password != null && password.matches(regex);
+}
 }

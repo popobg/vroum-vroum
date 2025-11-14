@@ -67,17 +67,32 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
     /** Véhicules de service gérés par le collaborateur */
     @ManyToMany
     @JoinTable(name = "ADMINISTRATEUR_VEHICULE_SERVICE", joinColumns = @JoinColumn(name = "ID_ADMINISTARTEUR", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ID_VEHICULE_SEVICE", referencedColumnName = "ID"))
-    private Set<VehiculeService> vehiculeServices;
+    private Set<VehiculeService> vehiculesService;
 
     {
         covoiturages = new HashSet<>();
         vehicules = new ArrayList<>();
         reservations = new ArrayList<>();
-        vehiculeServices = new HashSet<>();
+        vehiculesService = new HashSet<>();
     }
 
     /** Constructeur vide */
     public Collaborateur() {}
+
+     /**
+     * Constructeur
+     * @param nom nom
+     * @param prenom prénom
+     * @param adresse adresse
+     * @param email adresse email
+     * @param telephone numéro téléphone
+     * @param pseudo pseudo utilisateur app
+     * @param password mot de passe utilisateur app
+     * @param admin statut administrateur
+     */
+    public Collaborateur(String nom, String prenom, String adresse, String email, String telephone, String pseudo, String password, Boolean admin) {
+        this(0, nom, prenom, adresse, email, telephone, pseudo, password, admin);
+    }
 
     /**
      * Constructeur
@@ -335,18 +350,20 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
 
     /**
      * Getter
-     * @return liste de véhicules de service
+     * @return liste de véhicules de service administrés par le collaborateur
      */
-    public Set<VehiculeService> getVehiculeServices() {
-        return vehiculeServices;
+    public Set<VehiculeService> getVehiculesService() {
+        return vehiculesService;
     }
 
     /**
      * Setter
-     * @param vehiculeServices liste de véhicules de service
+     * @param vehiculeServices liste de véhicules de service administrés par le collaborateur
      */
-    public void setVehiculeServices(Set<VehiculeService> vehiculeServices) {
-        this.vehiculeServices = vehiculeServices;
+    public void setVehiculesService(Set<VehiculeService> vehiculeServices) {
+        if (this.admin) {
+            this.vehiculesService = vehiculeServices;
+        }
     }
 
     /**
