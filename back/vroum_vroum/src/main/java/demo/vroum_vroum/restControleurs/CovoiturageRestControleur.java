@@ -15,7 +15,6 @@ import java.util.Set;
 /**
  * REST controller des routes en lien avec le covoiturage
  */
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/covoiturage")
 public class CovoiturageRestControleur {
