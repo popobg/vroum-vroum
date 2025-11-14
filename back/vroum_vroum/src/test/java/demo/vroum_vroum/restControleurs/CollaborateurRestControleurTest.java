@@ -3,7 +3,10 @@ package demo.vroum_vroum.restControleurs;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -57,7 +60,28 @@ public class CollaborateurRestControleurTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    // Messages d'erreur
+    private final String errorMessagePassword = "Le mot de passe doit contenir au moins 8 caractères, dont au minimum une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial";
+
+    private final String errorMessageUnknownId = "Pas de collaborateur trouvé pour l'ID ";
+
+    private final String errorMessageIdForNewItem = "Un nouveau collaborateur ne peut pas avoir d'ID";
+
+    private final String errorMessagePseudo = "Le collaborateur doit avoir un pseudo";
+
+    private final String errorMessageEmail = "Le format de l'email n'est pas valide";
+
+    private final String errorMessageNom = "Le nom doit comporter au moins deux caractères";
+
+    private final String errorMessagePrenom = "Le prénom doit comporter au moins deux caractères";
+
+    private final String errorMessageAccessDenied = "Access Denied";
+
     // DATA
+    private final int id = 2;
+    private final int nonExistingId = 4;
+    private final String typeMismatchId = "a";
+
     // Nouvelle entité
     private final Collaborateur newCollaborateur = new Collaborateur("Bernard", "Benoit", "5 avenue du trombone", "benoit.bernard@example.com", "6010203050", "bbernard", "Password4!", false);
 
@@ -93,10 +117,22 @@ public class CollaborateurRestControleurTest {
      */
     public CollaborateurRestControleurTest() {
         this.collaborateursMocked.addAll(this.modelCollaborateurs);
-        this.collaborateursMocked.get(2).setVehicules(List.of(vehicule));
+
+        Collaborateur collaborateur = this.collaborateursMocked.stream()
+        .filter(c -> c.getId() == this.id)
+        .findFirst()
+        .orElseThrow();
+
+        collaborateur.setVehicules(List.of(vehicule));
 
         this.collaborateursDto.addAll(CollaborateurMapper.toDtos(modelCollaborateurs));
-        this.collaborateursDto.get(2).setVehicules(List.of(VehiculeMapper.toDto(vehicule)));
+
+        CollaborateurDto collaborateurDto = this.collaborateursDto.stream()
+        .filter(c -> c.getId() == this.id)
+        .findFirst()
+        .orElseThrow();
+
+        collaborateurDto.setVehicules(List.of(VehiculeMapper.toDto(vehicule)));
 
         this.collaborateursLiteDto.addAll(CollaborateurMapper.toLiteDtos(modelCollaborateurs));
 
@@ -104,7 +140,7 @@ public class CollaborateurRestControleurTest {
         this.newCollaborateurDto = CollaborateurMapper.toDto(this.newCollaborateur);
         this.newCollaborateurDto.setPassword(this.newCollaborateur.getPassword());
 
-        this.newSavedCollaborateur = new Collaborateur(4, this.newCollaborateur.getNom(), this.newCollaborateur.getPrenom(), this.newCollaborateur.getAdresse(), this.newCollaborateur.getEmail(), this.newCollaborateur.getTelephone(), this.newCollaborateur.getPseudo(), "Password4!Encoded", this.newCollaborateur.getAdmin());
+        this.newSavedCollaborateur = new Collaborateur(this.nonExistingId, this.newCollaborateur.getNom(), this.newCollaborateur.getPrenom(), this.newCollaborateur.getAdresse(), this.newCollaborateur.getEmail(), this.newCollaborateur.getTelephone(), this.newCollaborateur.getPseudo(), "Password4!Encoded", this.newCollaborateur.getAdmin());
 
         // Construction des entités utiles aux tests de la modification d'une entité Collaborateur existante
         this.modifiedCollaborateurDto = CollaborateurMapper.toDto(this.modifiedCollaborateur);
@@ -112,6 +148,10 @@ public class CollaborateurRestControleurTest {
 
         this.modifiedSavedCollaborateur = new Collaborateur(this.modifiedCollaborateur.getId(), this.modifiedCollaborateur.getNom(), this.modifiedCollaborateur.getPrenom(), this.modifiedCollaborateur.getAdresse(), this.modifiedCollaborateur.getEmail(), this.modifiedCollaborateur.getTelephone(), this.modifiedCollaborateur.getPseudo(), "Password11!Encoded", this.modifiedCollaborateur.getAdmin());
     }
+
+    /********************
+     *** METHODES GET ***
+     ********************/
 
     @Test
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
@@ -154,24 +194,21 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
     void testGetCollaborateurById_shouldReturnUser_roleAdmin() throws NoSuchElementException, Exception {
-        // ARRANGE
         CollaborateurDto collaborateurDto = this.collaborateursDto.stream()
-        .filter(c -> c.getId() == 3)
+        .filter(c -> c.getId() == this.id)
         .findFirst()
         .orElseThrow();
 
         List<VehiculeLiteDto> vehicules = collaborateurDto.getVehicules();
 
         Collaborateur collaborateur = this.collaborateursMocked.stream()
-        .filter(c -> c.getId() == 3)
+        .filter(c -> c.getId() == this.id)
         .findFirst()
         .orElseThrow();
 
-        when(collaborateurService.getCollaborateurById(3)).thenReturn(collaborateur);
+        when(collaborateurService.getCollaborateurById(this.id)).thenReturn(collaborateur);
 
-        // ACT
-        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/3")).andDo(print())
-        // ASSERT
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.id)).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(collaborateurDto.getId())))
                 .andExpect(jsonPath("nom", is(collaborateurDto.getNom())))
@@ -196,20 +233,20 @@ public class CollaborateurRestControleurTest {
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
     void testGetCollaborateurById_shouldReturUser_roleUser() throws NoSuchElementException, Exception {
         CollaborateurDto collaborateurDto = this.collaborateursDto.stream()
-        .filter(c -> c.getId() == 3)
+        .filter(c -> c.getId() == this.id)
         .findFirst()
         .orElseThrow();
 
         List<VehiculeLiteDto> vehicules = collaborateurDto.getVehicules();
 
         Collaborateur collaborateur = this.collaborateursMocked.stream()
-        .filter(c -> c.getId() == 3)
+        .filter(c -> c.getId() == this.id)
         .findFirst()
         .orElseThrow();
 
-        when(collaborateurService.getCollaborateurById(3)).thenReturn(collaborateur);
+        when(collaborateurService.getCollaborateurById(this.id)).thenReturn(collaborateur);
 
-        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/3")).andDo(print())
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.id)).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(collaborateurDto.getId())))
                 .andExpect(jsonPath("nom", is(collaborateurDto.getNom())))
@@ -233,12 +270,11 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
     void testGetCollaborateurById_shouldRetur404_badId() throws Exception {
-        int badId = 4;
-        String errorMessage = "Pas de collaborateur trouvé à l'ID " + badId;
+        String errorMessage = this.errorMessageUnknownId + this.nonExistingId;
 
-        when(collaborateurService.getCollaborateurById(badId)).thenThrow(new EntityNotFoundException(errorMessage));
+        when(collaborateurService.getCollaborateurById(this.nonExistingId)).thenThrow(new EntityNotFoundException(errorMessage));
 
-        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/4")).andDo(print())
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.nonExistingId)).andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.Erreur").value("EntityNotFoundException"))
                 .andExpect(jsonPath("$.message").value(errorMessage));
@@ -247,14 +283,14 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
     void testGetById_shouldReturn400_idIsNotANumber() throws Exception {
-        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/a"))
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.typeMismatchId))
                .andExpect(status().isBadRequest())
                .andExpect(jsonPath("$.Erreur").value("TypeMismatchException"));
     }
 
     @Test
     void testGetCollaborateurById_shouldReturn401_unauthorized() throws Exception {
-        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/3")).andDo(print())
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.id)).andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
@@ -262,12 +298,12 @@ public class CollaborateurRestControleurTest {
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
     void testGetCurrentUserLite_shouldreturnConnectedUser() throws Exception {
         CollaborateurDto collaborateurDto = this.collaborateursDto.stream()
-        .filter(c -> c.getId() == 1)
+        .filter(c -> c.getId() == this.id)
         .findFirst()
         .orElseThrow();
 
         Collaborateur collaborateur = this.collaborateursMocked.stream()
-        .filter(c -> c.getId() == 1)
+        .filter(c -> c.getId() == this.id)
         .findFirst()
         .orElseThrow();
 
@@ -290,10 +326,13 @@ public class CollaborateurRestControleurTest {
         this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/me")).andDo(print())
                 .andExpect(status().isUnauthorized());
     }
+    /********************
+     ** METHODES POST **
+     ********************/
 
     @Test
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
-    void testAddCollaborateur_shouldReturnCreatedCollaborateur() throws Exception {
+    void testAddCollaborateur_shouldReturnCreatedCollaborateur_roleAdmin() throws Exception {
         when(collaborateurService.createCollaborateur(this.newCollaborateur)).thenReturn(this.newSavedCollaborateur);
 
         this.mock.perform(MockMvcRequestBuilders.post("/collaborateur")
@@ -318,7 +357,7 @@ public class CollaborateurRestControleurTest {
 
     @Test
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
-    void testAddCollaborateur_shouldReturn400_connectedUserNotAdmin() throws Exception {
+    void testAddCollaborateur_shouldReturn500_roleUser() throws Exception {
         when(collaborateurService.createCollaborateur(this.newCollaborateur)).thenReturn(this.newSavedCollaborateur);
 
         this.mock.perform(MockMvcRequestBuilders.post("/collaborateur")
@@ -328,7 +367,7 @@ public class CollaborateurRestControleurTest {
                     .accept(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(this.newCollaborateurDto)))
                 .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.message").value("Access Denied"));
+                .andExpect(jsonPath("$.message").value(errorMessageAccessDenied));
     }
 
     @Test
@@ -372,11 +411,11 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
     void testAddCollaborateur_shouldReturn400_containsId() throws Exception {
-        CollaborateurDto inputDto = new CollaborateurDto(4, this.newCollaborateurDto.getNom(), this.newCollaborateurDto.getPrenom(), this.newCollaborateurDto.getAdresse(), this.newCollaborateurDto.getEmail(), this.newCollaborateurDto.getTelephone(), this.newCollaborateurDto.getPseudo(), this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
+        CollaborateurDto inputDto = new CollaborateurDto(this.nonExistingId, this.newCollaborateurDto.getNom(), this.newCollaborateurDto.getPrenom(), this.newCollaborateurDto.getAdresse(), this.newCollaborateurDto.getEmail(), this.newCollaborateurDto.getTelephone(), this.newCollaborateurDto.getPseudo(), this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
 
-        Collaborateur mappedCollaborateur = new Collaborateur(4, this.newCollaborateur.getNom(), this.newCollaborateur.getPrenom(), this.newCollaborateur.getAdresse(), this.newCollaborateur.getEmail(), this.newCollaborateur.getTelephone(), this.newCollaborateur.getPseudo(), this.newCollaborateur.getPassword(), this.newCollaborateur.getAdmin());
+        Collaborateur mappedCollaborateur = CollaborateurMapper.toEntity(inputDto);
 
-        String errorMessage = "Un nouveau collaborateur ne peut pas déjà avoir d'ID";
+        String errorMessage = this.errorMessageIdForNewItem;
 
         when(collaborateurService.createCollaborateur(mappedCollaborateur)).thenThrow(new IllegalArgumentException(errorMessage));
 
@@ -396,9 +435,9 @@ public class CollaborateurRestControleurTest {
     void testAddCollaborateur_shouldReturn400_emptyPassword() throws Exception {
         CollaborateurDto inputDto = new CollaborateurDto(this.newCollaborateurDto.getNom(), this.newCollaborateurDto.getPrenom(), this.newCollaborateurDto.getAdresse(), this.newCollaborateurDto.getEmail(), this.newCollaborateurDto.getTelephone(), this.newCollaborateurDto.getPseudo(), "", this.newCollaborateurDto.getAdmin());
 
-        Collaborateur mappedCollaborateur = new Collaborateur(this.newCollaborateur.getNom(), this.newCollaborateur.getPrenom(), this.newCollaborateur.getAdresse(), this.newCollaborateur.getEmail(), this.newCollaborateur.getTelephone(), this.newCollaborateur.getPseudo(), "", this.newCollaborateur.getAdmin());
+        Collaborateur mappedCollaborateur = CollaborateurMapper.toEntity(inputDto);
 
-        String errorMessage = "Le mot de passe doit contenir au moins 8 caractères, dont au minimum une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial";
+        String errorMessage = this.errorMessagePassword;
 
         when(collaborateurService.createCollaborateur(mappedCollaborateur)).thenThrow(new IllegalArgumentException(errorMessage));
 
@@ -413,16 +452,10 @@ public class CollaborateurRestControleurTest {
             .andExpect(jsonPath("$.message").value(errorMessage));
     }
 
-
     @Test
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
     void testAddCollaborateur_shouldReturn400_emptyFields() throws Exception {
         CollaborateurDto inputDto = new CollaborateurDto("", "", this.newCollaborateurDto.getAdresse(), "whatever", this.newCollaborateurDto.getTelephone(),"", this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
-
-        String errorMessagePseudo = "Le collaborateur doit avoir un pseudo";
-        String errorMessageEmail = "Le format de l'email n'est pas valide";
-        String errorMessageNom = "Le nom doit comporter au moins deux caractères";
-        String errorMessagePrenom = "Le prénom doit comporter au moins deux caractères";
 
         this.mock.perform(MockMvcRequestBuilders.post("/collaborateur")
                 .characterEncoding("UTF-8")
@@ -432,10 +465,10 @@ public class CollaborateurRestControleurTest {
                 .content(objectMapper.writeValueAsString(inputDto)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
-            .andExpect(jsonPath("$.message", containsString(errorMessagePseudo)))
-            .andExpect(jsonPath("$.message", containsString(errorMessageEmail)))
-            .andExpect(jsonPath("$.message", containsString(errorMessageNom)))
-            .andExpect(jsonPath("$.message", containsString(errorMessagePrenom)));
+            .andExpect(jsonPath("$.message", containsString(this.errorMessagePseudo)))
+            .andExpect(jsonPath("$.message", containsString(this.errorMessageEmail)))
+            .andExpect(jsonPath("$.message", containsString(this.errorMessageNom)))
+            .andExpect(jsonPath("$.message", containsString(this.errorMessagePrenom)));
     }
 
     @Test
@@ -443,9 +476,6 @@ public class CollaborateurRestControleurTest {
     void testAddCollaborateur_shouldReturn400_invalidNames() throws Exception {
         CollaborateurDto inputDto = new CollaborateurDto("a", "a", this.newCollaborateurDto.getAdresse(), this.newCollaborateurDto.getEmail(), this.newCollaborateurDto.getTelephone(), this.newCollaborateur.getPseudo(), this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
 
-        String errorMessageNom = "Le nom doit comporter au moins deux caractères";
-        String errorMessagePrenom = "Le prénom doit comporter au moins deux caractères";
-
         this.mock.perform(MockMvcRequestBuilders.post("/collaborateur")
                 .characterEncoding("UTF-8")
                 .with(csrf())
@@ -454,24 +484,25 @@ public class CollaborateurRestControleurTest {
                 .content(objectMapper.writeValueAsString(inputDto)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
-            .andExpect(jsonPath("$.message", containsString(errorMessageNom)))
-            .andExpect(jsonPath("$.message", containsString(errorMessagePrenom)));
+            .andExpect(jsonPath("$.message", containsString(this.errorMessageNom)))
+            .andExpect(jsonPath("$.message", containsString(this.errorMessagePrenom)));
     }
+
+    /********************
+     *** METHODES PUT ***
+     ********************/
 
     @Test
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
     void testUpdateCollaborateur_shouldReturnCollaborateurModifie_roleAdmin() throws Exception {
-        // ARRANGE
         when(collaborateurService.updateCollaborateur(this.modifiedCollaborateur)).thenReturn(this.modifiedSavedCollaborateur);
 
-        // ACT
         this.mock.perform(MockMvcRequestBuilders.put("/collaborateur")
                     .characterEncoding("UTF-8")
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(this.modifiedCollaborateurDto)))
-        // ASSERT
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(this.modifiedSavedCollaborateur.getId()))
                 .andExpect(jsonPath("$.nom").value(this.modifiedSavedCollaborateur.getNom()))
@@ -511,13 +542,171 @@ public class CollaborateurRestControleurTest {
                 .andExpect(jsonPath("vehicules.length()", is(0)));
     }
 
-    // @Test
-    // void testAddCollaborateur() {
+    @Test
+    @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
+    void testUpdateCollaborateur_shouldReturn403_noCsrf() throws Exception {
+        when(collaborateurService.updateCollaborateur(this.modifiedCollaborateur)).thenReturn(this.modifiedSavedCollaborateur);
 
-    // }
+        this.mock.perform(MockMvcRequestBuilders.put("/collaborateur")
+                    .characterEncoding("UTF-8")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(this.modifiedCollaborateurDto)))
+                .andExpect(status().isForbidden());
+    }
 
-    // @Test
-    // void testDeleteCollaborateur() {
+    @Test
+    void testUpdateCollaborateur_shouldReturn401_unauthorized() throws Exception {
+        this.mock.perform(MockMvcRequestBuilders.put("/collaborateur")
+                    .characterEncoding("UTF-8")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(this.modifiedCollaborateurDto)))
+                .andExpect(status().isUnauthorized());
+    }
 
-    // }
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testUpdateCollaborateur_shouldReturn404_badId() throws Exception {
+        String errorMessage = this.errorMessageUnknownId + this.nonExistingId;
+
+        CollaborateurDto inputDto = new CollaborateurDto(this.nonExistingId, this.modifiedCollaborateurDto.getNom(), this.modifiedCollaborateurDto.getPrenom(), this.modifiedCollaborateurDto.getAdresse(), this.modifiedCollaborateurDto.getEmail(), this.modifiedCollaborateurDto.getTelephone(), this.modifiedCollaborateurDto.getPseudo(), this.modifiedCollaborateurDto.getPassword(), this.modifiedCollaborateurDto.getAdmin());
+
+        Collaborateur mappedCollaborateur = CollaborateurMapper.toEntity(inputDto);
+
+        when(collaborateurService.updateCollaborateur(mappedCollaborateur)).thenThrow(new EntityNotFoundException(errorMessage));
+
+        this.mock.perform(MockMvcRequestBuilders.put("/collaborateur")
+                .characterEncoding("UTF-8")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(inputDto)))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.Erreur").value("EntityNotFoundException"))
+            .andExpect(jsonPath("$.message").value(errorMessage));
+    }
+
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testUpdateCollaborateur_shouldReturn400_emptyPassword() throws Exception {
+        CollaborateurDto inputDto = new CollaborateurDto(this.modifiedCollaborateurDto.getId(), this.modifiedCollaborateurDto.getNom(), this.modifiedCollaborateurDto.getPrenom(), this.modifiedCollaborateurDto.getAdresse(), this.modifiedCollaborateurDto.getEmail(), this.modifiedCollaborateurDto.getTelephone(), this.modifiedCollaborateurDto.getPseudo(), "", this.modifiedCollaborateurDto.getAdmin());
+
+        Collaborateur mappedCollaborateur = CollaborateurMapper.toEntity(inputDto);
+
+        String errorMessage = this.errorMessagePassword;
+
+        when(collaborateurService.updateCollaborateur(mappedCollaborateur)).thenThrow(new IllegalArgumentException(errorMessage));
+
+        this.mock.perform(MockMvcRequestBuilders.put("/collaborateur")
+                .characterEncoding("UTF-8")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(inputDto)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
+            .andExpect(jsonPath("$.message").value(errorMessage));
+    }
+
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testUpdateCollaborateur_shouldReturn400_emptyFields() throws Exception {
+        CollaborateurDto inputDto = new CollaborateurDto("", "", this.modifiedCollaborateurDto.getAdresse(), "whatever", this.modifiedCollaborateurDto.getTelephone(),"", this.modifiedCollaborateurDto.getPassword(), this.modifiedCollaborateurDto.getAdmin());
+
+        this.mock.perform(MockMvcRequestBuilders.put("/collaborateur")
+                .characterEncoding("UTF-8")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(inputDto)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
+            .andExpect(jsonPath("$.message", containsString(this.errorMessagePseudo)))
+            .andExpect(jsonPath("$.message", containsString(this.errorMessageEmail)))
+            .andExpect(jsonPath("$.message", containsString(this.errorMessageNom)))
+            .andExpect(jsonPath("$.message", containsString(this.errorMessagePrenom)));
+    }
+
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testUpdateCollaborateur_shouldReturn400_invalidNames() throws Exception {
+        CollaborateurDto inputDto = new CollaborateurDto("a", "a", this.modifiedCollaborateurDto.getAdresse(), this.modifiedCollaborateurDto.getEmail(), this.modifiedCollaborateurDto.getTelephone(), this.modifiedCollaborateurDto.getPseudo(), this.modifiedCollaborateurDto.getPassword(), this.modifiedCollaborateurDto.getAdmin());
+
+        this.mock.perform(MockMvcRequestBuilders.put("/collaborateur")
+                .characterEncoding("UTF-8")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(inputDto)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
+            .andExpect(jsonPath("$.message", containsString(this.errorMessageNom)))
+            .andExpect(jsonPath("$.message", containsString(this.errorMessagePrenom)));
+    }
+
+    /********************
+     * METHODES DELETE *
+     ********************/
+
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testDeleteCollaborateur_shouldReturn204_roleAdmin() throws Exception {
+        doNothing().when(collaborateurService).deleteCollaborateur(this.id);
+
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.id)
+                    .with(csrf()))
+                .andExpect(status().isNoContent());
+
+        verify(collaborateurService, times(1)).deleteCollaborateur(this.id);
+    }
+
+    @Test
+    @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
+    void testDeleteCollaborateur_shouldReturn500_roleUser() throws Exception {
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.id)
+                    .with(csrf()))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.message").value(errorMessageAccessDenied));
+    }
+
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testDeleteCollaborateur_shouldReturn403_noCsrf() throws Exception {
+        doNothing().when(collaborateurService).deleteCollaborateur(this.id);
+
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.id))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testDeleteCollaborateur_shouldReturn401_unauthorized() throws Exception {
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.id)
+                    .with(csrf()))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testDeleteCollaborateur_shouldReturn404_badId() throws Exception {
+        String errorMessage = this.errorMessageUnknownId + this.nonExistingId;
+
+        doThrow(new EntityNotFoundException(errorMessage)).when(collaborateurService).deleteCollaborateur(this.nonExistingId);
+
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.nonExistingId)
+                    .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.Erreur").value("EntityNotFoundException"))
+                .andExpect(jsonPath("$.message").value(errorMessage));
+    }
+
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testDeleteCollaborateur_shouldReturn400_idIsNotANumber() throws Exception {
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.typeMismatchId)
+                    .with(csrf()))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.Erreur").value("TypeMismatchException"));
+    }
 }
