@@ -69,18 +69,4 @@ public class CollaborateurMapper {
     public static Collaborateur toEntity(CollaborateurDto collaborateurDto) {
         return new Collaborateur(collaborateurDto.getId(), collaborateurDto.getNom(), collaborateurDto.getPrenom(), collaborateurDto.getAdresse(), collaborateurDto.getEmail(), collaborateurDto.getTelephone(), collaborateurDto.getPseudo(), collaborateurDto.getPassword(), collaborateurDto.getAdmin());
     }
-
-    /**
-     * Méthode permettant de convertir un CollaborateurLiteDto en Collaborateur
-     * @param collaborateurDto un CollaborateurLiteDto
-     * @return un collaborateur (entité)
-     */
-    public static Collaborateur liteToEntity(CollaborateurLiteDto collaborateurDto) {
-        Collaborateur collaborateur = new Collaborateur();
-        collaborateur.setId(collaborateurDto.getId());
-        collaborateur.setNom(collaborateurDto.getNom());
-        collaborateur.setPrenom(collaborateurDto.getPrenom());
-        collaborateur.setTelephone(collaborateurDto.getTelephone());
-        return collaborateur;
-    }
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
@@ -39,12 +38,6 @@ public class CollaborateurDto implements Serializable {
     private String pseudo;
 
     /** Mot de passe du collaborateur */
-    // @NotBlank(message = "Le collaborateur doit avoir un pseudo.")
-    // @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères.")
-    // @Pattern(
-    //     regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$",
-    //     message = "Le mot de passe doit contenir au moins une majuscule, une minuscule, un nombre et un caractère spécial."
-    // )
     private String password;
 
     /** Statut administrateur de l'application */
