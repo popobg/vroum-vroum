@@ -27,6 +27,16 @@ import java.util.Set;
  */
 @Service
 public class CollaborateurService implements UserDetailsService {
+    // Messages d'erreur
+    private static final String errorMessagePassword = "Le mot de passe doit contenir au moins 8 caractères, dont au minimum une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial";
+
+    private static final String errorMessageUnknownId = "Pas de collaborateur trouvé pour l'ID ";
+
+    private static final String errorMessageUnknownUsername = "Pas d'utilisateur trouvé pour le pseudo ";
+
+    private static final String errorMessageNoConnectedUser = "Pas d'utilisateur connecté";
+
+    private static final String errorMessageIdForNewItem = "Un nouveau collaborateur ne peut pas avoir d'ID";
 
     /** Repository de l'entité Collaborateur */
     private final CollaborateurRepository collaborateurRepository;
@@ -50,11 +60,11 @@ public class CollaborateurService implements UserDetailsService {
      * @param pseudo pseudo utilisateur
      * @return une entité Collaborateur
      */
-    public Collaborateur findByPseudo(String pseudo) throws EntityNotFoundException {
+    public Collaborateur findByPseudo(String pseudo) {
         Optional<Collaborateur> collaborateur = collaborateurRepository.findByPseudo(pseudo);
 
         if (collaborateur.isEmpty()) {
-            throw new EntityNotFoundException("Pas d'utilisateur trouvé avec le pseudo " + pseudo);
+            throw new EntityNotFoundException(errorMessageUnknownUsername + pseudo);
         }
 
         return collaborateur.get();
@@ -68,11 +78,11 @@ public class CollaborateurService implements UserDetailsService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            String username = authentication.getName();
-            return this.findByPseudo(username);
+            throw new NotAuthenticatedException(errorMessageNoConnectedUser);
         }
 
-        throw new NotAuthenticatedException("Pas d'utilisateur connecté");
+        String username = authentication.getName();
+        return this.findByPseudo(username);
     }
 
     /**
@@ -80,12 +90,12 @@ public class CollaborateurService implements UserDetailsService {
      * Retourne une entité UserDetails.
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         Optional<Collaborateur> optionalCollaborateur = collaborateurRepository.findByPseudo(username);
 
         // Si aucun collaborateur trouvé à partir du pseudo
         if (optionalCollaborateur.isEmpty()) {
-            throw new UsernameNotFoundException("Collaborateur inconnu");
+            throw new UsernameNotFoundException(errorMessageUnknownUsername + username);
         }
 
         Collaborateur collaborateur = optionalCollaborateur.get();
@@ -109,13 +119,12 @@ public class CollaborateurService implements UserDetailsService {
      * Retourne le collaborateur à partir de son ID.
      * @param id identifiant du collaborateur en BDD
      * @return un collaborateur
-     * @throws EntityNotFoundException lève une exception si l'ID du collaborateur n'existe pas en BDD
      */
-    public Collaborateur getCollaborateurById(int id) throws EntityNotFoundException {
+    public Collaborateur getCollaborateurById(int id) {
         Optional<Collaborateur> collaborateur = collaborateurRepository.findById(id);
 
         if (collaborateur.isEmpty()) {
-            throw new EntityNotFoundException("Pas de collaborateur trouvé à l'ID " + id);
+            throw new EntityNotFoundException(errorMessageUnknownId + id);
         }
 
         return collaborateur.get();
@@ -128,13 +137,13 @@ public class CollaborateurService implements UserDetailsService {
      */
     public Collaborateur createCollaborateur(Collaborateur collaborateur) {
         if (collaborateur.getId() != 0) {
-            throw new IllegalArgumentException("Un nouveau collaborateur ne peut pas déjà avoir d'ID");
+            throw new IllegalArgumentException(errorMessageIdForNewItem);
         }
 
         String password = collaborateur.getPassword();
 
         if (!Validator.isPasswordValid(password)) {
-            throw new IllegalArgumentException("Le mot de passe doit contenir au moins 8 caractères, dont au minimum une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial");
+            throw new IllegalArgumentException(errorMessagePassword);
         }
 
         // Hashage du mot de passe
@@ -147,12 +156,20 @@ public class CollaborateurService implements UserDetailsService {
      * Modifie les informations d'un collaborateur existant en BDD.
      * @param collaborateur collaborateur existant dont les données ont été modifiées
      * @return le collaborateur modifié
-     * @throws EntityNotFoundException lève une exception si l'ID du collaborateur n'existe pas en BDD
      */
-    public Collaborateur updateCollaborateur(Collaborateur collaborateur) throws EntityNotFoundException {
+    public Collaborateur updateCollaborateur(Collaborateur collaborateur) {
         if (!collaborateurRepository.existsById(collaborateur.getId())) {
-            throw new EntityNotFoundException("Pas de collaborateur trouvé pour l'ID " + collaborateur.getId());
+            throw new EntityNotFoundException(errorMessageUnknownId + collaborateur.getId());
         }
+
+        String password = collaborateur.getPassword();
+
+        if (!Validator.isPasswordValid(password)) {
+            throw new IllegalArgumentException(errorMessagePassword);
+        }
+
+        // Hashage du mot de passe
+        collaborateur.setPassword(passwordEncoder.encode(password));
 
         return collaborateurRepository.save(collaborateur);
     }
@@ -160,14 +177,13 @@ public class CollaborateurService implements UserDetailsService {
     /**
      * Supprime un collaborateur de la BDD à partir de son ID.
      * @param id identifiant du collaborateur
-     * @throws EntityNotFoundException lève une exception si l'ID du collaborateur n'existe pas en BDD
      * @throws RuntimeException lève une exception en cas d'erreur au moment de la suppression du collaborateur
      */
-    public void deleteCollaborateur(int id) throws EntityNotFoundException, RuntimeException {
+    public void deleteCollaborateur(int id) throws RuntimeException {
         if (collaborateurRepository.existsById(id)) {
             collaborateurRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException("Pas de collaborateur trouvé pour l'ID " + id);
+            throw new EntityNotFoundException(errorMessageUnknownId + id);
         }
     }
 }
