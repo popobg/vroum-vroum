@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -77,9 +78,9 @@ public class CollaborateurRestControleurTest {
     private final String errorMessageAccessDenied = "Access Denied";
 
     // DATA
-    // ID collaborateur recherché
     private final int id = 2;
     private final int nonExistingId = 4;
+    private final String typeMismatchId = "a";
 
     // Nouvelle entité
     private final Collaborateur newCollaborateur = new Collaborateur("Bernard", "Benoit", "5 avenue du trombone", "benoit.bernard@example.com", "6010203050", "bbernard", "Password4!", false);
@@ -282,7 +283,7 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
     void testGetById_shouldReturn400_idIsNotANumber() throws Exception {
-        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/a"))
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.typeMismatchId))
                .andExpect(status().isBadRequest())
                .andExpect(jsonPath("$.Erreur").value("TypeMismatchException"));
     }
@@ -686,62 +687,26 @@ public class CollaborateurRestControleurTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    // @Test
-    // @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
-    // void testGetCollaborateurById_shouldReturUser_roleUser() throws NoSuchElementException, Exception {
-    //     CollaborateurDto collaborateurDto = this.collaborateursDto.stream()
-    //     .filter(c -> c.getId() == 3)
-    //     .findFirst()
-    //     .orElseThrow();
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testDeleteCollaborateur_shouldReturn404_badId() throws Exception {
+        String errorMessage = this.errorMessageUnknownId + this.nonExistingId;
 
-    //     List<VehiculeLiteDto> vehicules = collaborateurDto.getVehicules();
+        doThrow(new EntityNotFoundException(errorMessage)).when(collaborateurService).deleteCollaborateur(this.nonExistingId);
 
-    //     Collaborateur collaborateur = this.collaborateursMocked.stream()
-    //     .filter(c -> c.getId() == 3)
-    //     .findFirst()
-    //     .orElseThrow();
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.nonExistingId)
+                    .with(csrf()))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.Erreur").value("EntityNotFoundException"))
+                .andExpect(jsonPath("$.message").value(errorMessage));
+    }
 
-    //     when(collaborateurService.getCollaborateurById(3)).thenReturn(collaborateur);
-
-    //     this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/3")).andDo(print())
-    //             .andExpect(status().isOk())
-    //             .andExpect(jsonPath("id", is(collaborateurDto.getId())))
-    //             .andExpect(jsonPath("nom", is(collaborateurDto.getNom())))
-    //             .andExpect(jsonPath("prenom", is(collaborateurDto.getPrenom())))
-    //             .andExpect(jsonPath("adresse", is(collaborateurDto.getAdresse())))
-    //             .andExpect(jsonPath("telephone", is(collaborateurDto.getTelephone())))
-    //             .andExpect(jsonPath("email", is(collaborateurDto.getEmail())))
-    //             .andExpect(jsonPath("pseudo", is(collaborateurDto.getPseudo())))
-    //             .andExpect(jsonPath("password", is(collaborateurDto.getPassword())))
-    //             .andExpect(jsonPath("admin", is(collaborateurDto.getAdmin())))
-    //             .andExpect(jsonPath("email", is(collaborateurDto.getEmail())))
-    //             .andExpect(jsonPath("pseudo", is(collaborateurDto.getPseudo())))
-    //             .andExpect(jsonPath("password", is(IsNull.nullValue())))
-    //             .andExpect(jsonPath("vehicules").isArray())
-    //             .andExpect(jsonPath("vehicules.length()", is(vehicules.size())))
-    //             .andExpect(jsonPath("vehicules[*].id", containsInAnyOrder(Utils.customMap(vehicules, VehiculeLiteDto::getId).toArray())))
-    //             .andExpect(jsonPath("vehicules[*].marque", containsInAnyOrder(Utils.customMap(vehicules, VehiculeLiteDto::getMarque).toArray())))
-    //             .andExpect(jsonPath("vehicules[*].modele", containsInAnyOrder(Utils.customMap(vehicules, VehiculeLiteDto::getModele).toArray())));
-    // }
-
-    // @Test
-    // @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
-    // void testGetCollaborateurById_shouldRetur404_badId() throws Exception {
-    //     String errorMessage = this.errorMessageUnknownId + this.nonExistingId;
-
-    //     when(collaborateurService.getCollaborateurById(this.nonExistingId)).thenThrow(new EntityNotFoundException(errorMessage));
-
-    //     this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.nonExistingId)).andDo(print())
-    //             .andExpect(status().isNotFound())
-    //             .andExpect(jsonPath("$.Erreur").value("EntityNotFoundException"))
-    //             .andExpect(jsonPath("$.message").value(errorMessage));
-    // }
-
-    // @Test
-    // @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
-    // void testGetById_shouldReturn400_idIsNotANumber() throws Exception {
-    //     this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/a"))
-    //            .andExpect(status().isBadRequest())
-    //            .andExpect(jsonPath("$.Erreur").value("TypeMismatchException"));
-    // }
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testDeleteCollaborateur_shouldReturn400_idIsNotANumber() throws Exception {
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.typeMismatchId)
+                    .with(csrf()))
+               .andExpect(status().isBadRequest())
+               .andExpect(jsonPath("$.Erreur").value("TypeMismatchException"));
+    }
 }
