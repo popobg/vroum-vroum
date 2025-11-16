@@ -4,6 +4,7 @@ import demo.vroum_vroum.entities.Reservation;
 import demo.vroum_vroum.enums.Categorie;
 import demo.vroum_vroum.enums.StatutVehicule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class VehiculeServiceDto {
@@ -16,7 +17,7 @@ public class VehiculeServiceDto {
     private int CO2parKm;
     private int nbPlaces;
     private StatutVehicule statut;
-    private List<Reservation> reservations;
+    private List<Reservation> reservations = new ArrayList<>();
 
     public String getImmatriculation() {
         return immatriculation;

@@ -53,28 +53,21 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
 
     /** Véhicules possédés par le collaborateur (pour covoiturage) */
     @OneToMany(mappedBy = "collaborateur")
-    private List<Vehicule> vehicules;
+    private List<Vehicule> vehicules = new ArrayList<>();
 
     /** Covoiturages auxquels le collaborateur participe en tant que passager */
     @ManyToMany
     @JoinTable(name = "PASSAGER_COVOITURAGE", joinColumns = @JoinColumn(name="ID_PASSAGER", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name="ID_COVOITURAGE", referencedColumnName = "ID"))
-    private Set<Covoiturage> covoiturages;
+    private Set<Covoiturage> covoiturages = new HashSet<>();
 
     /** Réservations de véhicules de service réalisées par le collaborateur */
     @OneToMany(mappedBy = "collaborateur")
-    private List<Reservation> reservations;
+    private List<Reservation> reservations = new ArrayList<>();
 
     /** Véhicules de service gérés par le collaborateur */
     @ManyToMany
     @JoinTable(name = "ADMINISTRATEUR_VEHICULE_SERVICE", joinColumns = @JoinColumn(name = "ID_ADMINISTARTEUR", referencedColumnName = "ID"), inverseJoinColumns = @JoinColumn(name = "ID_VEHICULE_SEVICE", referencedColumnName = "ID"))
-    private Set<VehiculeService> vehiculesService;
-
-    {
-        covoiturages = new HashSet<>();
-        vehicules = new ArrayList<>();
-        reservations = new ArrayList<>();
-        vehiculesService = new HashSet<>();
-    }
+    private Set<VehiculeService> vehiculesService = new HashSet<>();
 
     /** Constructeur vide */
     public Collaborateur() {}
@@ -161,7 +154,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return Id
      */
     public int getId() {
-        return id;
+        return this.id;
     }
 
     /**
@@ -177,7 +170,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return nom
      */
     public String getNom() {
-        return nom;
+        return this.nom;
     }
 
     /**
@@ -193,7 +186,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return prénom
      */
     public String getPrenom() {
-        return prenom;
+        return this.prenom;
     }
 
     /**
@@ -209,7 +202,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return adresse
      */
     public String getAdresse() {
-        return adresse;
+        return this.adresse;
     }
 
     /**
@@ -225,7 +218,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return email
      */
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     /**
@@ -241,7 +234,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return num téléphone
      */
     public String getTelephone() {
-        return telephone;
+        return this.telephone;
     }
 
     /**
@@ -257,7 +250,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return pseudo
      */
     public String getPseudo() {
-        return pseudo;
+        return this.pseudo;
     }
 
     /**
@@ -273,7 +266,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return password
      */
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     /**
@@ -289,7 +282,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return admin
      */
     public Boolean getAdmin() {
-        return admin;
+        return this.admin;
     }
 
     /**
@@ -305,7 +298,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return liste de véhicules
      */
     public List<Vehicule> getVehicules() {
-        return vehicules;
+        return this.vehicules;
     }
 
     /**
@@ -321,7 +314,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return liste de covoiturages
      */
     public Set<Covoiturage> getCovoiturages() {
-        return covoiturages;
+        return this.covoiturages;
     }
 
     /**
@@ -337,7 +330,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return liste de réservations de véhicule de service
      */
     public List<Reservation> getReservations() {
-        return reservations;
+        return this.reservations;
     }
 
     /**
@@ -353,12 +346,12 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @return liste de véhicules de service administrés par le collaborateur
      */
     public Set<VehiculeService> getVehiculesService() {
-        return vehiculesService;
+        return this.vehiculesService;
     }
 
     /**
      * Setter
-     * @param vehiculeServices liste de véhicules de service administrés par le collaborateur
+     * @param vehiculeServices liste de véhicules de service administrés par le collaborateur.
      */
     public void setVehiculesService(Set<VehiculeService> vehiculeServices) {
         if (this.admin) {
@@ -367,21 +360,21 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
     }
 
     /**
-     * Méthode générant une chaîne de caractères à partir des attributs du collaborateur
+     * Méthode générant une chaîne de caractères à partir des attributs du collaborateur.
      * @return String
      */
     @Override
     public String toString() {
         return "Collaborateur{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", adresse='" + adresse + '\'' +
-                ", email='" + email + '\'' +
-                ", telephone=" + telephone +
-                ", pseudo='" + pseudo + '\'' +
-                ", password='" + password + '\'' +
-                ", admin=" + admin +
+                "id=" + this.id +
+                ", nom='" + this.nom + '\'' +
+                ", prenom='" + this.prenom + '\'' +
+                ", adresse='" + this.adresse + '\'' +
+                ", email='" + this.email + '\'' +
+                ", telephone=" + this.telephone +
+                ", pseudo='" + this.pseudo + '\'' +
+                ", password='" + this.password + '\'' +
+                ", admin=" + this.admin +
                 '}';
     }
 
@@ -394,13 +387,15 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Collaborateur autreCollab)) return false;
-        return id == autreCollab.id && Objects.equals(nom, autreCollab.nom)
-                && Objects.equals(prenom, autreCollab.prenom)
-                && Objects.equals(telephone, autreCollab.telephone)
-                && Objects.equals(email, autreCollab.email)
-                && Objects.equals(pseudo, autreCollab.pseudo)
-                && Objects.equals(password, autreCollab.password)
-                && Objects.equals(admin, autreCollab.admin);
+
+        return this.id == autreCollab.id
+            && Objects.equals(this.nom, autreCollab.nom)
+            && Objects.equals(this.prenom, autreCollab.prenom)
+            && Objects.equals(this.telephone, autreCollab.telephone)
+            && Objects.equals(this.email, autreCollab.email)
+            && Objects.equals(this.pseudo, autreCollab.pseudo)
+            && Objects.equals(this.password, autreCollab.password)
+            && Objects.equals(this.admin, autreCollab.admin);
     }
 
     /**
@@ -409,7 +404,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(id, nom, prenom, telephone, email, pseudo, password, admin);
+        return Objects.hash(this.id, this.nom, this.prenom, this.telephone, this.email, this.pseudo, this.password, this.admin);
     }
 
     /**

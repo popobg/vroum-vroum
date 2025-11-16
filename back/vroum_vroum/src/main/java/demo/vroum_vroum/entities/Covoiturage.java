@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -56,7 +58,7 @@ public class Covoiturage implements Serializable {
 
     /** Collaborateur(s) passager(s) du covoiturage */
     @ManyToMany(mappedBy = "covoiturages")
-    private Set<Collaborateur> collaborateurs;
+    private Set<Collaborateur> collaborateurs = new HashSet<>();
 
     /**
      * Constructeur vide
@@ -83,86 +85,170 @@ public class Covoiturage implements Serializable {
         this.date = date;
     }
 
+    /**
+     * Getter
+     * @return id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Setter
+     * @param id id
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Getter
+     * @return date
+     */
     public LocalDateTime getDate() {
         return date;
     }
 
+    /**
+     * Setter
+     * @param date date
+     */
     public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
+    /**
+     * Getter
+     * @return adresse de départ
+     */
     public Adresse getAdresseDepart() {
         return adresseDepart;
     }
 
+    /**
+     * Setter
+     * @param adresseDepart adresse de départ
+     */
     public void setAdresseDepart(Adresse adresseDepart) {
         this.adresseDepart = adresseDepart;
     }
 
+    /**
+     * Getter
+     * @return adresse d'arrivée
+     */
     public Adresse getAdresseArrivee() {
         return adresseArrivee;
     }
 
+    /**
+     * Setter
+     * @param adresseArrivee adresse d'arrivée
+     */
     public void setAdresseArrivee(Adresse adresseArrivee) {
         this.adresseArrivee = adresseArrivee;
     }
 
+    /**
+     * Getter
+     * @return nombre de places
+     */
     public int getNbPlaces() {
         return nbPlaces;
     }
 
+    /**
+     * Setter
+     * @param nbPlaces nombre de places
+     */
     public void setNbPlaces(int nbPlaces) {
         this.nbPlaces = nbPlaces;
     }
 
+    /**
+     * Getter
+     * @return distance
+     */
     public int getDistance() {
         return distance;
     }
 
+    /**
+     * Setter
+     * @param distance distance
+     */
     public void setDistance(int distance) {
         this.distance = distance;
     }
 
+    /**
+     * Getter
+     * @return durée
+     */
     public int getDuree() {
         return duree;
     }
 
+    /**
+     * Setter
+     * @param duree durée
+     */
     public void setDuree(int duree) {
         this.duree = duree;
     }
 
+    /**
+     * Getter
+     * @return collaborateur organisateur du covoiturage
+     */
     public Collaborateur getOrganisateur() {
         return organisateur;
     }
 
+    /**
+     * Setter
+     * @param organisateur collaborateur organisateur du covoiturage
+     */
     public void setOrganisateur(Collaborateur organisateur) {
         this.organisateur = organisateur;
     }
 
+    /**
+     * Getter
+     * @return véhicule utilisé par le collaborateur
+     */
     public Vehicule getVehicule() {
         return vehicule;
     }
 
+    /**
+     * Setter
+     * @param vehicule véhicule utilisé par le collaborateur
+     */
     public void setVehicule(Vehicule vehicule) {
         this.vehicule = vehicule;
     }
 
+    /**
+     * Getter
+     * @return collaborateurs passagers du covoiturage
+     */
     public Set<Collaborateur> getCollaborateurs() {
         return collaborateurs;
     }
 
+    /**
+     * Setter
+     * @param Collaborateurs collaborateurs passagers du covoiturage
+     */
     public void setCollaborateurs(Set<Collaborateur> Collaborateurs) {
         this.collaborateurs = Collaborateurs;
     }
 
+    /**
+     * Méthode générant une chaîne de caractères à partir des attributs du covoiturage.
+     * @return String
+     */
     @Override
     public String toString() {
         return "Covoiturage{" +
@@ -174,5 +260,30 @@ public class Covoiturage implements Serializable {
                 ", distance='" + distance + '\'' +
                 ", duree=" + duree +
                 '}';
+    }
+
+    /**
+     * Vérifie si deux objets de la classe Covoiturage sont identiques.
+     * @param o instance de l'objet à comparer
+     * @return boolean, true si les objets sont identiques, sinon false
+     */
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Covoiturage autreCovoit)) return false;
+
+        return this.id == autreCovoit.id
+        && this.distance == autreCovoit.distance
+        && this.duree == autreCovoit.duree
+        && this.nbPlaces == autreCovoit.nbPlaces
+        && Objects.equals(this.date, autreCovoit.date);
+    }
+
+    /**
+     * Retourne le hashcode de l'objet Covoiturage.
+     * @return entier
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.id, this.nbPlaces, this.distance, this.duree, this.date, this.adresseArrivee, this.adresseDepart);
     }
 }

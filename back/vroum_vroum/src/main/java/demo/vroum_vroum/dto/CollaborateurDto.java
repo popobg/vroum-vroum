@@ -45,11 +45,7 @@ public class CollaborateurDto implements Serializable {
     private Boolean admin = false;
 
     /** Véhicules lite dtos possédés par le collaborateur (pour organiser des covoiturages) */
-    private List<VehiculeLiteDto> vehicules;
-
-    {
-        vehicules = new ArrayList<>();
-    }
+    private List<VehiculeLiteDto> vehicules = new ArrayList<>();
 
     /** Constructeur vide */
     public CollaborateurDto() {}
