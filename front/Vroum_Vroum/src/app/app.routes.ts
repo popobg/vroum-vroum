@@ -29,7 +29,7 @@ export const routes: Routes = [
     component: CovoitOrganises,
     canActivate: [authGuard]
   },
-  { path: 'covoiturages/organises',
+  { path: 'covoiturages/nouveau',
     component: CovoitCreer,
     canActivate: [authGuard]
   },

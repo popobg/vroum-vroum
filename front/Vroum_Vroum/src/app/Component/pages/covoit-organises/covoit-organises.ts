@@ -4,14 +4,15 @@ import { CovoitService } from '../../../../core/covoit/covoit.service';
 import { Covoiturage } from '../../../Model/Covoiturage';
 import { CollaborateurLite } from '../../../Model/CollaborateurLite';
 import { UserService } from '../../../../core/auth/user.service';
-import {DatePipe, DecimalPipe} from '@angular/common';
+import {CommonModule, DatePipe, DecimalPipe} from '@angular/common';
 
 @Component({
   selector: 'app-covoit-organises',
   templateUrl: './covoit-organises.html',
   imports: [
     DatePipe,
-    DecimalPipe
+    DecimalPipe,
+    CommonModule
   ],
   styleUrls: ['./covoit-organises.css']
 })

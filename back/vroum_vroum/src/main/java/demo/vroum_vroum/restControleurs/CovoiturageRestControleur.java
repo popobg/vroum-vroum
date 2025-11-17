@@ -1,8 +1,10 @@
 package demo.vroum_vroum.restControleurs;
 
 import demo.vroum_vroum.dto.CovoiturageDto;
+import demo.vroum_vroum.entities.Covoiturage;
 import demo.vroum_vroum.mappers.CovoiturageMapper;
 import demo.vroum_vroum.services.CovoiturageService;
+import demo.vroum_vroum.utils.Validator;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,6 +32,37 @@ public class CovoiturageRestControleur {
         this.covoiturageService = covoiturageService;
     }
 
+    @PostMapping("/creer")
+    public ResponseEntity<CovoiturageDto> creerCovoiturage(@RequestBody CovoiturageDto covoiturageDto) {
+        try {
+            // Vérifications simples
+            if (covoiturageDto.getNbPlaces() <= 0) {
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            if (covoiturageDto.getDate() == null || !Validator.matchDateUlterieure(covoiturageDto.getDate())) {
+                return ResponseEntity.badRequest().body(null);
+            }
+
+            // Création via le service
+            Covoiturage covoitCree = covoiturageService.creerCovoiturage(
+                    covoiturageDto,
+                    covoiturageDto.getOrganisateur().getId(),
+                    covoiturageDto.getVehicule().getId()
+            );
+
+            return ResponseEntity.ok(CovoiturageMapper.toDto(covoitCree));
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(404).body(null);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+
     /**
      * Récupère les covoiturages organisés par un collaborateur.
      *
@@ -43,45 +76,6 @@ public class CovoiturageRestControleur {
         return ResponseEntity.ok(
                 CovoiturageMapper.toDtos(covoiturageService.getMesCovoituragesOrganises(idCollaborateur))
         );
-    }
-
-
-    @PostMapping("/creer")
-    public ResponseEntity<Void> creerCovoiturage(
-            @RequestParam int idCollaborateur,
-            @RequestBody CovoiturageDto covoitDto) throws EntityNotFoundException {
-
-        covoiturageService.creerCovoiturage(idCollaborateur, covoitDto);
-        return ResponseEntity.status(201).build();
-    }
-
-
-    @PutMapping("/modifier/{id}")
-    public ResponseEntity<CovoiturageDto> modifierCovoiturage(
-            @PathVariable int id,
-            @RequestBody CovoiturageDto covoiturageDto) {
-        try {
-            var covoiturageModifie = covoiturageService.modifierCovoiturage(id, CovoiturageMapper.toEntity(covoiturageDto));
-            return ResponseEntity.ok(CovoiturageMapper.toDto(covoiturageModifie));
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    @DeleteMapping("/supprimer/{id}")
-    public ResponseEntity<Void> supprimerCovoiturage(@PathVariable int id) {
-        try {
-            covoiturageService.supprimerCovoiturage(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
-        }
     }
 
 

@@ -1,7 +1,9 @@
 package demo.vroum_vroum.mappers;
 
 import demo.vroum_vroum.dto.CovoiturageDto;
+import demo.vroum_vroum.entities.Collaborateur;
 import demo.vroum_vroum.entities.Covoiturage;
+import demo.vroum_vroum.entities.Vehicule;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
@@ -27,6 +29,7 @@ public class CovoiturageMapper {
      * @return une liste de CovoiturageDto
      */
     public static Set<CovoiturageDto> toDtos(Set<Covoiturage> covoiturages) {
+        if (covoiturages == null) return null;
         Set<CovoiturageDto> dtos = new HashSet<>();
 
         for (Covoiturage covoiturage : covoiturages) {
@@ -42,6 +45,36 @@ public class CovoiturageMapper {
      * @return un objet Covoiturage
      */
     public static Covoiturage toEntity(CovoiturageDto dto) {
-        return new Covoiturage();
+        if (dto == null) return null;
+
+        Covoiturage covoit = new Covoiturage();
+        covoit.setDate(dto.getDate());
+        covoit.setDistance(dto.getDistance());
+        covoit.setDuree(dto.getDuree());
+        covoit.setNbPlaces(dto.getNbPlaces());
+
+        if (dto.getAdresseDepart() != null) {
+            covoit.setAdresseDepart(AdresseMapper.toEntity(dto.getAdresseDepart()));
+        }
+        if (dto.getAdresseArrivee() != null) {
+            covoit.setAdresseArrivee(AdresseMapper.toEntity(dto.getAdresseArrivee()));
+        }
+
+        // ⭐ AJOUT ORGANISATEUR
+        if (dto.getOrganisateur() != null) {
+            Collaborateur orga = new Collaborateur();
+            orga.setId(dto.getOrganisateur().getId());
+            covoit.setOrganisateur(orga);
+        }
+
+        // ⭐ AJOUT VEHICULE
+        if (dto.getVehicule() != null) {
+            Vehicule veh = new Vehicule();
+            veh.setId(dto.getVehicule().getId());
+            covoit.setVehicule(veh);
+        }
+
+        return covoit;
     }
+
 }

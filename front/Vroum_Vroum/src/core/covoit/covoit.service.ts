@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpParams } from '@angular/common/http';
+import { HttpParams, HttpClient  } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { MyHttpClient } from '../../app/http-client';
 import { Covoiturage } from '../../app/Model/Covoiturage';
@@ -14,7 +14,7 @@ export class CovoitService {
   baseUrl: string = "/covoiturage";
   reservationUrl: string = this.baseUrl + "/reservations";
 
-  constructor(private http: MyHttpClient) {}
+  constructor(private http: MyHttpClient, private httpClient: HttpClient) {}
 
   // Récupère tous les covoiturages (utilisé pour afficher la liste initiale)
   getTous(): Observable<Covoiturage[]> {
@@ -26,8 +26,8 @@ export class CovoitService {
     return this.http.get(`${this.baseUrl}/organises`, params);
   }
 
-  creerCovoiturage(idCollaborateur: number, covoitData: any): Observable<void> {
-    return this.http.post(`${this.baseUrl}/creer?idCollaborateur=${idCollaborateur}`, covoitData);
+  creerCovoiturage(covoiturageDto: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/creer`, covoiturageDto);
   }
 
   rechercher(villedep: string, cpdep: string, villearr: string, cparr: string, date: string): Observable<Covoiturage[]> {

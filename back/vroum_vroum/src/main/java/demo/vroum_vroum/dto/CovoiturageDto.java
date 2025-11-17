@@ -36,6 +36,9 @@ public class CovoiturageDto implements Serializable {
     /** Collaborateurs passagers du covoiturage */
     private Set<CollaborateurLiteDto> passagers;
 
+    private int nbPlaces;
+
+
     /** Constructeur vide */
     public CovoiturageDto() {}
 
@@ -193,5 +196,29 @@ public class CovoiturageDto implements Serializable {
      */
     public void setPassagers(Set<CollaborateurLiteDto> passagers) {
         this.passagers = passagers;
+    }
+
+    public int getNbPlaces() {
+        return nbPlaces;
+    }
+
+    public void setNbPlaces(int nbPlaces) {
+        this.nbPlaces = nbPlaces;
+    }
+
+    @Override
+    public String toString() {
+        return "CovoiturageDto{" +
+                "id=" + id +
+                ", date=" + date +
+                ", adresseDepart=" + adresseDepart +
+                ", adresseArrivee=" + adresseArrivee +
+                ", distance=" + distance +
+                ", duree=" + duree +
+                ", organisateur=" + organisateur +
+                ", vehicule=" + vehicule +
+                ", passagers=" + passagers +
+                ", nbPlaces=" + nbPlaces +
+                '}';
     }
 }

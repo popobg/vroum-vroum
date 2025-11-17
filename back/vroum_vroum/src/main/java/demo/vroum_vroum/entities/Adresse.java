@@ -94,11 +94,10 @@ public class Adresse implements Serializable, Comparable<Adresse> {
      */
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder(numero);
-        sb.append(" ").append(rue);
-        sb.append(", ").append(codePostal);
-        sb.append(" ").append(ville);
-        return sb.toString();
+        return (numero != null ? numero : "") + " " +
+                (rue != null ? rue : "") + ", " +
+                (codePostal != null ? codePostal : "") + " " +
+                (ville != null ? ville : "");
     }
 
     /**
@@ -210,4 +209,6 @@ public class Adresse implements Serializable, Comparable<Adresse> {
     public void setVille(String ville) {
         this.ville = ville;
     }
+
+
 }

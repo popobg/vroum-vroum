@@ -20,8 +20,8 @@
   <tbody>
   <tr *ngFor="let covoit of covoitsOrganises">
     <td>{{ covoit.date | date:'short' }}</td>
-    <td>{{ covoit.adresseDepart?.ville }} ({{ covoit.adresseDepart?.codePostal }})</td>
-    <td>{{ covoit.adresseArrivee?.ville }} ({{ covoit.adresseArrivee?.codePostal }})</td>
+    <td>{{ covoit.adresseDepart?.nomVille }} ({{ covoit.adresseDepart?.codePostal }})</td>
+    <td>{{ covoit.adresseArrivee?.nomVille }} ({{ covoit.adresseArrivee?.codePostal }})</td>
     <td>{{ covoit.nbPlaces }}</td>
     <td>{{ covoit.distance }} km</td>
     <td>{{ covoit.duree | number }} min</td>
