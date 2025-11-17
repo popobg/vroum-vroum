@@ -74,7 +74,7 @@ public class CollaborateurService implements UserDetailsService {
      * Récupère l'utilisateur actuellement connecté (si un utilisateur est connecté).
      * @return une entité Collaborateur
      */
-    public Collaborateur getCurrentUser() throws EntityNotFoundException {
+    public Collaborateur getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication instanceof AnonymousAuthenticationToken) {
