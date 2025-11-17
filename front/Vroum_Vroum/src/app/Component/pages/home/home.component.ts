@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {Router, RouterModule} from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { UserService } from '../../../../core/auth/user.service';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { CollaborateurLite } from '../../../Model/CollaborateurLite';
@@ -19,8 +19,9 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    // redirection si non connecté
-    const user = this.userService.getUser();
+    console.log("Dans home");
+
+    // this.collaborateur = this.userService.getUser();
 
     // Surveille les modifications du userSubject et récupère l'utilisateur s'il se connecte
     this.userService.userSubject.subscribe({
