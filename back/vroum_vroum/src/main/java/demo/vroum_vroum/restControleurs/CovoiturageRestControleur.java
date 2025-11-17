@@ -78,6 +78,56 @@ public class CovoiturageRestControleur {
         );
     }
 
+    /**
+     * Supprime un covoiturage organisé par un collaborateur.
+     *
+     * @param idCovoit Id du covoiturage à supprimer
+     * @param idCollaborateur Id du collaborateur organisateur
+     * @return 204 si supprimé, 404 si non trouvé, 400 si non autorisé
+     */
+    @DeleteMapping("/delete/{idCovoit}/{idCollaborateur}")
+    public ResponseEntity<Void> supprimerCovoiturage(
+            @PathVariable int idCovoit,
+            @PathVariable int idCollaborateur) {
+
+        try {
+            covoiturageService.supprimerCovoiturage(idCovoit, idCollaborateur);
+            return ResponseEntity.noContent().build();
+
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    /**
+     * Met à jour un covoiturage existant.
+     *
+     * @param idCovoit Id du covoiturage à modifier
+     * @param dto DTO contenant les nouvelles valeurs
+     * @return réponse 204 si succès
+     */
+    @PutMapping("/update/{idCovoit}")
+    public ResponseEntity<Void> updateCovoiturage(
+            @PathVariable int idCovoit,
+            @RequestBody CovoiturageDto dto) {
+
+        try {
+            covoiturageService.updateCovoiturage(idCovoit, dto);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
+    }
 
     @GetMapping("/tous")
     public ResponseEntity<Set<CovoiturageDto>> getTousLesCovoiturages() {

@@ -5,6 +5,7 @@ import { ReservationCovoitComponent } from './Component/pages/reservation_covoit
 import { CovoitOrganises } from './Component/pages/covoit-organises/covoit-organises';
 import { CovoitCreer } from './Component/pages/covoit-creer/covoit-creer';
 import { authGuard } from './guards/auth.guard';
+import {CovoitModifier} from './Component/pages/covoit-modifier/covoit-modifier';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,10 @@ export const routes: Routes = [
   },
   { path: 'covoiturages/nouveau',
     component: CovoitCreer,
+    canActivate: [authGuard]
+  },
+  { path: 'covoiturages/modifier/:id',
+    component: CovoitModifier,
     canActivate: [authGuard]
   },
   {

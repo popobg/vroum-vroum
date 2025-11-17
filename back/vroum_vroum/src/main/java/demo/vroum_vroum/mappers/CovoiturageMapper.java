@@ -20,7 +20,7 @@ public class CovoiturageMapper {
      * @return un Covoiturage dto
      */
     public static CovoiturageDto toDto(Covoiturage covoiturage) {
-        return new CovoiturageDto(covoiturage.getId(), covoiturage.getDate(), AdresseMapper.toDto(covoiturage.getAdresseDepart()), AdresseMapper.toDto(covoiturage.getAdresseArrivee()), covoiturage.getDistance(), covoiturage.getDuree(), CollaborateurMapper.toLiteDto(covoiturage.getOrganisateur()), VehiculeMapper.toDto(covoiturage.getVehicule()), CollaborateurMapper.toLiteDtos(covoiturage.getCollaborateurs()));
+        return new CovoiturageDto(covoiturage.getId(), covoiturage.getDate(), AdresseMapper.toDto(covoiturage.getAdresseDepart()), AdresseMapper.toDto(covoiturage.getAdresseArrivee()), covoiturage.getDistance(), covoiturage.getDuree(), CollaborateurMapper.toLiteDto(covoiturage.getOrganisateur()), VehiculeMapper.toDto(covoiturage.getVehicule()), CollaborateurMapper.toLiteDtos(covoiturage.getCollaborateurs()), covoiturage.getNbPlaces());
     }
 
     /**

@@ -98,6 +98,64 @@ public class CovoiturageService {
         return covoiturageRepository.findByOrganisateur(collaborateur);
     }
 
+    public void supprimerCovoiturage(int idCovoit, int idCollaborateur)
+            throws EntityNotFoundException, IllegalArgumentException, Exception {
+
+        Covoiturage covoit = this.getCovoiturageById(idCovoit);
+        Collaborateur organisateur = collaborateurService.getCollaborateurById(idCollaborateur);
+
+        // Vérification que l'organisateur est bien le créateur
+        if (covoit.getOrganisateur().getId() != organisateur.getId()) {
+            throw new IllegalArgumentException("Vous n'êtes pas l'organisateur de ce covoiturage.");
+        }
+
+        // Vérification que la date n'est pas déjà passée
+        if (!Validator.matchDateUlterieure(covoit.getDate())) {
+            throw new IllegalArgumentException("Impossible de supprimer un covoiturage déjà passé.");
+        }
+
+        // Retirer le covoit de la liste de chaque passager
+        for (Collaborateur passager : covoit.getCollaborateurs()) {
+            passager.getCovoiturages().remove(covoit);  // relation ManyToMany
+            collaborateurService.updateCollaborateur(passager);
+        }
+
+        // Suppression définitive
+        covoiturageRepository.delete(covoit);
+    }
+
+    /**
+     * Met à jour un covoiturage existant
+     *
+     * @param idCovoit Id du covoiturage
+     * @param dto DTO contenant les nouvelles valeurs
+     * @throws EntityNotFoundException si covoiturage non trouvé
+     */
+    public void updateCovoiturage(int idCovoit, CovoiturageDto dto) throws EntityNotFoundException {
+        Covoiturage covoit = covoiturageRepository.findById(idCovoit)
+                .orElseThrow(() -> new EntityNotFoundException("Covoiturage introuvable"));
+
+        // Mise à jour des champs
+        covoit.setDate(dto.getDate());
+        covoit.setNbPlaces(dto.getNbPlaces());
+        covoit.setDistance(dto.getDistance());
+        covoit.setDuree(dto.getDuree());
+
+        // Mise à jour des adresses
+        covoit.getAdresseDepart().setNumero(dto.getAdresseDepart().getNumero());
+        covoit.getAdresseDepart().setRue(dto.getAdresseDepart().getRue());
+        covoit.getAdresseDepart().setCodePostal(dto.getAdresseDepart().getCodePostal());
+        covoit.getAdresseDepart().setVille(dto.getAdresseDepart().getNomVille());
+
+        covoit.getAdresseArrivee().setNumero(dto.getAdresseArrivee().getNumero());
+        covoit.getAdresseArrivee().setRue(dto.getAdresseArrivee().getRue());
+        covoit.getAdresseArrivee().setCodePostal(dto.getAdresseArrivee().getCodePostal());
+        covoit.getAdresseArrivee().setVille(dto.getAdresseArrivee().getNomVille());
+
+        // Sauvegarde en BDD
+        covoiturageRepository.save(covoit);
+    }
+
     public Set<Covoiturage> findAll() {
         return new HashSet<Covoiturage>(covoiturageRepository.findAll());
     }

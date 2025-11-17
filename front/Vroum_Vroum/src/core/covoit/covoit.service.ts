@@ -30,6 +30,20 @@ export class CovoitService {
     return this.http.post(`${this.baseUrl}/creer`, covoiturageDto);
   }
 
+  supprimerCovoiturage(idCovoit: number, idCollaborateur: number): Observable<void> {
+    const url = `${this.baseUrl}/delete/${idCovoit}/${idCollaborateur}`;
+    return this.http.delete(url);
+  }
+
+  /**
+   * Met à jour un covoiturage existant
+   * @param id Id du covoiturage
+   * @param covoiturage données modifiées
+   */
+  updateCovoit(id: number, covoiturage: Covoiturage): Observable<void> {
+    return this.http.put(`${this.baseUrl}/update/${id}`, covoiturage);
+  }
+
   rechercher(villedep: string, cpdep: string, villearr: string, cparr: string, date: string): Observable<Covoiturage[]> {
     const params = new HttpParams()
       .set('villedep', villedep)

@@ -42,7 +42,7 @@ public class CovoiturageDto implements Serializable {
     /** Constructeur vide */
     public CovoiturageDto() {}
 
-    public CovoiturageDto(int id, LocalDateTime date, AdresseDto adresseDepart, AdresseDto adresseArrivee, int distance, int duree, CollaborateurLiteDto orga, VehiculeLiteDto vehicule, Set<CollaborateurLiteDto> passagers) {
+    public CovoiturageDto(int id, LocalDateTime date, AdresseDto adresseDepart, AdresseDto adresseArrivee, int distance, int duree, CollaborateurLiteDto orga, VehiculeLiteDto vehicule, Set<CollaborateurLiteDto> passagers, int nbPlaces) {
         this.id = id;
         this.date = date;
         this.adresseDepart = adresseDepart;
@@ -52,6 +52,7 @@ public class CovoiturageDto implements Serializable {
         this.organisateur = orga;
         this.vehicule = vehicule;
         this.passagers = passagers;
+        this.nbPlaces = nbPlaces;
     }
 
     /**
