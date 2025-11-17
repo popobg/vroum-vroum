@@ -3,6 +3,7 @@ package demo.vroum_vroum.dto;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -34,7 +35,7 @@ public class CovoiturageDto implements Serializable {
     private VehiculeLiteDto vehicule;
 
     /** Collaborateurs passagers du covoiturage */
-    private Set<CollaborateurLiteDto> passagers;
+    private Set<CollaborateurLiteDto> passagers = new HashSet<>();
 
     /** Constructeur vide */
     public CovoiturageDto() {}
