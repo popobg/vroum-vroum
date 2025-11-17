@@ -18,7 +18,9 @@ import {CommonModule, DatePipe, DecimalPipe} from '@angular/common';
 })
 export class CovoitOrganises implements OnInit {
   covoitsOrganises: Covoiturage[] = [];
-  utilisateurConnecte!: CollaborateurLite
+  utilisateurConnecte!: CollaborateurLite;
+  popupVisible = false;
+  covoitSelectionne: Covoiturage | null = null;
 
   constructor(
     private covoitService: CovoitService,
@@ -42,6 +44,34 @@ export class CovoitOrganises implements OnInit {
       },
       error: (err) => {
         console.error('Erreur lors du chargement des covoiturages organisés :', err);
+      }
+    });
+  }
+
+  modifier(id: number) {
+    this.router.navigate(['/covoiturages/modifier', id]);
+  }
+
+  ouvrirPopup(covoit: Covoiturage): void {
+    this.covoitSelectionne = covoit;
+    this.popupVisible = true;
+  }
+
+  fermerPopup(): void {
+    this.popupVisible = false;
+    this.covoitSelectionne = null;
+  }
+
+  confirmerAnnulation(covoit: any) {
+    this.covoitService.supprimerCovoiturage(covoit.id, this.utilisateurConnecte.id).subscribe({
+      next: () => {
+        alert('Covoiturage supprimé avec succès');
+        this.chargerCovoitsOrganises();
+        this.fermerPopup()
+      },
+      error: (err) => {
+        console.error('Erreur lors de l’annulation', err);
+        alert('Une erreur est survenue');
       }
     });
   }
