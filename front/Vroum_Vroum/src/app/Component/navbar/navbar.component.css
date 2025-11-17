@@ -19,97 +19,98 @@
 
 /* Brand */
 .navbar .navbar-brand {
-  display: flex;
+  display : flex;
   align-items: center;
   gap: 0.4rem;
 }
-.navbar .brand-text {
-  font-weight: 700;
-  color: #eafff4;
-  letter-spacing: 0.4px;
-}
-
-/* Toggler (hamburger) */
-.navbar-toggler {
-  border-color: rgba(255,255,255,0.14);
-}
-.navbar-toggler-icon {
-  filter: invert(1) brightness(2); /* rend l'icône visible sur fond sombre */
-}
-
-/* Liens principaux */
-.navbar .nav-link {
-  color: rgba(255,255,255,0.92);
-  margin: 0 0.35rem;
-  transition: color .15s, transform .12s;
-  padding: .3rem .45rem;
-}
-
-
-
-/* Ajuster la couleur des liens pour contraste */
-.navbar .nav-link,
-.navbar .navbar-brand,
-.navbar .logout {
-  color: #eafff4 !important;
-}
-/* Bouton Déconnexion */
-.navbar .logout {
-  border-color: rgba(255,255,255,0.12);
-  color: #fff;
-  background: transparent;
-  padding: .35rem .6rem;
-}
-.navbar .logout:hover {
-  background: rgba(67,206,162,0.08);
-  border-color: rgba(67,206,162,0.34);
-}
-
-/* Collapse: fond et espacement sur mobile pour lisibilité */
-@media (max-width: 991.98px) {
-  .navbar-collapse {
-    background: rgba(2,10,25,0.6);
-    border-radius: 8px;
-    padding: .75rem;
-    margin-top: .45rem;
+  .navbar .brand-text {
+    font-weight: 700;
+    color: #eafff4;
+    letter-spacing: 0.4px;
   }
-  .navbar .nav-link { display: block; padding: .5rem 0; }
-}
 
-/* Petite amélioration d'accessibilité: agrandir l'aire cliquable des liens */
-.navbar .nav-link, .navbar .navbar-brand, .navbar .logout {
-  touch-action: manipulation;
-}
-.navbar a {
-  color: white;
-  text-decoration: none;
-  font-weight: 600;
-  margin: 0 1rem;
-  transition: 0.3s;
-}
+  /* Toggler (hamburger) */
+  .navbar-toggler {
+    border-color: rgba(255,255,255,0.14);
+  }
+  .navbar-toggler-icon {
+    filter: invert(1) brightness(2); /* rend l'icône visible sur fond sombre */
+  }
 
-.navbar a:hover {
-  color: #cce3de;
-}
+  /* Liens principaux */
+  .navbar .nav-link {
+    color: rgba(255,255,255,0.92);
+    margin: 0 0.35rem;
+    transition: color .15s, transform .12s;
+    padding: .3rem .45rem;
+  }
 
-.left {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
 
-.home-btn {
-  font-size: 1.2rem;
-}
 
-.center {
-  display: flex;
-  gap: 1.5rem;
-}
+  /* Ajuster la couleur des liens pour contraste */
+  .navbar .nav-link,
+  .navbar .navbar-brand,
+  .navbar .logout {
+    color: #eafff4 !important;
+  }
+  /* Bouton Déconnexion */
+  .navbar .logout {
+    border-color: rgba(255,255,255,0.12);
+    color: #fff;
+    background: transparent;
+    padding: .35rem .6rem;
+  }
+  .navbar .logout:hover {
+    background: rgba(67,206,162,0.08);
+    border-color: rgba(67,206,162,0.34);
+  }
 
-.right {
-  display: flex;
-  align-items: center;
-}
+  /* Collapse: fond et espacement sur mobile pour lisibilité */
+  @media (max-width: 991.98px) {
+    .navbar-collapse {
+      background: rgba(2,10,25,0.6);
+      border-radius: 8px;
+      padding: .75rem;
+      margin-top: .45rem;
+    }
+    .navbar .nav-link { display: block; padding: .5rem 0; }
+  }
+
+  /* Petite amélioration d'accessibilité: agrandir l'aire cliquable des liens */
+  .navbar .nav-link, .navbar .navbar-brand, .navbar .logout {
+    touch-action: manipulation;
+  }
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    margin: 0 1rem;
+    transition: 0.3s;
+  }
+
+  .navbar a:hover {
+    color: #cce3de;
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .home-btn {
+    font-size: 1.2rem;
+  }
+
+  .center {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+  }
+
 
 
