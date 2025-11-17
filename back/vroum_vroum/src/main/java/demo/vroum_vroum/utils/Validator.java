@@ -12,6 +12,8 @@ public class Validator {
      * @return true si le format correspond, sinon false
      */
     public static boolean matchCodePostalFormat(String input) {
+        if (input == null) return false;
+
         return input.matches("^\\d{5}$");
     }
 
@@ -34,7 +36,9 @@ public class Validator {
      * @return true si le format est correct, sinon false
      */
     public static boolean isPasswordValid(String password) {
-    String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\d\\s])[a-zA-Z\\d\\w\\W]{8,}$";
-    return password != null && password.matches(regex);
-}
+        if (password == null) return false;
+
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\d\\s])[a-zA-Z\\d\\w\\W]{8,}$";
+        return password != null && password.matches(regex);
+    }
 }
