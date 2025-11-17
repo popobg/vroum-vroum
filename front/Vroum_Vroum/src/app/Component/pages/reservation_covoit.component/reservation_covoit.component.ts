@@ -9,8 +9,8 @@ import { CollaborateurLite } from '../../../Model/CollaborateurLite';
   selector: 'app-reservation-covoit',
   standalone: true,
   imports: [DatePipe, NgIf, NgFor],
-  templateUrl: './reservation.covoit.component.html',
-  styleUrls: ['./reservation.covoit.component.css']
+  templateUrl: './reservation_covoit.component.html',
+  styleUrls: ['./reservation_covoit.component.css']
 })
 export class ReservationCovoitComponent implements OnInit {
   mesReservations: Covoiturage[] = [];

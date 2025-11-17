@@ -104,7 +104,7 @@ public class AdresseDto {
      * Setter
      * @param codePostal Code postal
      */
-    public void setIdCodePostal(String codePostal) {
+    public void setCodePostal(String codePostal) {
         this.codePostal = codePostal;
     }
 
@@ -122,5 +122,16 @@ public class AdresseDto {
      */
     public void setNomVille(String nomVille) {
         this.nomVille = nomVille;
+    }
+
+    @Override
+    public String toString() {
+        return "AdresseDto{" +
+                "id=" + id +
+                ", numero='" + numero + '\'' +
+                ", rue='" + rue + '\'' +
+                ", codePostal='" + codePostal + '\'' +
+                ", nomVille='" + nomVille + '\'' +
+                '}';
     }
 }

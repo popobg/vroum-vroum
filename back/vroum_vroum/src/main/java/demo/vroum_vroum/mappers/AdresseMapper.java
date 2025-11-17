@@ -12,6 +12,18 @@ public class AdresseMapper {
      * @return une adresse dto
      */
     public static AdresseDto toDto(Adresse adresse) {
+        if (adresse == null) return null;
         return new AdresseDto(adresse.getId(), adresse.getNumero(), adresse.getRue(), adresse.getCodePostal(), adresse.getVille());
+    }
+
+    public static Adresse toEntity(AdresseDto dto) {
+        if (dto == null) return null;
+
+        Adresse adresse = new Adresse();
+        adresse.setNumero(dto.getNumero());
+        adresse.setRue(dto.getRue());
+        adresse.setCodePostal(dto.getCodePostal());
+        adresse.setVille(dto.getNomVille());
+        return adresse;
     }
 }

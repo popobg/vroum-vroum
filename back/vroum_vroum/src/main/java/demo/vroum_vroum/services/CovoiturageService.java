@@ -1,7 +1,12 @@
 package demo.vroum_vroum.services;
 
+import demo.vroum_vroum.dto.CovoiturageDto;
+import demo.vroum_vroum.entities.Adresse;
 import demo.vroum_vroum.entities.Collaborateur;
 import demo.vroum_vroum.entities.Covoiturage;
+import demo.vroum_vroum.entities.Vehicule;
+import demo.vroum_vroum.exceptions.Controle;
+import demo.vroum_vroum.mappers.CovoiturageMapper;
 import demo.vroum_vroum.repositories.CovoiturageRepository;
 import demo.vroum_vroum.utils.Validator;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,16 +24,136 @@ import java.util.Set;
 public class CovoiturageService {
     /** Covoiturage repository */
     private final CovoiturageRepository covoiturageRepository;
-
     private final CollaborateurService collaborateurService;
+    private final VehiculeService vehiculeService;
 
     /**
      * Constructeur CovoiturageService
      * @param covoiturageRepository repository de l'entité Covoiturage
      */
-    public CovoiturageService(CovoiturageRepository covoiturageRepository, CollaborateurService collaborateurService) {
+    public CovoiturageService(CovoiturageRepository covoiturageRepository, CollaborateurService collaborateurService, VehiculeService vehiculeService) {
         this.covoiturageRepository = covoiturageRepository;
         this.collaborateurService = collaborateurService;
+        this.vehiculeService = vehiculeService;
+    }
+
+    /**
+     * Crée un nouveau covoiturage
+     * @param dto DTO contenant toutes les informations nécessaires
+     * @param idOrganisateur ID du collaborateur conducteur
+     * @param idVehicule ID du véhicule utilisé
+     * @return le covoiturage créé
+     * @throws EntityNotFoundException si collaborateur ou véhicule introuvable
+     * @throws IllegalArgumentException si données invalides (places, date, adresses)
+     */
+    public Covoiturage creerCovoiturage(CovoiturageDto dto, int idOrganisateur, int idVehicule) throws EntityNotFoundException, IllegalArgumentException, Controle {
+
+        Collaborateur organisateur = collaborateurService.getCollaborateurById(idOrganisateur);
+        Vehicule vehicule = vehiculeService.getVehiculeById(idVehicule);
+
+        // Vérification date
+        if (!Validator.matchDateUlterieure(dto.getDate())) {
+            throw new IllegalArgumentException("La date de départ doit être ultérieure à la date et heure actuelle.");
+        }
+
+        // Vérification adresses
+        Adresse adresseDepart = CovoiturageMapper.toEntity(dto).getAdresseDepart();
+        Adresse adresseArrivee = CovoiturageMapper.toEntity(dto).getAdresseArrivee();
+
+        if (adresseDepart == null || adresseArrivee == null) {
+            throw new IllegalArgumentException("Les adresses de départ et d'arrivée doivent être renseignées.");
+        }
+
+        // Vérification nombre de places
+        if (dto.getNbPlaces() <= 0) {
+            throw new IllegalArgumentException("Le nombre de places doit être supérieur à 0.");
+        }
+
+        // Création de l'entité Covoiturage
+        Covoiturage covoiturage = new Covoiturage();
+        covoiturage.setDate(dto.getDate());
+        covoiturage.setAdresseDepart(adresseDepart);
+        covoiturage.setAdresseArrivee(adresseArrivee);
+        covoiturage.setNbPlaces(dto.getNbPlaces());
+        covoiturage.setDistance(dto.getDistance());
+        covoiturage.setDuree(dto.getDuree());
+        covoiturage.setOrganisateur(organisateur);
+        covoiturage.setVehicule(vehicule);
+        covoiturage.setCollaborateurs(new HashSet<>()); // pas encore de passagers
+
+        // Sauvegarde en base
+        return covoiturageRepository.save(covoiturage);
+    }
+
+    /**
+     * Méthode de service récupérant les covoiturages organisés par un collaborateur.
+     *
+     * @param idCollaborateur identifiant du collaborateur organisateur
+     * @return liste de covoiturages organisés
+     */
+    public Set<Covoiturage> getMesCovoituragesOrganises(int idCollaborateur) throws EntityNotFoundException {
+        Collaborateur collaborateur = collaborateurService.getCollaborateurById(idCollaborateur);
+
+        // On filtre tous les covoiturages où l'organisateur est ce collaborateur
+        return covoiturageRepository.findByOrganisateur(collaborateur);
+    }
+
+    public void supprimerCovoiturage(int idCovoit, int idCollaborateur)
+            throws EntityNotFoundException, IllegalArgumentException, Exception {
+
+        Covoiturage covoit = this.getCovoiturageById(idCovoit);
+        Collaborateur organisateur = collaborateurService.getCollaborateurById(idCollaborateur);
+
+        // Vérification que l'organisateur est bien le créateur
+        if (covoit.getOrganisateur().getId() != organisateur.getId()) {
+            throw new IllegalArgumentException("Vous n'êtes pas l'organisateur de ce covoiturage.");
+        }
+
+        // Vérification que la date n'est pas déjà passée
+        if (!Validator.matchDateUlterieure(covoit.getDate())) {
+            throw new IllegalArgumentException("Impossible de supprimer un covoiturage déjà passé.");
+        }
+
+        // Retirer le covoit de la liste de chaque passager
+        for (Collaborateur passager : covoit.getCollaborateurs()) {
+            passager.getCovoiturages().remove(covoit);  // relation ManyToMany
+            collaborateurService.updateCollaborateur(passager);
+        }
+
+        // Suppression définitive
+        covoiturageRepository.delete(covoit);
+    }
+
+    /**
+     * Met à jour un covoiturage existant
+     *
+     * @param idCovoit Id du covoiturage
+     * @param dto DTO contenant les nouvelles valeurs
+     * @throws EntityNotFoundException si covoiturage non trouvé
+     */
+    public void updateCovoiturage(int idCovoit, CovoiturageDto dto) throws EntityNotFoundException {
+        Covoiturage covoit = covoiturageRepository.findById(idCovoit)
+                .orElseThrow(() -> new EntityNotFoundException("Covoiturage introuvable"));
+
+        // Mise à jour des champs
+        covoit.setDate(dto.getDate());
+        covoit.setNbPlaces(dto.getNbPlaces());
+        covoit.setDistance(dto.getDistance());
+        covoit.setDuree(dto.getDuree());
+
+        // Mise à jour des adresses
+        covoit.getAdresseDepart().setNumero(dto.getAdresseDepart().getNumero());
+        covoit.getAdresseDepart().setRue(dto.getAdresseDepart().getRue());
+        covoit.getAdresseDepart().setCodePostal(dto.getAdresseDepart().getCodePostal());
+        covoit.getAdresseDepart().setVille(dto.getAdresseDepart().getNomVille());
+
+        covoit.getAdresseArrivee().setNumero(dto.getAdresseArrivee().getNumero());
+        covoit.getAdresseArrivee().setRue(dto.getAdresseArrivee().getRue());
+        covoit.getAdresseArrivee().setCodePostal(dto.getAdresseArrivee().getCodePostal());
+        covoit.getAdresseArrivee().setVille(dto.getAdresseArrivee().getNomVille());
+
+        // Sauvegarde en BDD
+        covoiturageRepository.save(covoit);
     }
 
     public Set<Covoiturage> findAll() {
@@ -83,7 +208,6 @@ public class CovoiturageService {
 
     /**
      * Méthode de service récupérant les covoiturages d'un passager.
-     * @param collaborateur collaborateur passager
      * @return liste de covoiturages
      */
     public Set<Covoiturage> getMesReservationsCovoit(int idCollaborateur) throws EntityNotFoundException {

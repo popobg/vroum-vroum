@@ -37,10 +37,13 @@ public class CovoiturageDto implements Serializable {
     /** Collaborateurs passagers du covoiturage */
     private Set<CollaborateurLiteDto> passagers = new HashSet<>();
 
+    private int nbPlaces;
+
+
     /** Constructeur vide */
     public CovoiturageDto() {}
 
-    public CovoiturageDto(int id, LocalDateTime date, AdresseDto adresseDepart, AdresseDto adresseArrivee, int distance, int duree, CollaborateurLiteDto orga, VehiculeLiteDto vehicule, Set<CollaborateurLiteDto> passagers) {
+    public CovoiturageDto(int id, LocalDateTime date, AdresseDto adresseDepart, AdresseDto adresseArrivee, int distance, int duree, CollaborateurLiteDto orga, VehiculeLiteDto vehicule, Set<CollaborateurLiteDto> passagers, int nbPlaces) {
         this.id = id;
         this.date = date;
         this.adresseDepart = adresseDepart;
@@ -50,6 +53,7 @@ public class CovoiturageDto implements Serializable {
         this.organisateur = orga;
         this.vehicule = vehicule;
         this.passagers = passagers;
+        this.nbPlaces = nbPlaces;
     }
 
     /**
@@ -194,5 +198,29 @@ public class CovoiturageDto implements Serializable {
      */
     public void setPassagers(Set<CollaborateurLiteDto> passagers) {
         this.passagers = passagers;
+    }
+
+    public int getNbPlaces() {
+        return nbPlaces;
+    }
+
+    public void setNbPlaces(int nbPlaces) {
+        this.nbPlaces = nbPlaces;
+    }
+
+    @Override
+    public String toString() {
+        return "CovoiturageDto{" +
+                "id=" + id +
+                ", date=" + date +
+                ", adresseDepart=" + adresseDepart +
+                ", adresseArrivee=" + adresseArrivee +
+                ", distance=" + distance +
+                ", duree=" + duree +
+                ", organisateur=" + organisateur +
+                ", vehicule=" + vehicule +
+                ", passagers=" + passagers +
+                ", nbPlaces=" + nbPlaces +
+                '}';
     }
 }

@@ -9,8 +9,8 @@ import { Covoiturage } from '../../../Model/Covoiturage';
   selector: 'app-recherche-covoit',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './recherche.covoit.component.html',
-  styleUrls: ['./recherche.covoit.component.css']
+  templateUrl: './recherche_covoit.component.html',
+  styleUrls: ['./recherche_covoit.component.css']
 })
 export class RechercheCovoitComponent {
   /** VARIABLES ET CONSTANTES */

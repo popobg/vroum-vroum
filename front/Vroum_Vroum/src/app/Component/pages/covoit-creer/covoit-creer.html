@@ -1,0 +1,46 @@
+<h2>Publier une annonce de covoiturage</h2>
+
+<form #covoitForm="ngForm" (ngSubmit)="submitForm(covoitForm)">
+  <div>
+    <label>Date et heure du départ</label>
+    <input type="datetime-local" name="date" ngModel required />
+  </div>
+
+  <div>
+    <label>Nombre de places</label>
+    <input type="number" name="nbPlaces" ngModel required min="1" />
+  </div>
+
+  <div>
+    <label>Distance (km)</label>
+    <input type="number" name="distance" ngModel required min="1" />
+  </div>
+
+  <div>
+    <label>Durée (minutes)</label>
+    <input type="number" name="duree" ngModel required min="1" />
+  </div>
+
+  <fieldset>
+    <legend>Adresse de départ</legend>
+    <input placeholder="Numéro" name="numeroDepart" ngModel required />
+    <input placeholder="Rue" name="rueDepart" ngModel required />
+    <input placeholder="Code postal" name="cpDepart" ngModel required pattern="\d{5}" />
+    <input placeholder="Ville" name="villeDepart" ngModel required />
+  </fieldset>
+
+  <fieldset>
+    <legend>Adresse d'arrivée</legend>
+    <input placeholder="Numéro" name="numeroArrivee" ngModel required />
+    <input placeholder="Rue" name="rueArrivee" ngModel required />
+    <input placeholder="Code postal" name="cpArrivee" ngModel required pattern="\d{5}" />
+    <input placeholder="Ville" name="villeArrivee" ngModel required />
+  </fieldset>
+
+  <div>
+    <label>Véhicule utilisé</label>
+    <input type="text" value="Véhicule test (ID 1)" disabled />
+  </div>
+
+  <button type="submit">Publier</button>
+</form>

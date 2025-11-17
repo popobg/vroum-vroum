@@ -30,36 +30,53 @@ export class MyHttpClient {
      * @param data corps de requête (optionnel)
      * @returns retour de la requête (peut être void - code 204)
      */
-    post(url: string, data?: any): Observable<any> {
-        return this.csrfRequestWrapper((token: string) => {
-            return this.http.post(
-                `${this.baseUrl}${url}`,
-                data,
-                {
-                    headers: new HttpHeaders({
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        "X-CSRF-TOKEN": token
-                    }),
-                    withCredentials: true
-                }
-            )
-        });
+    // post(url: string, data?: any): Observable<any> {
+    //     return this.csrfRequestWrapper((token: string) => {
+    //         return this.http.post(
+    //             `${this.baseUrl}${url}`,
+    //             data,
+    //             {
+    //                 headers: new HttpHeaders({
+    //                     "Content-Type": "application/x-www-form-urlencoded",
+    //                     "X-CSRF-TOKEN": token
+    //                 }),
+    //                 withCredentials: true
+    //             }
+    //         )
+    //     });
+    // }
+
+    post(url: string, data?: any, contentType: string = "application/json"): Observable<any> {
+      return this.csrfRequestWrapper((token: string) => {
+        return this.http.post(
+          `${this.baseUrl}${url}`,
+          data,
+          {
+            headers: new HttpHeaders({
+              "Content-Type": contentType,
+              "X-CSRF-TOKEN": token
+            }),
+            withCredentials: true
+          }
+        )
+      });
     }
 
-    /**
+
+  /**
      * Méthode permettant d'envoyer une requête sécurisée au backend pour modifier une ressource existante.
      * @param url url de la requête
      * @param data corps de requête (optionnel)
      * @returns retour de la requête (peut être void - code 204)
      */
-    put(url: string, data?: any): Observable<any> {
+    put(url: string, data?: any, contentType: string = "application/json"): Observable<any> {
         return this.csrfRequestWrapper((token: string) => {
             return this.http.put(
                 `${this.baseUrl}${url}`,
                 data,
                 {
                     headers: new HttpHeaders({
-                        "Content-Type": "application/x-www-form-urlencoded",
+                        "Content-Type": contentType,
                         "X-CSRF-TOKEN": token
                     }),
                     withCredentials: true

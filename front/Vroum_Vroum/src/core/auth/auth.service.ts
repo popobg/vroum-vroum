@@ -25,7 +25,7 @@ export class AuthService {
     body.set('pseudo', pseudo)
     body.set('password', password);
 
-    return this.http.post(`/api/auth/login`, body.toString()).pipe(
+    return this.http.post(`/api/auth/login`, body.toString(), "application/x-www-form-urlencoded").pipe(
       tap({
         next: () => {
           console.log("Authentification réussie !");

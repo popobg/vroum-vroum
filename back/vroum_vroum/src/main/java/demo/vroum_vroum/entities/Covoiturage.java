@@ -25,12 +25,12 @@ public class Covoiturage implements Serializable {
     private LocalDateTime date;
 
     /** Adresse de départ du covoiturage */
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ID_ADRS_DEPART")
     private Adresse adresseDepart;
 
     /** Adresse d'arrivée du covoiturage */
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "ID_ADRS_ARRIVEE")
     private Adresse adresseArrivee;
 
@@ -254,10 +254,10 @@ public class Covoiturage implements Serializable {
         return "Covoiturage{" +
                 "id=" + id +
                 ", date=" + date +
-                ", adresseDepart='" + adresseDepart + '\'' +
-                ", adresseArrivee='" + adresseArrivee + '\'' +
+                ", adresseDepart=" + (adresseDepart != null ? adresseDepart : "null") +
+                ", adresseArrivee=" + (adresseArrivee != null ? adresseArrivee : "null") +
                 ", nbPlaces=" + nbPlaces +
-                ", distance='" + distance + '\'' +
+                ", distance=" + distance +
                 ", duree=" + duree +
                 '}';
     }
