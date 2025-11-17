@@ -64,7 +64,7 @@ public class CollaborateurService implements UserDetailsService {
         Optional<Collaborateur> collaborateur = collaborateurRepository.findByPseudo(pseudo);
 
         if (collaborateur.isEmpty()) {
-            throw new EntityNotFoundException(errorMessageUnknownUsername + pseudo);
+            throw new UsernameNotFoundException(errorMessageUnknownUsername + pseudo);
         }
 
         return collaborateur.get();
@@ -77,7 +77,7 @@ public class CollaborateurService implements UserDetailsService {
     public Collaborateur getCurrentUser() throws EntityNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
+        if (authentication instanceof AnonymousAuthenticationToken) {
             throw new NotAuthenticatedException(errorMessageNoConnectedUser);
         }
 
@@ -120,7 +120,11 @@ public class CollaborateurService implements UserDetailsService {
      * @param id identifiant du collaborateur en BDD
      * @return un collaborateur
      */
-    public Collaborateur getCollaborateurById(int id) {
+    public Collaborateur getCollaborateurById(Integer id) {
+        if (id == null) {
+            throw new IllegalArgumentException("L'ID ne peut pas être null");
+        }
+
         Optional<Collaborateur> collaborateur = collaborateurRepository.findById(id);
 
         if (collaborateur.isEmpty()) {
