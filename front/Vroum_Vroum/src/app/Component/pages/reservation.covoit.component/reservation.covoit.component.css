@@ -1,27 +1,36 @@
-.popup-overlay {
+/* overlay centré au-dessus de tout */
+.simple-modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
+  inset: 0;
+  background: rgba(0,0,0,0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 2050;
+  padding: 1rem;
 }
-
-.popup {
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  width: 400px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+/* container interne pour empêcher le clipping par un parent */
+.simple-modal-dialog {
+  width: 100%;
+  max-width: 720px;
+  margin: 0;
+  pointer-events: auto;
 }
-
-.popup-actions {
-  margin-top: 20px;
+/* réutilise .bg-card pour le même rendu ; assure contraste et taille */
+.simple-modal-content {
+  border-radius: 12px;
+  overflow: visible;
+  min-height: 140px;
+  max-height: 80vh;
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  flex-direction: column;
+}
+
+/* bouton close visible sur fond sombre */
+.btn-close-white { filter: invert(1) brightness(2); }
+
+/* scroll si contenu trop grand */
+.simple-modal-content .card-body { overflow-y: auto; }
+@media (max-width: 576px) {
+  .simple-modal-dialog { max-width: calc(100% - 24px); }
 }
