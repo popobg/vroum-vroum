@@ -1,4 +1,4 @@
-package demo.vroum_vroum.utils;
+package demo.vroum_vroum.utils_tests;
 
 import java.util.List;
 import java.util.function.Function;

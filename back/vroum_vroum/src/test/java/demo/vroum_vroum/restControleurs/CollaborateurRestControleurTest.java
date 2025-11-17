@@ -39,7 +39,7 @@ import demo.vroum_vroum.entities.Vehicule;
 import demo.vroum_vroum.mappers.CollaborateurMapper;
 import demo.vroum_vroum.mappers.VehiculeMapper;
 import demo.vroum_vroum.services.CollaborateurService;
-import demo.vroum_vroum.utils.Utils;
+import demo.vroum_vroum.utils_tests.Utils;
 import jakarta.persistence.EntityNotFoundException;
 
 /**

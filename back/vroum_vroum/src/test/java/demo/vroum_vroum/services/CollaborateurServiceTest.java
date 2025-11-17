@@ -45,7 +45,7 @@ import demo.vroum_vroum.enums.Categorie;
 import demo.vroum_vroum.enums.StatutVehicule;
 import demo.vroum_vroum.exceptions.NotAuthenticatedException;
 import demo.vroum_vroum.repositories.CollaborateurRepository;
-import demo.vroum_vroum.utils.Utils;
+import demo.vroum_vroum.utils_tests.Utils;
 import jakarta.persistence.EntityNotFoundException;
 
 /**
