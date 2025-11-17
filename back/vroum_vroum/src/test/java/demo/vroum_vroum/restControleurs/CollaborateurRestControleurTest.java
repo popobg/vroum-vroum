@@ -78,7 +78,8 @@ public class CollaborateurRestControleurTest {
     private final String errorMessageAccessDenied = "Access Denied";
 
     // DATA
-    private final int id = 2;
+    private final int adminId = 1;
+    private final int userId = 2;
     private final int nonExistingId = 4;
     private final String typeMismatchId = "a";
 
@@ -119,7 +120,7 @@ public class CollaborateurRestControleurTest {
         this.collaborateursMocked.addAll(this.modelCollaborateurs);
 
         Collaborateur collaborateur = this.collaborateursMocked.stream()
-        .filter(c -> c.getId() == this.id)
+        .filter(c -> c.getId() == this.userId)
         .findFirst()
         .orElseThrow();
 
@@ -128,7 +129,7 @@ public class CollaborateurRestControleurTest {
         this.collaborateursDto.addAll(CollaborateurMapper.toDtos(modelCollaborateurs));
 
         CollaborateurDto collaborateurDto = this.collaborateursDto.stream()
-        .filter(c -> c.getId() == this.id)
+        .filter(c -> c.getId() == this.userId)
         .findFirst()
         .orElseThrow();
 
@@ -195,20 +196,20 @@ public class CollaborateurRestControleurTest {
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
     void testGetCollaborateurById_shouldReturnUser_roleAdmin() throws NoSuchElementException, Exception {
         CollaborateurDto collaborateurDto = this.collaborateursDto.stream()
-        .filter(c -> c.getId() == this.id)
+        .filter(c -> c.getId() == this.userId)
         .findFirst()
         .orElseThrow();
 
         List<VehiculeLiteDto> vehicules = collaborateurDto.getVehicules();
 
         Collaborateur collaborateur = this.collaborateursMocked.stream()
-        .filter(c -> c.getId() == this.id)
+        .filter(c -> c.getId() == this.userId)
         .findFirst()
         .orElseThrow();
 
-        when(collaborateurService.getCollaborateurById(this.id)).thenReturn(collaborateur);
+        when(collaborateurService.getCollaborateurById(this.userId)).thenReturn(collaborateur);
 
-        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.id)).andDo(print())
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.userId)).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(collaborateurDto.getId())))
                 .andExpect(jsonPath("nom", is(collaborateurDto.getNom())))
@@ -233,20 +234,20 @@ public class CollaborateurRestControleurTest {
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
     void testGetCollaborateurById_shouldReturUser_roleUser() throws NoSuchElementException, Exception {
         CollaborateurDto collaborateurDto = this.collaborateursDto.stream()
-        .filter(c -> c.getId() == this.id)
+        .filter(c -> c.getId() == this.userId)
         .findFirst()
         .orElseThrow();
 
         List<VehiculeLiteDto> vehicules = collaborateurDto.getVehicules();
 
         Collaborateur collaborateur = this.collaborateursMocked.stream()
-        .filter(c -> c.getId() == this.id)
+        .filter(c -> c.getId() == this.userId)
         .findFirst()
         .orElseThrow();
 
-        when(collaborateurService.getCollaborateurById(this.id)).thenReturn(collaborateur);
+        when(collaborateurService.getCollaborateurById(this.userId)).thenReturn(collaborateur);
 
-        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.id)).andDo(print())
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.userId)).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(collaborateurDto.getId())))
                 .andExpect(jsonPath("nom", is(collaborateurDto.getNom())))
@@ -290,7 +291,7 @@ public class CollaborateurRestControleurTest {
 
     @Test
     void testGetCollaborateurById_shouldReturn401_unauthorized() throws Exception {
-        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.id)).andDo(print())
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.userId)).andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
@@ -298,12 +299,12 @@ public class CollaborateurRestControleurTest {
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
     void testGetCurrentUserLite_shouldreturnConnectedUser() throws Exception {
         CollaborateurDto collaborateurDto = this.collaborateursDto.stream()
-        .filter(c -> c.getId() == this.id)
+        .filter(c -> c.getId() == this.userId)
         .findFirst()
         .orElseThrow();
 
         Collaborateur collaborateur = this.collaborateursMocked.stream()
-        .filter(c -> c.getId() == this.id)
+        .filter(c -> c.getId() == this.userId)
         .findFirst()
         .orElseThrow();
 
@@ -653,19 +654,19 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
     void testDeleteCollaborateur_shouldReturn204_roleAdmin() throws Exception {
-        doNothing().when(collaborateurService).deleteCollaborateur(this.id);
+        doNothing().when(collaborateurService).deleteCollaborateur(this.userId);
 
-        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.id)
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.userId)
                     .with(csrf()))
                 .andExpect(status().isNoContent());
 
-        verify(collaborateurService, times(1)).deleteCollaborateur(this.id);
+        verify(collaborateurService, times(1)).deleteCollaborateur(this.userId);
     }
 
     @Test
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
     void testDeleteCollaborateur_shouldReturn500_roleUser() throws Exception {
-        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.id)
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.userId)
                     .with(csrf()))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.message").value(errorMessageAccessDenied));
@@ -674,15 +675,15 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
     void testDeleteCollaborateur_shouldReturn403_noCsrf() throws Exception {
-        doNothing().when(collaborateurService).deleteCollaborateur(this.id);
+        doNothing().when(collaborateurService).deleteCollaborateur(this.userId);
 
-        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.id))
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.userId))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     void testDeleteCollaborateur_shouldReturn401_unauthorized() throws Exception {
-        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.id)
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.userId)
                     .with(csrf()))
                 .andExpect(status().isUnauthorized());
     }
@@ -708,5 +709,74 @@ public class CollaborateurRestControleurTest {
                     .with(csrf()))
                .andExpect(status().isBadRequest())
                .andExpect(jsonPath("$.Erreur").value("TypeMismatchException"));
+    }
+
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testDeleteUtilisateurConnecte_shouldReturn204_roleAdmin() throws Exception {
+        int id = this.adminId;
+
+        Collaborateur expectedCollaborateur = this.collaborateursMocked.stream()
+        .filter(c -> c.getId() == id)
+        .findFirst()
+        .orElseThrow();
+
+        when(collaborateurService.getCurrentUser()).thenReturn(expectedCollaborateur);
+
+        doNothing().when(collaborateurService).deleteCollaborateur(id);
+
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/me")
+                    .with(csrf()))
+                .andExpect(status().isNoContent());
+
+        verify(collaborateurService, times(1)).getCurrentUser();
+        verify(collaborateurService, times(1)).deleteCollaborateur(id);
+    }
+
+    @Test
+    @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
+    void testDeleteUtilisateurConnecte_shouldReturn204_roleUser() throws Exception {
+        int id = this.userId;
+
+        Collaborateur expectedCollaborateur = this.collaborateursMocked.stream()
+        .filter(c -> c.getId() == id)
+        .findFirst()
+        .orElseThrow();
+
+        when(collaborateurService.getCurrentUser()).thenReturn(expectedCollaborateur);
+
+        doNothing().when(collaborateurService).deleteCollaborateur(id);
+
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/me")
+                    .with(csrf()))
+                .andExpect(status().isNoContent());
+
+        verify(collaborateurService, times(1)).getCurrentUser();
+        verify(collaborateurService, times(1)).deleteCollaborateur(id);
+    }
+
+    @Test
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testDeleteUtilisateurConnecte_shouldReturn403_noCsrf() throws Exception {
+        int id = this.userId;
+
+        Collaborateur expectedCollaborateur = this.collaborateursMocked.stream()
+        .filter(c -> c.getId() == id)
+        .findFirst()
+        .orElseThrow();
+
+        when(collaborateurService.getCurrentUser()).thenReturn(expectedCollaborateur);
+
+        doNothing().when(collaborateurService).deleteCollaborateur(id);
+
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/me"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void testDeleteUtilisateurConnecte_shouldReturn401_unauthorized() throws Exception {
+        this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/me")
+                    .with(csrf()))
+                .andExpect(status().isUnauthorized());
     }
 }
