@@ -31,10 +31,10 @@ public class Validator {
      * - Au moins un chiffre
      * - Au moins un caractère spécial
      * @param password
-     * @return
+     * @return true si le format est correct, sinon false
      */
     public static boolean isPasswordValid(String password) {
-    String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
+    String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\d\\s])[a-zA-Z\\d\\w\\W]{8,}$";
     return password != null && password.matches(regex);
 }
 }
