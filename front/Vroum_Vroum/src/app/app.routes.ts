@@ -14,7 +14,8 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'rechercher-covoit',

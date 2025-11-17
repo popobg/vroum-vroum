@@ -1,55 +1,85 @@
-<h2>Mes covoiturages organisés</h2>
+<div class="page-wrapper">
+  <div class="animated-bg"></div>
+  <div class="container">
 
-<div class="actions">
-  <button class="btn btn-primary" (click)="allerVersCreation()">
-    Publier une annonce
-  </button>
-</div>
+    <div class="card bg-card m-1">
+      <div class="card-body">
+        <h4 class="card-title mb-2">Mes covoiturages organisés</h4>
+        <p class="subtitle mb-3">Gérez vos réservations ici</p>
+        <button class="btn btn-primary" (click)="allerVersCreation()">
+          Publier une annonce
+        </button>
+      </div>
+    </div>
+    <div class="actions">
 
-<table *ngIf="covoitsOrganises.length > 0; else noData" class="table">
-  <thead>
-  <tr>
-    <th>Date</th>
-    <th>Départ</th>
-    <th>Arrivée</th>
-    <th>Places dispo</th>
-    <th>Distance</th>
-    <th>Durée</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let covoit of covoitsOrganises">
-    <td>{{ covoit.date | date:'short' }}</td>
-    <td>{{ covoit.adresseDepart?.nomVille }} ({{ covoit.adresseDepart?.codePostal }})</td>
-    <td>{{ covoit.adresseArrivee?.nomVille }} ({{ covoit.adresseArrivee?.codePostal }})</td>
-    <td>{{ covoit.nbPlaces }}</td>
-    <td>{{ covoit.distance }} km</td>
-    <td>{{ covoit.duree | number }} min</td>
-    <td>
-      <button class="btn btn-primary" (click)="modifier(covoit.id)">Modifier</button>
-    </td>
-    <td>
-      <button class="btn btn-danger btn-sm" (click)="ouvrirPopup(covoit)">Annuler</button>
-    </td>
-  </tr>
-  </tbody>
-</table>
+    </div>
 
-<ng-template #noData>
-  <p>Aucun covoiturage organisé pour le moment.</p>
-</ng-template>
+    <!-- remplace le tableau des "covoitsOrganises" par un ensemble de cards -->
+    <div class="row g-3">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3" *ngFor="let covoit of covoitsOrganises">
+        <div class="card bg-card h-100">
+          <div class="card-body d-flex flex-column">
+            <h6 class="card-subtitle  mb-2">{{ covoit.date | date:'short' }}</h6>
 
-<div class="popup-overlay" *ngIf="popupVisible">
-  <div class="popup">
-    <h3>Annuler la réservation</h3>
+            <h5 class="card-title mb-2">
+              <span class="text-decoration-underline text-info">{{ covoit.adresseDepart?.nomVille || '—' }}</span>
+              <small class="text-info mx-2">→</small>
+              <span class="text-decoration-underline text-info">{{ covoit.adresseArrivee?.nomVille || '—' }}</span>
+            </h5>
 
-    <p><strong>Date :</strong> {{ covoitSelectionne?.date | date:'short' }}</p>
-    <p><strong>Trajet :</strong> {{ covoitSelectionne?.adresseDepart?.nomVille }} → {{ covoitSelectionne?.adresseArrivee?.nomVille }}</p>
-    <p><strong>Conducteur :</strong> {{ covoitSelectionne?.organisateur?.prenom }} {{ covoitSelectionne?.organisateur?.nom }}</p>
+            <p class="mb-1 small">
+              <strong>Départ :</strong>
+              {{ covoit.adresseDepart?.nomVille }} ({{ covoit.adresseDepart?.codePostal }})
+            </p>
+            <p class="mb-1 small">
+              <strong>Arrivée :</strong>
+              {{ covoit.adresseArrivee?.nomVille }} ({{ covoit.adresseArrivee?.codePostal }})
+            </p>
 
-    <div class="popup-actions">
-      <button class="btn btn-secondary" (click)="fermerPopup()">Fermer</button>
-      <button class="btn btn-danger" (click)="confirmerAnnulation(covoitSelectionne)">Confirmer l'annulation</button>
+            <p class="mb-1 small mt-auto">
+              <strong>Places dispo :</strong> {{ covoit.nbPlaces }}
+            </p>
+            <p class="mb-1 small"><strong>Distance :</strong> {{ covoit.distance }} km</p>
+            <p class="mb-1 small"><strong>Durée :</strong> {{ covoit.duree | number }} min</p>
+
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <div>
+                <button class="btn btn-sm btn-outline-primary me-2" (click)="modifier(covoit.id)">Modifier</button>
+                <button class="btn btn-sm btn-danger" (click)="ouvrirPopup(covoit)">Supprimer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <ng-template #noData>
+      <p class="mt-3">Aucun covoiturage organisé pour le moment.</p>
+    </ng-template>
+
+  </div>
+  <div *ngIf="popupVisible" class="simple-modal" (click)="fermerPopup()">
+    <div class="simple-modal-dialog" (click)="$event.stopPropagation()">
+      <div class="card bg-card simple-modal-content">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Détails du covoiturage</h5>
+          <button class="btn-close btn-close-white" aria-label="Close" (click)="fermerPopup()"></button>
+        </div>
+
+        <div class="card-body">
+          Êtes‑vous sûr de vouloir annuler votre réservation ? Cette action est irréversible.
+        </div>
+
+
+        <div class="card-footer d-flex justify-content-end gap-2">
+          <button type="button" class="btn btn-danger btn-sm" (click)="confirmerAnnulation(covoitSelectionne)">Annuler
+            la réservation
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+

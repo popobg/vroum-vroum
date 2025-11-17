@@ -77,7 +77,9 @@ export class CovoitModifier implements OnInit {
       }
     });
   }
-
+  annuler(): void {
+    this.router.navigateByUrl('/mes-covoits-organises');
+  }
   modifier() {
     if (this.form.invalid) return;
 
@@ -86,7 +88,7 @@ export class CovoitModifier implements OnInit {
     this.covoitService.updateCovoit(id, this.form.value).subscribe({
       next: () => {
         alert('Covoiturage modifié avec succès');
-        this.router.navigate(['/covoiturages']);
+        this.router.navigateByUrl( '/mes-covoits-organises');
       },
       error: () => {
         alert('Erreur lors de la modification');

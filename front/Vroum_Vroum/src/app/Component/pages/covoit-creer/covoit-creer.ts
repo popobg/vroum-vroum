@@ -59,13 +59,16 @@ export class CovoitCreer {
     this.covoitService.creerCovoiturage(covoiturageDto).subscribe({
       next: () => {
         alert('Covoiturage publié avec succès !');
-        this.router.navigate(['/covoiturages']);
+        this.router.navigateByUrl( '/mes-covoits-organises');
       },
       error: (err) => {
         console.error('Erreur lors de la création du covoiturage :', err);
         alert('Une erreur est survenue lors de la création du covoiturage.');
       },
     });
+  }
+  annuler(): void {
+    this.router.navigateByUrl('/mes-covoits-organises');
   }
 
 

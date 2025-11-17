@@ -37,6 +37,7 @@ export class LoginComponent {
 
     this.authService.login(pseudo!, password!).subscribe({
       next: () => {
+
         this.loading = false;
 
         // Redirection vers la page d'accueil du site

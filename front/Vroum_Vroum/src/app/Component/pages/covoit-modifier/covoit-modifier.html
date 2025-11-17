@@ -1,42 +1,77 @@
-<h2>Modifier mon covoiturage</h2>
+<div class="page-wrapper">
+  <div class="animated-bg"></div>
+  <!-- Formulaire "Modifier mon covoiturage" stylisé en card (à coller dans le template voulu) -->
+  <div class="card bg-card m-1">
+    <div class="card-body">
+      <h4 class="card-title mb-2">Modifier mon covoiturage</h4>
+      <p class="subtitle mb-3">Mettez à jour les informations de votre annonce</p>
 
-<form [formGroup]="form" (ngSubmit)="modifier()">
+      <form [formGroup]="form" (ngSubmit)="modifier()" class="form">
+        <div class="row gx-3 gy-2">
+          <div class="col-md-6">
+            <label class="form-label">Date et heure du départ</label>
+            <input class="form-control" type="datetime-local" formControlName="date" required />
+          </div>
 
-  <div>
-    <label>Date et heure du départ</label>
-    <input type="datetime-local" formControlName="date" required />
+          <div class="col-md-6">
+            <label class="form-label">Nombre de places</label>
+            <input class="form-control" type="number" formControlName="nbPlaces" required min="1" />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Distance (km)</label>
+            <input class="form-control" type="number" formControlName="distance" required min="1" />
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Durée (minutes)</label>
+            <input class="form-control" type="number" formControlName="duree" required min="1" />
+          </div>
+
+          <!-- Adresse de départ -->
+          <div class="col-12" formGroupName="adresseDepart">
+            <h6 class="mt-2 mb-2">Adresse de départ</h6>
+            <div class="row gx-2 gy-2 align-items-center">
+              <div class="col-3 col-md-2">
+                <input class="form-control" placeholder="Numéro" formControlName="numero" required />
+              </div>
+              <div class="col-9 col-md-6">
+                <input class="form-control" placeholder="Rue" formControlName="rue" required />
+              </div>
+              <div class="col-6 col-md-2">
+                <input class="form-control" placeholder="Code postal" formControlName="codePostal" required pattern="\d{5}" />
+              </div>
+              <div class="col-6 col-md-2">
+                <input class="form-control" placeholder="Ville" formControlName="nomVille" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- Adresse d'arrivée -->
+          <div class="col-12" formGroupName="adresseArrivee">
+            <h6 class="mt-2 mb-2">Adresse d'arrivée</h6>
+            <div class="row gx-2 gy-2 align-items-center">
+              <div class="col-3 col-md-2">
+                <input class="form-control" placeholder="Numéro" formControlName="numero" required />
+              </div>
+              <div class="col-9 col-md-6">
+                <input class="form-control" placeholder="Rue" formControlName="rue" required />
+              </div>
+              <div class="col-6 col-md-2">
+                <input class="form-control" placeholder="Code postal" formControlName="codePostal" required pattern="\d{5}" />
+              </div>
+              <div class="col-6 col-md-2">
+                <input class="form-control" placeholder="Ville" formControlName="nomVille" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12 d-flex gap-2 justify-content-end mt-2">
+            <button type="button" class="btn btn-danger" (click)="annuler()">Annuler</button>
+            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
-
-  <div>
-    <label>Nombre de places</label>
-    <input type="number" formControlName="nbPlaces" required min="1" />
-  </div>
-
-  <div>
-    <label>Distance (km)</label>
-    <input type="number" formControlName="distance" required min="1" />
-  </div>
-
-  <div>
-    <label>Durée (minutes)</label>
-    <input type="number" formControlName="duree" required min="1" />
-  </div>
-
-  <fieldset formGroupName="adresseDepart">
-    <legend>Adresse de départ</legend>
-    <input placeholder="Numéro" formControlName="numero" required />
-    <input placeholder="Rue" formControlName="rue" required />
-    <input placeholder="Code postal" formControlName="codePostal" required pattern="\d{5}" />
-    <input placeholder="Ville" formControlName="nomVille" required />
-  </fieldset>
-
-  <fieldset formGroupName="adresseArrivee">
-    <legend>Adresse d'arrivée</legend>
-    <input placeholder="Numéro" formControlName="numero" required />
-    <input placeholder="Rue" formControlName="rue" required />
-    <input placeholder="Code postal" formControlName="codePostal" required pattern="\d{5}" />
-    <input placeholder="Ville" formControlName="nomVille" required />
-  </fieldset>
-
-  <button type="submit">Enregistrer les modifications</button>
-</form>
+</div>

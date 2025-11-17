@@ -1,46 +1,86 @@
-<h2>Publier une annonce de covoiturage</h2>
+<div class="page-wrapper">
+  <div class="animated-bg"></div>
+  <!-- Publier une annonce : card réutilisant le style .bg-card -->
+  <div class="card bg-card m-1">
+    <div class="card-body">
+      <h4 class="card-title mb-2">Publier une annonce de covoiturage</h4>
+      <p class="subtitle mb-3">Créez votre annonce et proposez des places</p>
 
-<form #covoitForm="ngForm" (ngSubmit)="submitForm(covoitForm)">
-  <div>
-    <label>Date et heure du départ</label>
-    <input type="datetime-local" name="date" ngModel required />
+      <form #covoitForm="ngForm" (ngSubmit)="submitForm(covoitForm)" class="form">
+        <div class="row gx-3 gy-2">
+          <div class="col-md-6">
+            <label class="form-label visually-hidden">Date</label>
+            <input class="form-control" type="datetime-local" name="date" ngModel required/>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label visually-hidden">Nombre de places</label>
+            <input class="form-control" type="number" name="nbPlaces" ngModel required min="1"
+                   placeholder="Nombre de places"/>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label visually-hidden">Distance (km)</label>
+            <input class="form-control" type="number" name="distance" ngModel required min="1"
+                   placeholder="Distance (km)"/>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label visually-hidden">Durée (minutes)</label>
+            <input class="form-control" type="number" name="duree" ngModel required min="1"
+                   placeholder="Durée (minutes)"/>
+          </div>
+
+          <!-- Adresse de départ -->
+          <div class="col-12">
+            <h6 class="mt-2 mb-2">Adresse de départ</h6>
+            <div class="row gx-2 gy-2">
+              <div class="col-3 col-md-2">
+                <input class="form-control" placeholder="Numéro" name="numeroDepart" ngModel required/>
+              </div>
+              <div class="col-9 col-md-6">
+                <input class="form-control" placeholder="Rue" name="rueDepart" ngModel required/>
+              </div>
+              <div class="col-6 col-md-2">
+                <input class="form-control" placeholder="Code postal" name="cpDepart" ngModel required pattern="\d{5}"/>
+              </div>
+              <div class="col-6 col-md-2">
+                <input class="form-control" placeholder="Ville" name="villeDepart" ngModel required/>
+              </div>
+            </div>
+          </div>
+
+          <!-- Adresse d'arrivée -->
+          <div class="col-12">
+            <h6 class="mt-2 mb-2">Adresse d'arrivée</h6>
+            <div class="row gx-2 gy-2">
+              <div class="col-3 col-md-2">
+                <input class="form-control" placeholder="Numéro" name="numeroArrivee" ngModel required/>
+              </div>
+              <div class="col-9 col-md-6">
+                <input class="form-control" placeholder="Rue" name="rueArrivee" ngModel required/>
+              </div>
+              <div class="col-6 col-md-2">
+                <input class="form-control" placeholder="Code postal" name="cpArrivee" ngModel required
+                       pattern="\d{5}"/>
+              </div>
+              <div class="col-6 col-md-2">
+                <input class="form-control" placeholder="Ville" name="villeArrivee" ngModel required/>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <label class="form-label">Véhicule utilisé</label>
+            <input class="form-control" type="text" value="Véhicule test (ID 1)" disabled/>
+          </div>
+
+          <div class="col-12 d-flex gap-2 justify-content-end mt-2">
+            <button type="button" class="btn btn-danger" (click)="annuler()">Annuler</button>
+            <button type="submit" class="btn btn-primary">Publier l'annonce</button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
-
-  <div>
-    <label>Nombre de places</label>
-    <input type="number" name="nbPlaces" ngModel required min="1" />
-  </div>
-
-  <div>
-    <label>Distance (km)</label>
-    <input type="number" name="distance" ngModel required min="1" />
-  </div>
-
-  <div>
-    <label>Durée (minutes)</label>
-    <input type="number" name="duree" ngModel required min="1" />
-  </div>
-
-  <fieldset>
-    <legend>Adresse de départ</legend>
-    <input placeholder="Numéro" name="numeroDepart" ngModel required />
-    <input placeholder="Rue" name="rueDepart" ngModel required />
-    <input placeholder="Code postal" name="cpDepart" ngModel required pattern="\d{5}" />
-    <input placeholder="Ville" name="villeDepart" ngModel required />
-  </fieldset>
-
-  <fieldset>
-    <legend>Adresse d'arrivée</legend>
-    <input placeholder="Numéro" name="numeroArrivee" ngModel required />
-    <input placeholder="Rue" name="rueArrivee" ngModel required />
-    <input placeholder="Code postal" name="cpArrivee" ngModel required pattern="\d{5}" />
-    <input placeholder="Ville" name="villeArrivee" ngModel required />
-  </fieldset>
-
-  <div>
-    <label>Véhicule utilisé</label>
-    <input type="text" value="Véhicule test (ID 1)" disabled />
-  </div>
-
-  <button type="submit">Publier</button>
-</form>
+</div>
