@@ -29,8 +29,9 @@ public class CovoiturageMapper {
      * @return une liste de CovoiturageDto
      */
     public static Set<CovoiturageDto> toDtos(Set<Covoiturage> covoiturages) {
-        if (covoiturages == null) return null;
         Set<CovoiturageDto> dtos = new HashSet<>();
+
+        if (covoiturages == null) return dtos;
 
         for (Covoiturage covoiturage : covoiturages) {
             dtos.add(toDto(covoiturage));
@@ -60,14 +61,12 @@ public class CovoiturageMapper {
             covoit.setAdresseArrivee(AdresseMapper.toEntity(dto.getAdresseArrivee()));
         }
 
-        // ⭐ AJOUT ORGANISATEUR
         if (dto.getOrganisateur() != null) {
             Collaborateur orga = new Collaborateur();
             orga.setId(dto.getOrganisateur().getId());
             covoit.setOrganisateur(orga);
         }
 
-        // ⭐ AJOUT VEHICULE
         if (dto.getVehicule() != null) {
             Vehicule veh = new Vehicule();
             veh.setId(dto.getVehicule().getId());
