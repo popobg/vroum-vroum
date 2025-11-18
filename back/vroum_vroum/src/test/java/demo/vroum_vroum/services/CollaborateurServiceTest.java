@@ -215,11 +215,11 @@ class CollaborateurServiceTest {
     @ParameterizedTest
     @ValueSource(strings = {"inconnu"})
     @NullAndEmptySource
-    void findByPseudo_shouldThrowUsernameNotFoundException_invalidPseudo(String pseudo) {
+    void findByPseudo_shouldThrowEntityNotFoundException_invalidPseudo(String pseudo) {
         when(collaborateurRepository.findByPseudo(pseudo)).thenReturn(Optional.empty());
 
-        Exception ex = assertThrows(UsernameNotFoundException.class, () -> collaborateurService.findByPseudo(pseudo));
-        assertEquals(ErrorMessages.ERROR_MESSAGE_UNKNOWN_USERNAME.toString() + pseudo, ex.getMessage());
+        Exception ex = assertThrows(EntityNotFoundException.class, () -> collaborateurService.findByPseudo(pseudo));
+        assertEquals(ErrorMessages.UNKNOWN_USERNAME_ERROR_MESSAGE, ex.getMessage());
     }
 
     @Test
@@ -255,7 +255,7 @@ class CollaborateurServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         Exception ex = assertThrows(NotAuthenticatedException.class, () -> collaborateurService.getCurrentUser());
-        assertEquals(ErrorMessages.ERROR_MESSAGE_NO_CONNECTED_USER.toString(), ex.getMessage());
+        assertEquals(ErrorMessages.NO_CONNECTED_USER_ERROR_MESSAGE, ex.getMessage());
     }
 
     @Test
@@ -301,7 +301,7 @@ class CollaborateurServiceTest {
         when(collaborateurRepository.findByPseudo(pseudo)).thenReturn(Optional.empty());
 
         Exception ex = assertThrows(UsernameNotFoundException.class, () -> collaborateurService.loadUserByUsername(pseudo));
-        assertEquals(ErrorMessages.ERROR_MESSAGE_UNKNOWN_USERNAME.toString() + pseudo, ex.getMessage());
+        assertEquals(ErrorMessages.UNKNOWN_USERNAME_ERROR_MESSAGE, ex.getMessage());
     }
 
     @Test
@@ -344,7 +344,7 @@ class CollaborateurServiceTest {
         when(collaborateurRepository.findById(id)).thenReturn(Optional.empty());
 
         Exception ex = assertThrows(EntityNotFoundException.class, () -> collaborateurService.getCollaborateurById(id));
-        assertEquals(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID.toString() + id, ex.getMessage());
+        assertEquals(ErrorMessages.UNKNOWN_ID_ERROR_MESSAGE, ex.getMessage());
     }
 
     /********************
@@ -368,7 +368,7 @@ class CollaborateurServiceTest {
         this.newCollaborateur.setId(id);
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> collaborateurService.createCollaborateur(newCollaborateur));
-        assertEquals(ErrorMessages.ERROR_MESSAGE_ID_FOR_NEW_ITEM.toString(), ex.getMessage());
+        assertEquals(ErrorMessages.ID_FOR_NEW_ITEM_ERROR_MESSAGE, ex.getMessage());
     }
 
     @ParameterizedTest
@@ -378,7 +378,7 @@ class CollaborateurServiceTest {
         this.newCollaborateur.setPassword(password);
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> collaborateurService.createCollaborateur(newCollaborateur));
-        assertEquals(ErrorMessages.ERROR_MESSAGE_PASSWORD.toString(), ex.getMessage());
+        assertEquals(ErrorMessages.INVALID_PASSWORD_ERROR_MESSAGE, ex.getMessage());
     }
 
     /********************
@@ -445,7 +445,7 @@ class CollaborateurServiceTest {
         when(collaborateurRepository.existsById(id)).thenReturn(false);
 
         Exception ex = assertThrows(EntityNotFoundException.class, () -> collaborateurService.updateCollaborateur(this.newCollaborateur));
-        assertEquals(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID.toString() + id, ex.getMessage());
+        assertEquals(ErrorMessages.UNKNOWN_ID_ERROR_MESSAGE, ex.getMessage());
     }
 
     @ParameterizedTest
@@ -460,7 +460,7 @@ class CollaborateurServiceTest {
         when(collaborateurRepository.existsById(id)).thenReturn(true);
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> collaborateurService.updateCollaborateur(newCollaborateur));
-        assertEquals(ErrorMessages.ERROR_MESSAGE_PASSWORD.toString(), ex.getMessage());
+        assertEquals(ErrorMessages.INVALID_PASSWORD_ERROR_MESSAGE, ex.getMessage());
     }
 
     /********************
@@ -483,6 +483,6 @@ class CollaborateurServiceTest {
         when(collaborateurRepository.existsById(id)).thenReturn(false);
 
         Exception ex = assertThrows(EntityNotFoundException.class, () -> collaborateurService.deleteCollaborateur(id));
-        assertEquals(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID.toString() + id, ex.getMessage());
+        assertEquals(ErrorMessages.UNKNOWN_ID_ERROR_MESSAGE, ex.getMessage());
     }
 }

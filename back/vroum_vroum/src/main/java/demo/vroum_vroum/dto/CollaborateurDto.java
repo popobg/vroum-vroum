@@ -17,25 +17,25 @@ public class CollaborateurDto implements Serializable {
     private int id;
 
     /** Nom du collaborateur */
-    @Size(min = 2, message = ErrorMessages.ERROR_MESSAGE_NOM)
+    @Size(min = 2, message = ErrorMessages.INVALID_NOM_ERROR_MESSAGE)
     private String nom;
 
     /** Prénom du collaborateur */
-    @Size(min = 2, message = ErrorMessages.ERROR_MESSAGE_PRENOM)
+    @Size(min = 2, message = ErrorMessages.INVALID_PRENOM_ERROR_MESSAGE)
     private String prenom;
 
     /** Adresse du collaborateur */
     private String adresse;
 
     /** Adresse électronique du collaborateur */
-    @Email(message = ErrorMessages.ERROR_MESSAGE_EMAIL)
+    @Email(message = ErrorMessages.INVALID_EMAILE_ERROR_MESSAGE)
     private String email;
 
     /** Numéro de téléphone du collaborateur */
     private String telephone;
 
     /** Pseudo du collaborateur */
-    @NotBlank(message = ErrorMessages.ERROR_MESSAGE_PSEUDO)
+    @NotBlank(message = ErrorMessages.INVALID_PSEUDO_ERROR_MESSAGE)
     private String pseudo;
 
     /** Mot de passe du collaborateur */
