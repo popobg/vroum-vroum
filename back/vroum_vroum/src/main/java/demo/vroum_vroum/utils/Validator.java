@@ -38,7 +38,7 @@ public class Validator {
     public static boolean isPasswordValid(String password) {
         if (password == null) return false;
 
-        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\d\\s])[a-zA-Z\\d\\w\\W]{8,}$";
-        return password != null && password.matches(regex);
+        String regex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^\\w\\d\\s])[\\w\\W]{8,}$";
+        return password.matches(regex);
     }
 }
