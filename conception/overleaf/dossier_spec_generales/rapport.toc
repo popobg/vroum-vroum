@@ -1,0 +1,159 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Objet du document}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Terminologie}{2}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Focus fonctionnel}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}diagramme de cas d'utilisation}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Cas d'utilisation n°1 : S'authentifier}{4}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Description}{4}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Accès : profils}{4}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Maquette}{4}{subsubsection.2.2.3}%
+\contentsline {subsubsection}{\numberline {2.2.4}Actions}{4}{subsubsection.2.2.4}%
+\contentsline {subsubsection}{\numberline {2.2.5}Règles interface utilisateur}{5}{subsubsection.2.2.5}%
+\contentsline {subsubsection}{\numberline {2.2.6}Règles métier}{5}{subsubsection.2.2.6}%
+\contentsline {subsubsection}{\numberline {2.2.7}Cas d'erreur}{5}{subsubsection.2.2.7}%
+\contentsline {subsection}{\numberline {2.3}Cas d'utilisation n°2 : Accéder à la page d'accueil}{6}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Description}{6}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Accès : profils}{6}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}Maquette}{6}{subsubsection.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.3.4}Actions}{7}{subsubsection.2.3.4}%
+\contentsline {subsubsection}{\numberline {2.3.5}Règles métier}{7}{subsubsection.2.3.5}%
+\contentsline {subsection}{\numberline {2.4}Cas d'utilisation n°3 : Afficher la liste des réservations de covoiturage}{8}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Description}{8}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Accès : profils}{8}{subsubsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.3}Maquette}{8}{subsubsection.2.4.3}%
+\contentsline {subsubsection}{\numberline {2.4.4}Actions}{9}{subsubsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.5}Cas d'utilisation n°4 : Afficher le détail d'une réservation de covoiturage}{10}{subsection.2.5}%
+\contentsline {subsubsection}{\numberline {2.5.1}Description}{10}{subsubsection.2.5.1}%
+\contentsline {subsubsection}{\numberline {2.5.2}Accès : profils}{10}{subsubsection.2.5.2}%
+\contentsline {subsubsection}{\numberline {2.5.3}Maquette}{10}{subsubsection.2.5.3}%
+\contentsline {subsubsection}{\numberline {2.5.4}Actions}{10}{subsubsection.2.5.4}%
+\contentsline {subsection}{\numberline {2.6}Cas d'utilisation n°5 : Annuler une réservation de covoiturage}{11}{subsection.2.6}%
+\contentsline {subsubsection}{\numberline {2.6.1}Description}{11}{subsubsection.2.6.1}%
+\contentsline {subsubsection}{\numberline {2.6.2}Accès : profils}{11}{subsubsection.2.6.2}%
+\contentsline {subsubsection}{\numberline {2.6.3}Maquette}{11}{subsubsection.2.6.3}%
+\contentsline {subsubsection}{\numberline {2.6.4}Actions}{12}{subsubsection.2.6.4}%
+\contentsline {subsection}{\numberline {2.7}Cas d'utilisation n°6 : Rechercher un covoiturage}{12}{subsection.2.7}%
+\contentsline {subsubsection}{\numberline {2.7.1}Description}{12}{subsubsection.2.7.1}%
+\contentsline {subsubsection}{\numberline {2.7.2}Accès : profils}{12}{subsubsection.2.7.2}%
+\contentsline {subsubsection}{\numberline {2.7.3}Maquette}{13}{subsubsection.2.7.3}%
+\contentsline {subsubsection}{\numberline {2.7.4}Actions}{13}{subsubsection.2.7.4}%
+\contentsline {subsubsection}{\numberline {2.7.5}Règles métier}{14}{subsubsection.2.7.5}%
+\contentsline {subsubsection}{\numberline {2.7.6}Cas d'erreur}{14}{subsubsection.2.7.6}%
+\contentsline {subsection}{\numberline {2.8}Cas d'utilisation n°7 : Réserver un covoiturage}{15}{subsection.2.8}%
+\contentsline {subsubsection}{\numberline {2.8.1}Description}{15}{subsubsection.2.8.1}%
+\contentsline {subsubsection}{\numberline {2.8.2}Accès : profils}{15}{subsubsection.2.8.2}%
+\contentsline {subsubsection}{\numberline {2.8.3}Maquette}{15}{subsubsection.2.8.3}%
+\contentsline {subsubsection}{\numberline {2.8.4}Actions}{15}{subsubsection.2.8.4}%
+\contentsline {subsection}{\numberline {2.9}Cas d'utilisation n°8 : Afficher la liste des covoiturages organisés}{16}{subsection.2.9}%
+\contentsline {subsubsection}{\numberline {2.9.1}Description}{16}{subsubsection.2.9.1}%
+\contentsline {subsubsection}{\numberline {2.9.2}Accès : profils}{16}{subsubsection.2.9.2}%
+\contentsline {subsubsection}{\numberline {2.9.3}Maquette}{16}{subsubsection.2.9.3}%
+\contentsline {subsubsection}{\numberline {2.9.4}Actions}{17}{subsubsection.2.9.4}%
+\contentsline {subsection}{\numberline {2.10}Cas d'utilisation n°9 : Créer une annonce de covoiturage}{18}{subsection.2.10}%
+\contentsline {subsubsection}{\numberline {2.10.1}Description}{18}{subsubsection.2.10.1}%
+\contentsline {subsubsection}{\numberline {2.10.2}Accès : profils}{18}{subsubsection.2.10.2}%
+\contentsline {subsubsection}{\numberline {2.10.3}Maquette}{18}{subsubsection.2.10.3}%
+\contentsline {subsubsection}{\numberline {2.10.4}Actions}{19}{subsubsection.2.10.4}%
+\contentsline {subsubsection}{\numberline {2.10.5}Règles métier}{19}{subsubsection.2.10.5}%
+\contentsline {subsubsection}{\numberline {2.10.6}Cas d'erreur}{20}{subsubsection.2.10.6}%
+\contentsline {subsection}{\numberline {2.11}Cas d'utilisation n°10 : Modifier une annonce de covoiturage}{21}{subsection.2.11}%
+\contentsline {subsubsection}{\numberline {2.11.1}Description}{21}{subsubsection.2.11.1}%
+\contentsline {subsubsection}{\numberline {2.11.2}Accès : profils}{21}{subsubsection.2.11.2}%
+\contentsline {subsubsection}{\numberline {2.11.3}Maquette}{21}{subsubsection.2.11.3}%
+\contentsline {subsubsection}{\numberline {2.11.4}Actions}{22}{subsubsection.2.11.4}%
+\contentsline {subsubsection}{\numberline {2.11.5}Règles métier}{23}{subsubsection.2.11.5}%
+\contentsline {subsubsection}{\numberline {2.11.6}Cas d'erreur}{23}{subsubsection.2.11.6}%
+\contentsline {subsection}{\numberline {2.12}Cas d'utilisation n°11 : Supprimer une annonce de covoiturage}{24}{subsection.2.12}%
+\contentsline {subsubsection}{\numberline {2.12.1}Description}{24}{subsubsection.2.12.1}%
+\contentsline {subsubsection}{\numberline {2.12.2}Accès : profils}{24}{subsubsection.2.12.2}%
+\contentsline {subsubsection}{\numberline {2.12.3}Maquette}{24}{subsubsection.2.12.3}%
+\contentsline {subsubsection}{\numberline {2.12.4}Actions}{24}{subsubsection.2.12.4}%
+\contentsline {subsubsection}{\numberline {2.12.5}Règles métier}{25}{subsubsection.2.12.5}%
+\contentsline {subsection}{\numberline {2.13}Cas d'utilisation n°12 : Afficher la liste des réservations des véhicules de service}{25}{subsection.2.13}%
+\contentsline {subsubsection}{\numberline {2.13.1}Description}{25}{subsubsection.2.13.1}%
+\contentsline {subsubsection}{\numberline {2.13.2}Accès : profils}{25}{subsubsection.2.13.2}%
+\contentsline {subsubsection}{\numberline {2.13.3}Maquette}{26}{subsubsection.2.13.3}%
+\contentsline {subsubsection}{\numberline {2.13.4}Actions}{26}{subsubsection.2.13.4}%
+\contentsline {subsubsection}{\numberline {2.13.5}Règles métier}{27}{subsubsection.2.13.5}%
+\contentsline {subsection}{\numberline {2.14}Cas d'utilisation n°13 : Réserver un véhicule de service}{27}{subsection.2.14}%
+\contentsline {subsubsection}{\numberline {2.14.1}Description}{27}{subsubsection.2.14.1}%
+\contentsline {subsubsection}{\numberline {2.14.2}Accès : profils}{27}{subsubsection.2.14.2}%
+\contentsline {subsubsection}{\numberline {2.14.3}Maquette}{27}{subsubsection.2.14.3}%
+\contentsline {subsubsection}{\numberline {2.14.4}Actions}{28}{subsubsection.2.14.4}%
+\contentsline {subsubsection}{\numberline {2.14.5}Règles interface utilisateur}{28}{subsubsection.2.14.5}%
+\contentsline {subsubsection}{\numberline {2.14.6}Règles métier}{29}{subsubsection.2.14.6}%
+\contentsline {subsubsection}{\numberline {2.14.7}Cas d'erreur}{29}{subsubsection.2.14.7}%
+\contentsline {subsection}{\numberline {2.15}Cas d'utilisation n°14 : Annuler la réservation d'un véhicule de service}{30}{subsection.2.15}%
+\contentsline {subsubsection}{\numberline {2.15.1}Description}{30}{subsubsection.2.15.1}%
+\contentsline {subsubsection}{\numberline {2.15.2}Accès : profils}{30}{subsubsection.2.15.2}%
+\contentsline {subsubsection}{\numberline {2.15.3}Maquette}{30}{subsubsection.2.15.3}%
+\contentsline {subsubsection}{\numberline {2.15.4}Actions}{30}{subsubsection.2.15.4}%
+\contentsline {subsection}{\numberline {2.16}Cas d'utilisation n°15 : Modifier la réservation d'un véhicule de service}{31}{subsection.2.16}%
+\contentsline {subsubsection}{\numberline {2.16.1}Description}{31}{subsubsection.2.16.1}%
+\contentsline {subsubsection}{\numberline {2.16.2}Accès : profils}{31}{subsubsection.2.16.2}%
+\contentsline {subsubsection}{\numberline {2.16.3}Maquette}{31}{subsubsection.2.16.3}%
+\contentsline {subsubsection}{\numberline {2.16.4}Actions}{32}{subsubsection.2.16.4}%
+\contentsline {subsubsection}{\numberline {2.16.5}Règles interface utilisateur}{32}{subsubsection.2.16.5}%
+\contentsline {subsubsection}{\numberline {2.16.6}Règles métier}{33}{subsubsection.2.16.6}%
+\contentsline {subsubsection}{\numberline {2.16.7}Cas d'erreur}{33}{subsubsection.2.16.7}%
+\contentsline {subsection}{\numberline {2.17}Cas d'utilisation n°16 : Afficher la page de gestion de service}{34}{subsection.2.17}%
+\contentsline {subsubsection}{\numberline {2.17.1}Description}{34}{subsubsection.2.17.1}%
+\contentsline {subsubsection}{\numberline {2.17.2}Accès : profils}{34}{subsubsection.2.17.2}%
+\contentsline {subsubsection}{\numberline {2.17.3}Maquette}{34}{subsubsection.2.17.3}%
+\contentsline {subsubsection}{\numberline {2.17.4}Actions}{34}{subsubsection.2.17.4}%
+\contentsline {subsection}{\numberline {2.18}Cas d'utilisation n°17 : Afficher la liste des véhicules de service}{35}{subsection.2.18}%
+\contentsline {subsubsection}{\numberline {2.18.1}Description}{35}{subsubsection.2.18.1}%
+\contentsline {subsubsection}{\numberline {2.18.2}Accès : profils}{35}{subsubsection.2.18.2}%
+\contentsline {subsubsection}{\numberline {2.18.3}Maquette}{35}{subsubsection.2.18.3}%
+\contentsline {subsubsection}{\numberline {2.18.4}Actions}{36}{subsubsection.2.18.4}%
+\contentsline {subsubsection}{\numberline {2.18.5}Règles métier}{37}{subsubsection.2.18.5}%
+\contentsline {subsubsection}{\numberline {2.18.6}Cas d'erreur}{37}{subsubsection.2.18.6}%
+\contentsline {subsection}{\numberline {2.19}Cas d'utilisation n°18 : Ajouter un véhicule de service}{38}{subsection.2.19}%
+\contentsline {subsubsection}{\numberline {2.19.1}Description}{38}{subsubsection.2.19.1}%
+\contentsline {subsubsection}{\numberline {2.19.2}Accès : profils}{38}{subsubsection.2.19.2}%
+\contentsline {subsubsection}{\numberline {2.19.3}Maquette}{38}{subsubsection.2.19.3}%
+\contentsline {subsubsection}{\numberline {2.19.4}Actions}{39}{subsubsection.2.19.4}%
+\contentsline {subsubsection}{\numberline {2.19.5}Règles interface utilisateur}{40}{subsubsection.2.19.5}%
+\contentsline {subsubsection}{\numberline {2.19.6}Règles métier}{40}{subsubsection.2.19.6}%
+\contentsline {subsubsection}{\numberline {2.19.7}Cas d'erreur}{41}{subsubsection.2.19.7}%
+\contentsline {subsection}{\numberline {2.20}Cas d'utilisation n°19 : Modifier les informations d'un véhicule de service}{41}{subsection.2.20}%
+\contentsline {subsubsection}{\numberline {2.20.1}Description}{41}{subsubsection.2.20.1}%
+\contentsline {subsubsection}{\numberline {2.20.2}Accès : profils}{41}{subsubsection.2.20.2}%
+\contentsline {subsubsection}{\numberline {2.20.3}Maquette}{42}{subsubsection.2.20.3}%
+\contentsline {subsubsection}{\numberline {2.20.4}Actions}{43}{subsubsection.2.20.4}%
+\contentsline {subsubsection}{\numberline {2.20.5}Règles interface utilisateur}{44}{subsubsection.2.20.5}%
+\contentsline {subsubsection}{\numberline {2.20.6}Règles métier}{44}{subsubsection.2.20.6}%
+\contentsline {subsubsection}{\numberline {2.20.7}Cas d'erreur}{45}{subsubsection.2.20.7}%
+\contentsline {subsection}{\numberline {2.21}Cas d'utilisation n°20 : Supprimer un véhicule de service}{45}{subsection.2.21}%
+\contentsline {subsubsection}{\numberline {2.21.1}Description}{45}{subsubsection.2.21.1}%
+\contentsline {subsubsection}{\numberline {2.21.2}Accès : profils}{45}{subsubsection.2.21.2}%
+\contentsline {subsubsection}{\numberline {2.21.3}Maquette}{46}{subsubsection.2.21.3}%
+\contentsline {subsubsection}{\numberline {2.21.4}Actions}{46}{subsubsection.2.21.4}%
+\contentsline {subsubsection}{\numberline {2.21.5}Règles métier}{46}{subsubsection.2.21.5}%
+\contentsline {subsection}{\numberline {2.22}Cas d'utilisation n°21 : Sélectionner un véhicule de covoiturage}{47}{subsection.2.22}%
+\contentsline {subsubsection}{\numberline {2.22.1}Description}{47}{subsubsection.2.22.1}%
+\contentsline {subsubsection}{\numberline {2.22.2}Accès : profils}{47}{subsubsection.2.22.2}%
+\contentsline {subsubsection}{\numberline {2.22.3}Maquette}{47}{subsubsection.2.22.3}%
+\contentsline {subsubsection}{\numberline {2.22.4}Actions}{48}{subsubsection.2.22.4}%
+\contentsline {subsection}{\numberline {2.23}Cas d'utilisation n°22 : Ajouter un véhicule personnel}{48}{subsection.2.23}%
+\contentsline {subsubsection}{\numberline {2.23.1}Description}{48}{subsubsection.2.23.1}%
+\contentsline {subsubsection}{\numberline {2.23.2}Accès : profils}{48}{subsubsection.2.23.2}%
+\contentsline {subsubsection}{\numberline {2.23.3}Maquette}{49}{subsubsection.2.23.3}%
+\contentsline {subsubsection}{\numberline {2.23.4}Actions}{49}{subsubsection.2.23.4}%
+\contentsline {subsubsection}{\numberline {2.23.5}Règles interface utilisateur}{50}{subsubsection.2.23.5}%
+\contentsline {subsubsection}{\numberline {2.23.6}Règles métier}{50}{subsubsection.2.23.6}%
+\contentsline {subsubsection}{\numberline {2.23.7}Cas d'erreur}{50}{subsubsection.2.23.7}%
+\contentsline {subsection}{\numberline {2.24}Cas d'utilisation n°23 : Modifier les informations d'un véhicule personnel}{51}{subsection.2.24}%
+\contentsline {subsubsection}{\numberline {2.24.1}Description}{51}{subsubsection.2.24.1}%
+\contentsline {subsubsection}{\numberline {2.24.2}Accès : profils}{51}{subsubsection.2.24.2}%
+\contentsline {subsubsection}{\numberline {2.24.3}Maquette}{51}{subsubsection.2.24.3}%
+\contentsline {subsubsection}{\numberline {2.24.4}Actions}{52}{subsubsection.2.24.4}%
+\contentsline {subsubsection}{\numberline {2.24.5}Règles interface utilisateur}{52}{subsubsection.2.24.5}%
+\contentsline {subsubsection}{\numberline {2.24.6}Règles métier}{53}{subsubsection.2.24.6}%
+\contentsline {subsubsection}{\numberline {2.24.7}Cas d'erreur}{53}{subsubsection.2.24.7}%
+\contentsline {subsection}{\numberline {2.25}Cas d'utilisation n°24 : Supprimer un véhicule personnel}{53}{subsection.2.25}%
+\contentsline {subsubsection}{\numberline {2.25.1}Description}{53}{subsubsection.2.25.1}%
+\contentsline {subsubsection}{\numberline {2.25.2}Accès : profils}{53}{subsubsection.2.25.2}%
+\contentsline {subsubsection}{\numberline {2.25.3}Maquette}{54}{subsubsection.2.25.3}%
+\contentsline {subsubsection}{\numberline {2.25.4}Actions}{54}{subsubsection.2.25.4}%

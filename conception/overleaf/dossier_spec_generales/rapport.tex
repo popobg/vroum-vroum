@@ -1,0 +1,1055 @@
+\documentclass{rapportECL2024}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\setlength\parindent{0pt}
+\addbibresource{biblio.bib}
+\setcounter{tocdepth}{2}
+\usepackage{tabularx}
+%--------------------------------------
+
+\titre{Dossier des spécifications générales}
+\soustitre{Vroum-Vroum}
+
+\enseignant{Richard \textsc{Bonnamy} \\
+             }
+
+\eleves{Johan \textsc{Guillen} \\
+    Loïc \textsc{Mayran} \\
+    Maxence \textsc{Ogier} \\
+	Pauline \textsc{Bouyssou}}
+
+%--------------------------------------
+
+\begin{document}
+
+\fairepagedegarde
+\fairetabledesmatieres
+
+%--------------------------------------
+\section{Introduction}
+\
+
+\subsection{Objet du document}
+
+
+
+    Ce document a pour objectif de présenter l’essentiel des questions fonctionnelles liées à la mise en place de l’application professionnelle Vroum-vroum.\newline
+    Ce document présente les différents cas d’utilisation recensés.
+
+
+\subsection{Terminologie}
+    \begin{itemize}
+        \item 
+        \textbf{Collaborateur} : Employé de l’entreprise, qui peut être aussi bien passager qu’organisateur d’un covoiturage, et peut louer un véhicule de service.
+        \item 
+        \textbf{Administrateur} :  Collaborateur pouvant en plus gérer le parc des véhicules de service.
+        \item  
+        \textbf{Covoiturage} : Trajet allant d’une adresse de départ vers une adresse d’arrivée, proposé à une date précise par un collaborateur utilisant son propre véhicule. Il est considéré comme l’organisateur de ce covoiturage.\newline
+        Des collaborateurs peuvent réserver le covoiturage en tant que passagers, en fonction du nombre de places disponibles.
+        \item 
+        \textbf{Véhicule de service} :  Un véhicule fourni par l’entreprise, empruntable par un collaborateur, avec lequel on ne peut pas organiser de covoiturage.
+    \end{itemize}
+
+\section{Focus fonctionnel}
+\subsection{diagramme de cas d'utilisation}
+    \insererfigure{image/diagramme_cu.jpg} {0.80\textwidth}{Diagramme de cas d'utilisation}{logo_raccourci}
+\newpage
+
+\subsection{Cas d'utilisation n°1 : S'authentifier}
+
+    \subsubsection{Description}
+        Ce cas d’utilisation (\textit{CU}) permet à un utilisateur non connecté de s’authentifier afin d’accéder à la page d’accueil de l’application.
+    \subsubsection{Accès : profils}
+        Tout utilisateur non connecté arrivant sur n’importe quelle page du site.
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation1.png}{0.5\textwidth}{maquette authentification}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth} { 
+  | >{\centering\arraybackslash}X 
+  | >{\centering\arraybackslash}X 
+  | >{\centering\arraybackslash}X | }
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Input pseudo & Saisie texte & Prise en compte du pseudo saisi par l’utilisateur \\ \hline
+            Input mot de passe & Saisie texte & Prise en compte du mot de passe saisi par l’utilisateur \\ \hline
+            Bouton « Se connecter » & clique simple & Envoi du formulaire au serveur pour vérification de l’existence du profil utilisateur / admin\\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - s'authentifier}
+        \end{table}
+    \subsubsection{Règles interface utilisateur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Les caractères saisis dans le champ « mot de passe » sont cachés par défaut.  \\ \hline
+            2 & Le bouton « Se connecter » n’est cliquable que si les deux champs précédents ont été saisis.  \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles interface utilisateur - s'authentifier}
+        \end{table}
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle\\ \hline
+            1 & Le pseudo doit comporter plus d’un caractère. \\ \hline
+            2 & Le mot de passe doit comporter plus de 8 caractères.  \\ \hline
+            3 & Le couple pseudo-mot de passe doit correspondre à un utilisateur en base de données. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - s'authentifier}
+        \end{table}
+        \subsubsection{Cas d'erreur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Messages d'erreur \\ \hline
+            1 & Le pseudo doit comporter au moins un caractère. \\ \hline
+            2 & Le mot de passe doit comporter au moins 8 caractères. \\ \hline
+            3 & Utilisateur inconnu. Le pseudo ou le mot de passe sont incorrects. \\ \hline        \end{tabularx}
+        \caption{tableau des cas d'erreurs - s'authentifier}
+        \end{table}
+
+\newpage
+\subsection{Cas d'utilisation n°2 : Accéder à la page d'accueil}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet de présenter l’application.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, après s'être authentifié sur la page de connexion.
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation2.png}{0.5\textwidth}{maquette page d'accueil}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Gestion service » & Simple clic & Redirection vers le CU « Afficher la liste des véhicules de service » \\ \hline
+            Bouton « Service » & Simple clic & Redirection vers le CU « Afficher la liste des réservations des véhicule de service » \\ \hline
+            Menu déroulant « Menu covoit » & Simple clic & Affiche les options liées au covoiturage \\ \hline
+            Option « Rechercher un covoit » du menu déroulant & Simple clic & Redirection vers le CU « »Rechercher un covoiturage« » \\ \hline
+            Option « Mes covoits réservés » du menu déroulan & Simple clic & Redirection vers le CU « Afficher la liste des réservations de covoiturages » \\ \hline
+            Option « Mes covoits organisés » du menu déroulant & Simple clic & Redirection vers le CU « Afficher la liste des covoiturages organisés » \\ \hline
+            Bouton « Se déconnecter » & Simple clic & Retour au CU « S'authentifier » \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - accéder à la page d'accueil}
+        \end{table}
+
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & L’utilisateur doit être administrateur pour que le bouton gestion de service apparaisse dans la barre de navigation. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - accéder à la page d'accueil}
+        \end{table}
+\newpage
+
+\subsection{Cas d'utilisation n°3 : Afficher la liste des réservations de covoiturage}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un utilisateur de visualiser la liste des covoiturages réservés en tant que passager (en cours ou passés), d'en voir le détail et de les annuler si besoin.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le menu déroulant « Menu covoit » de la barre de navigation, en cliquant sur l'option « Mes covoits réservés ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation3.png}{0.5\textwidth}{maquette affichage de la liste des covoit réservés}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Détail » & Clic simple & Ouvre une pop up correspondant au CU « Afficher le détail d'une réservation de covoiturage ». \\ \hline
+            Bouton « Annuler » & Clic simple & Ouvre une pop up de confirmation correspondant au CU « Annuler une réservation de covoiturage ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - afficher la liste des réservations de covoiturage}
+        \end{table}
+
+\newpage
+\subsection{Cas d'utilisation n°4 : Afficher le détail d'une réservation de covoiturage}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un utilisateur d'afficher des informations complémentaires concernant une réservation de covoiturage : informations liées au véhicule de l'organisateur, informations liées à l'organisateur et liste des autres passagers.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Afficher la liste des réservations de covoiturage », en cliquant sur le bouton « Détail » d'une réservation.
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation4.png}{0.5\textwidth}{maquette détail d'une réservation de covoiturage}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Fermer » & Clic simple & Retour au CU « Afficher la liste des réservations de covoiturage » \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - afficher le détail d'une réservation de covoiturage}
+        \end{table}
+  
+\subsection{Cas d'utilisation n°5 : Annuler une réservation de covoiturage}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un utilisateur d'afficher le détail de la réservation de covoiturage qu'il compte annuler et d'en confirmer l'annulation.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Afficher la liste des réservations de covoiturage », en cliquant sur le bouton « Annuler » d'une réservation.
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation5.png}{0.5\textwidth}{maquette annulation d'une réservation de covoiturage}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Confirmer suppression » & Clic simple & Sauvegarde en base de données la suppression de ce covoiturage de la liste des réservations de l'utilisateur et le supprime de la liste des passagers. \\ \hline
+            Bouton « Annuler » & Clic simple & Retour au CU « Afficher la liste des réservations de covoiturage ».  \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - annuler une réservation de covoiturage}
+        \end{table}
+
+\subsection{Cas d'utilisation n°6 : Rechercher un covoiturage}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un utilisateur de rechercher un covoiturage selon les critères « Adresse de départ », « Adresse d'arrivée » et « Date de départ ».
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le menu déroulant « Menu covoit » de la barre de navigation, en cliquant sur l'option « Rechercher un covoit ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation6.png}{0.5\textwidth}{maquette rechercher un covoiturage}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Réserver » & Clic simple & Ouvre une pop up correspondant au CU « Réserver un covoiturage ». \\ \hline
+            Input départ & Saisie texte & Met-à-jour la liste des covoiturages correspondant à l'adresse de départ saisie. \\ \hline
+            Input arrivée & Saisie texte & Met-à-jour la liste des covoiturages correspondant à l'adresse d'arrivée saisie. \\ \hline
+            Input date & Saisie date & Met-à-jour la liste des covoiturages correspondant à la date de départ saisie. \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - rechercher un covoiturage}
+        \end{table}
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & La liste des covoiturages proposés doit se mettre à jour au fur et à mesure des critères rentrés dans les champs de saisie. \\ \hline
+            2 & La date ne doit pas être antérieure à la date du jour. \\ \hline
+            3 & L'adresse de départ doit exister (si utilisation API Open Street Map). \\ \hline
+            4 & L'adresse d'arrivée doit exister (si utilisation API Open Street Map). \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - rechercher un covoiturage}
+        \end{table}
+    \subsubsection{Cas d'erreur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Messages d'erreur \\ \hline
+            1 & La date saisie est déjà passée. \\ \hline
+            2 & L’adresse saisie est incorrecte. \\ \hline
+        \end{tabularx}
+        \caption{tableau des cas d'erreurs - rechercher un covoiturage}
+        \end{table}
+
+\newpage
+\subsection{Cas d'utilisation n°7 : Réserver un covoiturage}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un utilisateur de réserver un covoiturage.  
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Rechercher un covoiturage » en cliquant sur le bouton « Réserver » d'un covoiturage proposé.
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation7.png}{0.5\textwidth}{maquette réservation d'un covoiturage}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Confirmer » & Clic simple & Sauvegarde en base de donnée de l’utilisateur dans la liste des participants du covoiturage et ajout du covoiturage dans la liste des réservations de l’utilisateur. \\ \hline
+            Bouton « Annuler » & Clic simple & Retour sur le CU « Rechercher un covoiturage ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - réserver un covoiturage}
+        \end{table}
+
+ 
+\subsection{Cas d'utilisation n°8 : Afficher la liste des covoiturages organisés}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un collaborateur d’afficher la liste des covoiturages qu'il propose (en cours ou passés), en tant que conducteur.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le menu déroulant « Menu covoit » de la barre de navigation, en cliquant sur l'option « Mes covoits organisés ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation8.png}{0.5\textwidth}{maquette liste des covoiturages organisés}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Publier une annonce » & Clic simple & Redirection vers le CU « Créer une annonce de covoiturage ». \\ \hline
+            Bouton « Modifier » & Clic simple & Redirection vers le CU « Modifier une annonce de covoiturage ». \\ \hline
+            Bouton « Annuler » & Clic simple & Redirection vers le CU « Supprimer une annonce de covoiturage ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - afficher la liste des covoiturages organisés}
+        \end{table}
+
+\newpage
+\subsection{Cas d'utilisation n°9 : Créer une annonce de covoiturage}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un collaborateur de créer une annonce de covoiturage et de la publier afin que d'autres collaborateurs puissent réserver une place dans la voiture de l'organisateur.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Afficher la liste des covoiturages organisés ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation9.png}{0.5\textwidth}{maquette création d'une annonce de covoiturage}{logo_raccourci}
+    \subsubsection{Actions}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Input départ & Saisie texte & Prise en compte de l'adresse de départ du covoiturage. \\ \hline
+            Input arrivée & Saisie texte & Prise en compte de l'adresse d’arrivé du covoiturage. \\ \hline
+            Input durée & Saisie texte & Prise en compte de la durée du covoiturage. \\ \hline  
+            Input distance & Saisie texte & Prise en compte de la distance du covoiturage. \\ \hline   
+            Bouton véhicule & Clic simple & Redirection vers le CU « Sélectionner le véhicule de covoiturage ». \\ \hline   
+            Input date & Saisie texte & Permet de choisir la date de départ du covoiturage. \\ \hline   
+            Bouton « Publier » & Clic simple & Sauvegarde des informations saisies comme nouveau covoiturage en base de données. \\ \hline     
+            Bouton « Annuler » & Clic simple & Retour au CU « Afficher la liste des covoiturages organisés ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - créer une annonce de covoiturage}
+        \end{table}
+
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & L'adresse de départ doit exister. \\ \hline
+            2 & L'adresse d’arrivée doit exister. \\ \hline
+            3 & La durée du trajet doit être positive.  \\ \hline
+            4 & La distance doit être positive.  \\ \hline
+            5 & Le nombre de places disponibles dans le véhicule doit être compris entre 1 et 10. \\ \hline
+            6 & La date de départ ne doit pas être ultérieure à la date du jour. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - créer une annonce de covoiturage}
+        \end{table}
+
+    \subsubsection{Cas d'erreur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & L'adresse de départ doit exister. \\ \hline
+            2 & L'adresse d’arrivée doit exister. \\ \hline
+            3 & La durée du trajet doit être positive. \\ \hline
+            4 & La distance doit être positive. \\ \hline
+            5 & Le nombre de places disponibles dans le véhicule doit être compris entre 1 et 10. \\ \hline
+            6 & La date de départ ne doit pas être ultérieure à la date du jour. \\ \hline
+        \end{tabularx}
+        \caption{tableau des cas d'erreurs - créer une annonce de covoiturage}
+        \end{table}
+
+ \newpage
+\subsection{Cas d'utilisation n°10 : Modifier une annonce de covoiturage}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un utilisateur de modifier une annonce de covoiturage qu'il a publié.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Afficher la liste des covoiturages organisés ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation10.png}{0.5\textwidth}{maquette modification d'une annonce de covoiturage}{logo_raccourci}
+    \subsubsection{Actions}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Input départ & Saisie texte & Prise en compte de l'adresse de départ du covoiturage. \\ \hline
+            Input arrivée & Saisie texte & Prise en compte de l'adresse d’arrivé du covoiturage. \\ \hline
+            Input durée & Saisie texte & Prise en compte de la durée du covoiturage. \\ \hline  
+            Input distance & Saisie texte & Prise en compte de la distance du covoiturage. \\ \hline   
+            Bouton véhicule & Clic simple & Redirection vers le CU « Sélectionner le véhicule de covoiturage ». \\ \hline   
+            Input date & Saisie texte & Permet de choisir la date de départ du covoiturage. \\ \hline
+            Input nombre de places & Saisie nombre & Prise en compte du nombre de places disponibles dans le véhicule pour d'autres collaborateurs. \\ \hline  
+            Bouton « Valider » & Clic simple & Sauvegarde les modifications du covoiturage en base de données. \\ \hline     
+            Bouton « Annuler » & Clic simple & Retour au CU « Afficher la liste des covoiturages organisés ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - modifier une annonce de covoiturage}
+        \end{table}
+
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & L'adresse de départ doit exister. \\ \hline
+            2 & L'adresse d’arrivée doit exister. \\ \hline
+            3 & La durée du trajet doit être positive.  \\ \hline
+            4 & La distance doit être positive.  \\ \hline
+            5 & Le nombre de places disponibles dans le véhicule doit être compris entre 1 et 10. \\ \hline
+            6 & La date de départ ne doit pas être ultérieure à la date du jour. \\ \hline
+            7 & L'annonce ne doit faire l'objet d'aucune réservation par des collaborateurs pour pouvoir être modifiée. Sinon, le collaborateur doit supprimer et recréer une annonce avec des informations à jour. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - modifier une annonce de covoiturage}
+        \end{table}
+
+    \subsubsection{Cas d'erreur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & L'adresse de départ doit exister. \\ \hline
+            2 & L'adresse d’arrivée doit exister. \\ \hline
+            3 & La durée du trajet doit être positive.  \\ \hline
+            4 & La distance doit être positive.  \\ \hline
+            5 & Le nombre de places disponibles dans le véhicule doit être compris entre 1 et 10. \\ \hline
+            6 & La date de départ ne doit pas être ultérieure à la date du jour. \\ \hline
+            7 & Cette annonce fait l'objet de réservations. Pour modifier votre offre, supprimez cette annonce et créez-en une nouvelle. \\ \hline
+        \end{tabularx}
+        \caption{tableau des cas d'erreurs - modifier une annonce de covoiturage}
+        \end{table}
+
+\newpage
+\subsection{Cas d'utilisation n°11 : Supprimer une annonce de covoiturage}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un utilisateur de visualiser les détails d'une annonce de covoiturage qu'il a publié et de confirmer sa suppression.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Afficher la liste des covoiturages organisés ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation11.png}{0.5\textwidth}{maquette suppression d'une annonce de covoiturage}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Confirmer suppression » & Clic simple & Supprime le covoiturage de la base de données. \\ \hline
+            Bouton « Annuler » & Clic simple & Retour au CU « Afficher la liste des covoiturages organisés ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - supprimer une annonce de covoiturage}
+        \end{table}
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & S'ils existent, la liste des collaborateurs ayant déjà réservé le covoiturage s'affiche dans le détail du covoiturage. \\ \hline
+            2 & En cas de confirmation, toutes les personnes ayant réservé le covoiturage reçoivent un mail les avertissant de sa suppression. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - supprimer une annonce de covoiturage}
+        \end{table}
+
+\subsection{Cas d'utilisation n°12 : Afficher la liste des réservations des véhicules de service}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un collaborateur de visualiser ses réservations de véhicule de service (en cours et passées). 
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, en cliquant sur le bouton « Service » de la barre de navigation.
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation12.png}{0.5\textwidth}{maquette liste des réservations de véhicule de service}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Nouvelle réservation » & Clic simple & Redirection vers le CU « Réserver un véhicule de service ». \\ \hline
+            Bouton « Modifier » & Clic simple & Redirection vers le CU « Modifier la réservation d'un véhicule de service ». \\ \hline
+            Bouton « Annuler » & Clic simple & Redirection vers le CU « Annuler la réservation d'un véhicule de service ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - afficher la liste des réservations de véhicule de service}
+        \end{table}
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Tri des réservations affichées de la date la plus récente à la date la plus ancienne. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - afficher la liste des réservations de véhicule de service}
+        \end{table}
+
+\subsection{Cas d'utilisation n°13 : Réserver un véhicule de service}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un collaborateur de réserver un véhicule de service.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Afficher la liste des réservations des véhicules de service », en cliquant sur le bouton « Nouvelle réservation ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation13.png}{0.5\textwidth}{maquette réservation d'un véhicule de service}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Input date départ & Choix date-heure & Sélectionne la date et heure de départ \\ \hline
+            Input date retour & Choix date-heure & Sélectionne la date et heure de retour (estimée) \\ \hline
+            Carrousel (\textit{slideshow}) & Choix du véhicule & Sélectionne le véhicule à louer \\ \hline
+            Bouton « Annuler » & Clic simple & Retour au CU « Afficher la liste des réservations des véhicules de service » \\ \hline
+            Bouton « Confirmer » & Clic simple & Sauvegarde en base de données de la réservation du véhicule choisi par le collaborateur pour les dates saisies \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - réserver un véhicule de service}
+        \end{table}
+    \subsubsection{Règles interface utilisateur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Bouton « Confirmer » grisé en attendant la réponse du serveur.  \\ \hline
+            2 & Les dates antérieures à la date du jour sont grisées pour l'input des dates.  \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles interface utilisateur - réserver un véhicule de service}
+        \end{table}
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Le choix d'une date et heure de départ est obligatoire. \\ \hline
+            2 & Le choix d'une date et heure de retour est obligatoire. \\ \hline
+            3 & Le choix d'un véhicule à louer est obligatoire. \\ \hline
+            4 & La date de départ ne doit pas être antérieure à la date du jour. \\ \hline
+            5 & La date de retour doit être ultérieure à la date de départ. \\ \hline
+            6 & Seuls les véhicules dont le statut est « disponible » sur la période saisie sont présentés. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - réserver un véhicule de service}
+        \end{table}
+    \subsubsection{Cas d'erreur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Messages d'erreur \\ \hline
+            1 & Vous devez saisir une date et heure de départ. \\ \hline
+            2 & Vous devez saisir une date et heure de retour. \\ \hline
+            3 & Vous devez choisir un véhicule à louer. \\ \hline
+            4 & Aucun véhicule n'est disponible sur la période saisie. \\ \hline
+            4 & L'horaire de départ est antérieur à la date du jour. \\ \hline
+            5 & L'horaire de retour est antérieur à l'horaire de départ. \\ \hline
+        \end{tabularx}
+        \caption{tableau des cas d'erreurs - réserver un véhicule de service}
+        \end{table}
+        
+\subsection{Cas d'utilisation n°14 : Annuler la réservation d'un véhicule de service}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un collaborateur de supprimer une réservation à venir pour un véhicule de service.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Afficher la liste des réservations de véhicule de service », en cliquant sur un bouton « Annuler » d’une réservation.
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation14.png}{0.5\textwidth}{maquette annulation d'une réservation de véhicule de service}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Annuler » & Clic simple & Retour au CU « Afficher la liste des réservations de véhicule de service ». \\ \hline
+            Bouton « Confirmer annulation » & Clic simple & Suppression de la réservation en base de données. \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - annuler la réservation d'un véhicule de service}
+        \end{table}
+
+\subsection{Cas d'utilisation n°15 : Modifier la réservation d'un véhicule de service}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un collaborateur de modifier une réservation à venir pour un véhicule de service.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Afficher la liste des réservations de véhicule de service », en cliquant sur le bouton « Modifier » d’une réservation.
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation15.png}{0.5\textwidth}{maquette modification d'une réservation de véhicule de service}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Input date & Choix date-heure & Prise en compte de la date et heure de départ. \\ \hline
+            Input date & Choix date-heure & Prise en compte de la date et heure de retour (estimée). \\ \hline
+            Carrousel (\textit{slideshow}) & Choix du véhicule & Sélectionne le véhicule à louer. \\ \hline
+            Bouton « Annuler » & Clic simple & Retour au CU « Afficher la liste des réservations des véhicules de service ». \\ \hline
+            Bouton « Confirmer » & Clic simple & Sauvegarde en base de données de la réservation du véhicule choisi par le collaborateur pour les dates saisies. \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - modifier une réservation d'un véhicule de service}
+        \end{table}
+    \subsubsection{Règles interface utilisateur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Bouton « Modifier » grisé en attendant la réponse du serveur. \\ \hline
+            2 & Les dates antérieures à la date du jour sont grisées pour l'input des dates. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles interface utilisateur - modifier une réservation d'un véhicule de service}
+        \end{table}
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Le choix d'une date et heure de départ est obligatoire. \\ \hline
+            2 & Le choix d'une date et heure de retour est obligatoire. \\ \hline
+            3 & Le choix d'un véhicule à louer est obligatoire. \\ \hline
+            4 & La date de départ ne doit pas être antérieure à la date du jour. \\ \hline
+            5 & La date de retour doit être ultérieure à la date de départ. \\ \hline
+            6 & Toutes les informations peuvent être modifiées. \\ \hline
+            7 & En cas de changement d'horaires, le véhicule réservé doit être disponible aux nouvelles dates-heures choisies ; si ce n'est pas le cas, seuls les véhicules disponibles sur ces dates sont proposés. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - modifier une réservation d'un véhicule de service}
+        \end{table}
+        \subsubsection{Cas d'erreur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Messages d'erreur \\ \hline
+            1 & Vous devez saisir une date et heure de départ. \\ \hline
+            2 & Vous devez saisir une date et heure de retour. \\ \hline
+            3 & Vous devez choisir un véhicule à louer. \\ \hline
+            4 & Aucun véhicule n'est disponible sur la période saisie. \\ \hline
+            4 & L'horaire de départ est antérieur à la date du jour. \\ \hline
+            5 & L'horaire de retour est antérieur à l'horaire de départ. \\ \hline
+        \end{tabularx}
+        \caption{tableau des cas d'erreurs - modifier une réservation d'un véhicule de service}
+        \end{table}
+
+\subsection{Cas d'utilisation n°16 : Afficher la page de gestion de service}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un administrateur d’afficher la liste des véhicules de service.
+    \subsubsection{Accès : profils}
+    Profil administrateur, en cliquant sur le bouton « gestion service » de la barre de navigation.
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation16.png}{0.5\textwidth}{maquette gestion service admin}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Liste » & Clic simple & Redirection vers le CU « Afficher la liste des véhicules de service ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions}
+        \end{table}
+
+\newpage
+\subsection{Cas d'utilisation n°17 : Afficher la liste des véhicules de service}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un administrateur de visualiser la liste des véhicules de service du parc automobile et de filtrer la liste des véhicules selon l’immatriculation ou la marque du véhicule.
+    \subsubsection{Accès : profils}
+    Profil administrateur, depuis le CU « Afficher la page de gestion de service », en cliquant sur le bouton « Liste ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation17.png}{0.5\textwidth}{maquette liste des véhicules de service}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+             Menu déroulant « Filtrer » & Clic simple & Déroule le menu des options ("Immatriculation" / "Modèle"). \\ \hline
+             Input immatriculation & Saisie texte & Apparaît après sélection de "Immatriculation" dans le menu déroulant. Affiche que les véhicules présentant le bout d'immatriculation fournie. \\ \hline
+             Input modèle & Saisie texte & Apparaît après sélection de "Modèle" dans le menu déroulant. Affiche que les véhicules avec le modèle fournis. \\ \hline
+            Bouton « Ajouter » & Clic simple & Redirection vers le CU « Ajouter un véhicule de service ». \\ \hline
+            Bouton « Modifier » & Clic simple & Redirection vers le CU « Modifier les informations d'un véhicule de service ». \\ \hline
+            Bouton « Supprimer » & Clic simple & Redirection vers le CU « Supprimer un véhicule de service ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - afficher la liste des véhicules de service}
+        \end{table}
+ 
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & La liste des voitures est triée par statut (disponible --> en réparation --> hors service). \\ \hline
+            2 & L'immatriculation saisie par l'utilisateur ne doit pas excédée 8 caractères (pour les anciennes plaques françaises). \\
+            3 & Un message d'erreur est affiché si aucun véhicule ne correspond à l'immatriculation ou au modèle saisi par l'utilisateur. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - afficher la liste des véhicules de service}
+        \end{table}
+    \subsubsection{Cas d'erreur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Messages d'erreur \\ \hline
+            1 & L’immatriculation ne peut excéder 8 caractères. \\ \hline
+            2 & Immatriculation inconnue. \\ \hline
+            3 & Modèle inconnu. \\ \hline        \end{tabularx}
+        \caption{tableau des cas d'erreurs - afficher la liste des véhicules de service}
+        \end{table}
+
+\newpage
+\subsection{Cas d'utilisation n°18 : Ajouter un véhicule de service}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un administrateur d’ajouter un nouveau véhicule au parc des véhicules de service de l'entreprise.
+    \subsubsection{Accès : profils}
+    Profil administrateur, depuis le CU « Afficher la liste des véhicules de service », en cliquant sur le bouton « Ajouter ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation18.png}{0.5\textwidth}{maquette ajout d'un véhicule de service}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Input « immatriculation » & Saisie texte & Prise en compte de l’immatriculation saisie par l’utilisateur. \\ \hline
+            Input « marque » & Saisie texte & Prise en compte de la marque saisie par l’utilisateur. \\ \hline
+            Input « modèle » & Saisie texte & Prise en compte du modèle saisi par l’utilisateur. \\ \hline
+            Menu déroulant « catégorie » & Saisie du choix & Sélection de l'option de catégorie faite par l’utilisateur. \\ \hline
+            Input « photo » & Saisie texte & Prise en compte de l’URL de l’image sélectionnée par l’utilisateur. \\ \hline
+            Input « nombre de places » & Saisie nombre & Prise en compte du nombre de places saisi par l’utilisateur. \\ \hline
+            Input « motorisation » & Saisie texte & Prise en compte de la motorisation saisie par l’utilisateur. \\ \hline
+            Input « Co2/km » & Saisie nombre & Prise en compte du Co2/km saisi par l’utilisateur. \\ \hline
+            Menu déroulant « statut » & Saisie du choix & Sélection de l'option de statut faite par l’utilisateur. \\ \hline
+            Bouton « Annuler » & Clic simple & Retour au CU « Afficher la liste des véhicules de service ». \\ \hline
+            Bouton « Valider » & Clic simple & Sauvegarde du véhicule en base de données. \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - ajouter un véhicule de service}
+        \end{table}
+    \subsubsection{Règles interface utilisateur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Bouton « Valider » grisé tant que tous les champs ne sont pas saisis (sauf la photo). \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles interface utilisateur - ajouter un véhicule de service}
+        \end{table}
+    
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Tous les champs sont obligatoires sauf le champ "photo". \\ \hline
+            2 & La photo n’est pas stockée dans l’application, il s’agit d’une URL qui est accessible en ligne.  \\ \hline
+            3 & L'immatriculation doit correspondre au pattern RegEx donné (cf CU « Créer une annonce de covoiturage »).  \\ \hline
+            4 & Le nombre de places du véhicule doit être compris entre 1 et 10. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - ajouter un véhicule de service}
+        \end{table}
+    \subsubsection{Cas d'erreur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Messages d'erreur \\ \hline
+            1 &Le champ « immatriculation » doit être rempli. \\ \hline
+            2 &Le champ « immatriculation » n'est pas au bon format. \\ \hline
+            3 &Le champ « marque » doit être rempli. \\ \hline
+            4 &Le champ « modèle »  doit être rempli. \\ \hline
+            5 & La « catégorie » doit être renseignée. \\ \hline
+            6 & Le champ « nombre de places » doit être rempli. \\ \hline
+            7 & Le champ « nombre de places » doit être un chiffre compris entre 1 et 10. \\ \hline
+            8 &Le champ « motorisation » doit être rempli. \\ \hline
+            9 & Le champ « Co2/km »  doit être rempli. \\ \hline
+            10 & Le « statut » doit être renseigné. \\ \hline
+        \end{tabularx}
+        \caption{tableau des cas d'erreurs - ajouter un véhicule de service}
+        \end{table}
+
+\subsection{Cas d'utilisation n°19 : Modifier les informations d'un véhicule de service}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un administrateur de modifier les informations d'un véhicule de service du parc automobile de l'entreprise.
+    \subsubsection{Accès : profils}
+    Profil administrateur, depuis le CU « Afficher la liste des véhicules de service », en cliquant sur le bouton « Modifier ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation19.png}{0.5\textwidth}{maquette modification des informations d'un véhicule de service}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Input « immatriculation » & Saisie texte & Prise en compte de l’immatriculation saisie par l’utilisateur. \\ \hline
+            Input « marque » & Saisie texte & Prise en compte de la marque saisie par l’utilisateur. \\ \hline
+            Input « modèle » & Saisie texte & Prise en compte du modèle saisi par l’utilisateur. \\ \hline
+            Menu déroulant « catégorie » & Saisie du choix & Sélection de l'option de catégorie faite par l’utilisateur. \\ \hline
+            Input « photo » & Saisie texte & Prise en compte de l’URL de l’image sélectionnée par l’utilisateur. \\ \hline
+            Input « nombre de places » & Saisie nombre & Prise en compte du nombre de places saisi par l’utilisateur. \\ \hline
+            Input « motorisation » & Saisie texte & Prise en compte de la motorisation saisie par l’utilisateur. \\ \hline
+            Input « Co2/km » & Saisie nombre & Prise en compte du Co2/km saisi par l’utilisateur. \\ \hline
+            Menu déroulant « statut » & Saisie du choix & Sélection de l'option de statut faite par l’utilisateur. \\ \hline
+            Bouton « Annuler » & Clic simple & Retour au CU « Afficher la liste des véhicules de service ». \\ \hline
+            Bouton « Valider » & Clic simple & Sauvegarde des modifications des informations du véhicule en base de données. \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - modifier un véhicule de service}
+        \end{table}
+    \subsubsection{Règles interface utilisateur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Bouton « Valider » grisé tant que tous les champs ne sont pas saisis (sauf la photo)  \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles interface utilisateur - modifier un véhicule de service}
+        \end{table}
+    
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Tous les champs sont obligatoires sauf le champ "photo". \\ \hline
+            2 & La photo n’est pas stockée dans l’application, il s’agit d’une URL qui est accessible en ligne.  \\ \hline
+            3 & L'immatriculation doit correspondre au pattern RegEx donné (cf CU « Créer une annonce de covoiturage »).  \\ \hline
+            4 & Si le statut d'un véhicule est mis hors-service ou en réparation, les réservations effectuées pour ce véhicule sont annulées et un mail est envoyé aux collaborateurs concernés.  \\ \hline
+            5 & Un tableau récapitulatif des réservations en cours, futures et passées en lien avec ce véhicule est affiché.  \\ \hline
+            6 & Le nombre de places doit être compris entre 1 et 10.\\  \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - modifier un véhicule de service}
+        \end{table}
+    \subsubsection{Cas d'erreur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Messages d'erreur \\ \hline
+            1 &Le champ « immatriculation » doit être rempli. \\ \hline
+            2 &Le champ « immatriculation » n'est pas au bon format. \\ \hline
+            3 &Le champ « marque » doit être rempli. \\ \hline
+            4 &Le champ « modèle »  doit être rempli. \\ \hline
+            5 & La « catégorie » doit être renseignée. \\ \hline
+            6 & Le champ « nombre de places »  doit être rempli. \\ \hline
+            7 & Le champ « nombre de places » doit être un chiffre compris entre 1 et 10. \\ \hline
+            8 &Le champ « motorisation » doit être rempli. \\ \hline
+            9 & Le champ « co2/km »  doit être rempli. \\ \hline
+            10 & Le « statut » doit être renseigné. \\ \hline
+        \end{tabularx}
+        \caption{tableau des cas d'erreurs - modifier un véhicule de service}
+        \end{table}
+
+\subsection{Cas d'utilisation n°20 : Supprimer un véhicule de service}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un administrateur de supprimer un véhicule du parc des véhicules de service de l'entreprise.
+    \subsubsection{Accès : profils}
+    Profil administrateur, depuis le CU « Afficher la liste des véhicules de service », en cliquant sur le bouton « Supprimer ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation20.png}{0.5\textwidth}{maquette suppression d'un véhicule de service}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Annuler » & Clic simple & Retour au CU « Afficher la liste des véhicules de service ». \\ \hline
+            Bouton « Valider» & Clic simple & Suppression de la voiture de service en base de données. \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - supprimer un véhicule de service}
+        \end{table}
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Si l'opération est validée, un mail est envoyé à tous les collaborateurs ayant une réservation à venir avec ce véhicule afin de les prévenir de son annulation. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - supprimer un véhicule de service}
+        \end{table}
+
+\newpage
+\subsection{Cas d'utilisation n°21 : Sélectionner un véhicule de covoiturage}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un collaborateur de sélectionner, ajouter, modifier ou supprimer un véhicule personnel utilisable pour un covoiturage.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis les CU « Ajouter une annonce de covoiturage » ou « Modifier une annonce de covoiturage », en cliquant sur le bouton « véhicule ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation21.png}{0.5\textwidth}{maquette choix véhicule personnel}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+             Bouton « Sélectionner » & Clic simple & Redirection vers les CU « Ajouter une annonce de covoiturage » ou « Modifier une annonce de covoiturage » en ajoutant le véhicule sélectionné comme véhicule rattaché à ce covoiturage. \\ \hline
+            Bouton « Ajouter un véhicule » & Clic simple & Redirection vers le CU « Ajouter un véhicule personnel ». \\ \hline
+             Bouton « Modifier » & Clic simple & Redirection vers le CU « Modifier les informations d'un véhicule personnel ». \\ \hline
+             Bouton « Supprimer » & Clic simple & Redirection vers le CU « Supprimer un véhicule personnel ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - sélectionner un véhicule de covoiturage}
+        \end{table}
+
+\subsection{Cas d'utilisation n°22 : Ajouter un véhicule personnel}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un collaborateur d’ajouter à son profil un véhicule personnel utilisable en covoiturage.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Sélectionner un véhicule de covoiturage », en cliquant sur le bouton « Ajouter un véhicule ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation22.png}{0.5\textwidth}{maquette ajout d'un véhicule personnel}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Input « immatriculation » & Saisie texte & Prise en compte de l’immatriculation saisie par l’utilisateur. \\ \hline
+            Input « marque » & Saisie texte & Prise en compte de la marque saisie par l’utilisateur. \\ \hline
+            Input « modèle » & Saisie texte & Prise en compte du modèle saisi par l’utilisateur. \\ \hline
+            Input « nombre de places » & Saisie nombre & Saisie du nombre de places du véhicule (dont place conducteur). \\ \hline
+            Bouton « Valider » & Clic simple & Sauvegarde du véhicule en base de données et redirection vers le CU « Sélectionner un véhicule de covoiturage ». \\ \hline
+            Bouton « Annuler » & Clic simple & Redirection vers le CU « Sélectionner un véhicule de covoiturage ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - ajouter un véhicule personnel}
+        \end{table}
+    \subsubsection{Règles interface utilisateur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Bouton « Valider » grisé tant que tous les champs ne sont pas saisis. \\ \hline
+            2 & Bouton « Valider » grisé après un premier clic utilisateur sur le bouton tant qu'on a pas de réponse du serveur. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles interface utilisateur - ajouter un véhicule personnel}
+        \end{table}
+    
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Tous les champs sont obligatoires. \\ \hline
+            2 & L'immatriculation doit correspondre au pattern RegEx donné (cf CU « Créer une annonce de covoiturage »). \\ \hline
+            3 & Le nombre de places du véhicule doit être compris entre 1 et 10. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - ajouter un véhicule personnel}
+        \end{table}
+    \subsubsection{Cas d'erreur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Messages d'erreur \\ \hline
+            1 &Le champ « immatriculation » doit être rempli. \\ \hline
+            2 &Le champ « immatriculation » n'est pas au bon format. \\ \hline
+            3 &Le champ « marque » doit être rempli. \\ \hline
+            4 &Le champ « modèle »  doit être rempli. \\ \hline
+            6 & Le champ « nombre de places »  doit être rempli. \\ \hline
+            7 & Le nombre de places doit être un chiffre compris entre 1 et 10. \\ \hline
+        \end{tabularx}
+        \caption{tableau des cas d'erreurs - ajouter un véhicule personnel}
+        \end{table}
+
+\subsection{Cas d'utilisation n°23 : Modifier les informations d'un véhicule personnel}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un collaborateur de modifier les informations d'un véhicule personnel rattaché à son profil.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Sélectionner le véhicule de covoiturage », en cliquant sur le bouton « Modifier ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation23.png}{0.5\textwidth}{maquette modification des informations d'un véhicule personnel}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+        
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Input « immatriculation » & Saisie texte & Prise en compte de l’immatriculation saisie par l’utilisateur. \\ \hline
+            Input « marque » & Saisie texte & Prise en compte de la marque saisie par l’utilisateur. \\ \hline
+            Input « modèle » & Saisie texte & Prise en compte du modèle saisi par l’utilisateur. \\ \hline
+            Input « nombre de places » & Saisie nombre & Saisie du nombre de places du véhicule (dont place conducteur). \\ \hline
+            Bouton « Valider » & Clic simple & Modifications des informations du véhicule en base de données et redirection vers le CU « Sélectionner un véhicule de covoiturage ». \\ \hline
+            Bouton « Annuler » & Clic simple & Redirection vers le CU « Sélectionner un véhicule de covoiturage ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - modifier les informations d'un véhicule personnel}
+        \end{table}
+    \subsubsection{Règles interface utilisateur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Bouton « Valider » grisé tant que tous les champs ne sont pas saisis. \\ \hline
+            2 & Bouton « Valider » grisé après un premier clic utilisateur sur le bouton tant qu'on a pas de réponse du serveur. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles interface utilisateur - modifier les informations d'un véhicule personnel}
+        \end{table}
+    
+    \subsubsection{Règles métier}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Règle \\ \hline
+            1 & Tous les champs sont obligatoires. \\ \hline
+            2 & L'immatriculation doit correspondre au pattern RegEx donné (cf CU « Créer une annonce de covoiturage »). \\ \hline
+            3 & Le nombre de places du véhicule doit être compris entre 1 et 10. \\ \hline
+        \end{tabularx}
+        \caption{tableau des règles métiers - modifier les informations d'un véhicule personnel}
+        \end{table}
+    \subsubsection{Cas d'erreur}
+            \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}N° de la règle & \cellcolor[RGB]{0,32,96}\color{white}Messages d'erreur \\ \hline
+            1 & Le champ « immatriculation » doit être rempli. \\ \hline
+            2 & Le champ « immatriculation » n'est pas au bon format. \\ \hline
+            3 & Le champ « marque » doit être rempli. \\ \hline
+            4 & Le champ « modèle »  doit être rempli. \\ \hline
+            6 & Le champ « nombre de places »  doit être rempli. \\ \hline
+            7 & Le nombre de places doit être un chiffre compris entre 1 et 10. \\ \hline
+        \end{tabularx}
+        \caption{tableau des cas d'erreurs - modifier les informations d'un véhicule personnel}
+        \end{table}
+
+\subsection{Cas d'utilisation n°24 : Supprimer un véhicule personnel}
+    \subsubsection{Description}
+    Ce cas d’utilisation permet à un collaborateur de supprimer un véhicule personnel de son profil.
+    \subsubsection{Accès : profils}
+    Tout utilisateur connecté, depuis le CU « Sélectionner un véhicule de covoiturage », en cliquant sur le bouton « Supprimer ».
+    \subsubsection{Maquette}
+    \insererfigure{image/cas_utilisation24.png}{0.5\textwidth}{maquette suppression d'un véhicule personnel}{logo_raccourci}
+    \subsubsection{Actions}
+        \begin{table}[H]
+        \centering
+        \begin{tabularx}{\textwidth}{| >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X    | >{\centering\arraybackslash}X |}
+            \hline
+            \cellcolor[RGB]{0,32,96} \color{white}Element HTML & \cellcolor[RGB]{0,32,96}\color{white}Type d’action & \cellcolor[RGB]{0,32,96}\color{white}Résultat \\ \hline
+            Bouton « Annuler » & Clic simple & Retour au CU « Sélectionner un véhicule de covoiturage ». \\ \hline
+            Bouton « Valider» & Clic simple & Suppression du véhicule en base de données et redirection vers le CU « Sélectionner un véhicule de covoiturage ». \\ \hline
+        \end{tabularx}
+        \caption{tableau des actions - supprimer un véhicule personnel}
+        \end{table}
+
+\end{document}

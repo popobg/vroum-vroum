@@ -1,0 +1,114 @@
+\documentclass{rapportECL2024}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\setlength\parindent{0pt}
+\addbibresource{biblio.bib}
+\setcounter{tocdepth}{2}
+\usepackage{tabularx}
+%--------------------------------------
+
+\titre{Dossier de conception}
+\soustitre{Vroum-Vroum}
+
+\enseignant{Richard \textsc{Bonnamy} \\
+             }
+
+\eleves{Johan \textsc{Guillen} \\
+    Loïc \textsc{Mayran} \\
+    Maxence \textsc{Ogier} \\
+	Pauline \textsc{Bouyssou}}
+
+%--------------------------------------
+
+\begin{document}
+
+\fairepagedegarde
+\fairetabledesmatieres
+
+%--------------------------------------
+\section{Introduction}
+\
+
+    \subsection{Objet du document}
+
+
+
+    Ce document a pour objectif de présenter l’essentiel des questions techniques liées à la mise en place de l’application Vroum-Vroum.
+    Ce document présente :
+    \begin{itemize}
+        \item Le diagramme de classe
+        \item Le modèle physique de données
+        \item le diagramme de couche
+    \end{itemize}
+
+\newpage
+\section{Architecture logicielle}
+    \subsection{Produits et versions}
+        \subsubsection{Langages, frameworks et librairies spécifiques}
+        \begin{table}[H]
+            \begin{tabularx}{\textwidth} { 
+              | >{\centering\arraybackslash}X 
+              | >{\centering\arraybackslash}X | }
+                \hline
+                     Nom&Version  \\
+                \hline
+                     Langage Java&21  \\
+                \hline
+                     Spring Boot&3  \\
+                \hline
+                     Hibernate&7.2  \\
+                \hline
+                     Angular&18  \\
+                \hline 
+
+                     
+            \end{tabularx}
+            \caption{tableau des langages, frameworks et librairies spécifiques  }
+        \end{table}
+        \subsubsection{serveur de base de données}
+        \begin{table}[H]
+            \begin{tabularx}{\textwidth} { 
+              | >{\centering\arraybackslash}X 
+              | >{\centering\arraybackslash}X | }
+                \hline
+                    Nom&Version  \\
+                \hline
+                    MySQL&8 \\
+                \hline 
+
+                     
+            \end{tabularx}
+            \caption{tableau des serveurs et BDD utilisé }
+        \end{table}
+        
+
+\section{Focus technique}
+    \subsection{Diagramme de classes métier (ou MCD)}
+        \insererfigure{image/diagramme_mcd.png} {0.80\textwidth}{Diagramme de classe}{logo_raccourci}
+    \subsection{Diagramme entités relations (ou MPD)}
+        \insererfigure{image/diagramme_mpd.png} {0.80\textwidth}{Diagramme entité relation}{logo_raccourci}
+    \subsection{Diagramme en couche }
+        \insererfigure{image/diagramme_couches.png} {0.80\textwidth}{Diagramme de couches}{logo_raccourci}
+    \subsection{Règles de développement coté back}
+        Règles de développement :
+        \begin{itemize}
+            \item 100 \% de la Javadoc doit être renseignée
+            \item Les règles de nommage respectent les conventions de nommage en usage en 2025.
+        \end{itemize}
+    
+        Découpage en couches:
+        \begin{itemize}
+            \item Couche contrôleur (qui contient les routes d’accès au back)
+            \item Couche de services qui va réaliser les contrôles métier. 
+            \item Couche repository (spring data)
+            \item Couche DTO : le contrôleur renvoie vers le front des instances de DTO.
+            \item Couche entités avec les annotations JPA.
+            \item Classes utilitaires.
+    
+        \end{itemize}
+\section{Tests et intégration}
+    \subsection{Tests unitaires}
+    \subsection{Tests fonctionnels}
+    \subsection{Indicateurs de qualité de code}
+    
+\end{document}
