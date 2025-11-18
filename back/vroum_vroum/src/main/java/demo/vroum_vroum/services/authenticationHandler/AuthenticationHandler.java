@@ -8,8 +8,17 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Classe de sécurité indiquant comment gérer l'authentification
+ */
 @Configuration
 public class AuthenticationHandler {
+    private AuthenticationHandler() {}
+
+    /**
+     * Méthode permettant de gérer la réponse envoyée au client en cas d'erreur d'authentification.
+     * @return un objet AuthenticationFailureHandler
+     */
     @Bean
     public static AuthenticationFailureHandler authenticationFailureHandler() {
         return (request, response, exception) -> {
