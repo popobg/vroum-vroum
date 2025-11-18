@@ -15,7 +15,6 @@ import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +38,7 @@ public class CollaborateurRestControleur {
      *
      * @param collaborateurService service collaborateur
      */
-    public CollaborateurRestControleur(CollaborateurService collaborateurService, PasswordEncoder passwordEncoder) {
+    public CollaborateurRestControleur(CollaborateurService collaborateurService) {
         this.collaborateurService = collaborateurService;
     }
 
