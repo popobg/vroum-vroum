@@ -335,7 +335,7 @@ class CollaborateurServiceTest {
 
         Collaborateur actualCollaborateur = collaborateurService.getCollaborateurById(ADMIN_ID);
 
-        assertTrue(actualCollaborateur.equals(expectedCollaborateur));
+        assertEquals(expectedCollaborateur, actualCollaborateur);
     }
 
     @ParameterizedTest
