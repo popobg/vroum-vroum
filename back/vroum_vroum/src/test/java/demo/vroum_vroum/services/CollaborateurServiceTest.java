@@ -356,7 +356,6 @@ class CollaborateurServiceTest {
         Collaborateur newSavedCollaborateur = new Collaborateur(NON_EXISTING_ID, this.newCollaborateur.getNom(), this.newCollaborateur.getPrenom(), this.newCollaborateur.getAdresse(), this.newCollaborateur. getEmail(), this.newCollaborateur.getTelephone(), this.newCollaborateur.getPseudo(), this.newCollaborateur.getPassword(), this.newCollaborateur.getAdmin());
 
         when(collaborateurRepository.save(this.newCollaborateur)).thenReturn(newSavedCollaborateur);
-        //when(passwordEncoder.encode(this.newCollaborateur.getPassword())).thenReturn(this.newCollaborateur.getPassword() + encoded);
 
         Collaborateur actualCollaborateur = collaborateurService.createCollaborateur(this.newCollaborateur);
 
@@ -406,7 +405,6 @@ class CollaborateurServiceTest {
 
         when(collaborateurRepository.existsById(modifiedCollaborateur.getId())).thenReturn(true);
         when(collaborateurRepository.save(modifiedCollaborateur)).thenReturn(expectedCollaborateur);
-        // when(passwordEncoder.encode(modifiedCollaborateur.getPassword())).thenReturn(expectedCollaborateur.getPassword());
 
         Collaborateur actualCollaborateur = collaborateurService.updateCollaborateur(modifiedCollaborateur);
 
@@ -433,7 +431,6 @@ class CollaborateurServiceTest {
 
         when(collaborateurRepository.existsById(modifiedCollaborateur.getId())).thenReturn(true);
         when(collaborateurRepository.save(modifiedCollaborateur)).thenReturn(expectedCollaborateur);
-        //when(passwordEncoder.encode(modifiedCollaborateur.getPassword())).thenReturn(expectedCollaborateur.getPassword() + encoded);
 
         Collaborateur actualCollaborateur = collaborateurService.updateCollaborateur(modifiedCollaborateur);
 
