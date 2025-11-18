@@ -100,7 +100,7 @@ public class ReservationRestControleur {
      * @throws IllegalArgumentException conditions d'annulation non respectées
      * @throws Exception opération échouée
      */
-    @PutMapping("/vehicule/annuler/{id}")
+    @PutMapping("/vehicule/annuler/{idReservation}")
     public ResponseEntity<Void> cancelReservation(@PathVariable int idReservation, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
         reservationService.annulerReservationVehicule(idReservation, idCollaborateur);
 
