@@ -49,7 +49,7 @@ public class CollaborateurService implements UserDetailsService {
         Optional<Collaborateur> collaborateur = collaborateurRepository.findByPseudo(pseudo);
 
         if (collaborateur.isEmpty()) {
-            throw new UsernameNotFoundException(ErrorMessages.ERROR_MESSAGE_UNKNOWN_USERNAME + pseudo);
+            throw new EntityNotFoundException(ErrorMessages.UNKNOWN_USERNAME_ERROR_MESSAGE);
         }
 
         return collaborateur.get();
@@ -63,7 +63,7 @@ public class CollaborateurService implements UserDetailsService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication instanceof AnonymousAuthenticationToken) {
-            throw new NotAuthenticatedException(ErrorMessages.ERROR_MESSAGE_NO_CONNECTED_USER);
+            throw new NotAuthenticatedException(ErrorMessages.NO_CONNECTED_USER_ERROR_MESSAGE);
         }
 
         String username = authentication.getName();
@@ -80,7 +80,7 @@ public class CollaborateurService implements UserDetailsService {
 
         // Si aucun collaborateur trouvé à partir du pseudo
         if (optionalCollaborateur.isEmpty()) {
-            throw new UsernameNotFoundException(ErrorMessages.ERROR_MESSAGE_UNKNOWN_USERNAME + username);
+            throw new UsernameNotFoundException(ErrorMessages.UNKNOWN_USERNAME_ERROR_MESSAGE);
         }
 
         Collaborateur collaborateur = optionalCollaborateur.get();
@@ -113,7 +113,7 @@ public class CollaborateurService implements UserDetailsService {
         Optional<Collaborateur> collaborateur = collaborateurRepository.findById(id);
 
         if (collaborateur.isEmpty()) {
-            throw new EntityNotFoundException(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID + id);
+            throw new EntityNotFoundException(ErrorMessages.UNKNOWN_ID_ERROR_MESSAGE);
         }
 
         return collaborateur.get();
@@ -126,13 +126,13 @@ public class CollaborateurService implements UserDetailsService {
      */
     public Collaborateur createCollaborateur(Collaborateur collaborateur) {
         if (collaborateur.getId() != 0) {
-            throw new IllegalArgumentException(ErrorMessages.ERROR_MESSAGE_ID_FOR_NEW_ITEM);
+            throw new IllegalArgumentException(ErrorMessages.ID_FOR_NEW_ITEM_ERROR_MESSAGE);
         }
 
         String password = collaborateur.getPassword();
 
         if (!Validator.isPasswordValid(password)) {
-            throw new IllegalArgumentException(ErrorMessages.ERROR_MESSAGE_PASSWORD);
+            throw new IllegalArgumentException(ErrorMessages.INVALID_PASSWORD_ERROR_MESSAGE);
         }
 
         return collaborateurRepository.save(collaborateur);
@@ -145,13 +145,13 @@ public class CollaborateurService implements UserDetailsService {
      */
     public Collaborateur updateCollaborateur(Collaborateur collaborateur) {
         if (!collaborateurRepository.existsById(collaborateur.getId())) {
-            throw new EntityNotFoundException(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID + collaborateur.getId());
+            throw new EntityNotFoundException(ErrorMessages.UNKNOWN_ID_ERROR_MESSAGE);
         }
 
         String password = collaborateur.getPassword();
 
         if (!Validator.isPasswordValid(password)) {
-            throw new IllegalArgumentException(ErrorMessages.ERROR_MESSAGE_PASSWORD);
+            throw new IllegalArgumentException(ErrorMessages.INVALID_PASSWORD_ERROR_MESSAGE);
         }
 
         return collaborateurRepository.save(collaborateur);
@@ -165,7 +165,7 @@ public class CollaborateurService implements UserDetailsService {
         if (collaborateurRepository.existsById(id)) {
             collaborateurRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID + id);
+            throw new EntityNotFoundException(ErrorMessages.UNKNOWN_ID_ERROR_MESSAGE);
         }
     }
 }
