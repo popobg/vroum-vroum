@@ -354,7 +354,7 @@ public class Collaborateur implements UserDetails, Comparable<Collaborateur> {
      * @param vehiculeServices liste de véhicules de service administrés par le collaborateur.
      */
     public void setVehiculesService(Set<VehiculeService> vehiculeServices) {
-        if (this.admin) {
+        if (Boolean.TRUE.equals(admin)) {
             this.vehiculesService = vehiculeServices;
         }
     }
