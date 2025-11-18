@@ -18,6 +18,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -64,10 +65,10 @@ public class CollaborateurRestControleur {
     public Set<CollaborateurLiteDto> getAllCollaborateurs() {
         Set<Collaborateur> collaborateurs = collaborateurService.getAllCollaborateurs();
 
-        if (collaborateurs.size() > 0) {
+        if (!collaborateurs.isEmpty()) {
             return CollaborateurMapper.toLiteDtos(collaborateurs);
         }
-        return Set.of();
+        return new HashSet<>();
     }
 
     /**
