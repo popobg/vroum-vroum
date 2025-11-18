@@ -19,6 +19,9 @@ import java.util.Set;
 
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -444,10 +447,12 @@ class CollaborateurRestControleurTest {
             .andExpect(jsonPath("$.message").value(errorMessage));
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = { "a" })
+    @EmptySource
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
-    void testAddCollaborateur_shouldReturn400_emptyFields() throws Exception {
-        CollaborateurDto inputDto = new CollaborateurDto("", "", this.newCollaborateurDto.getAdresse(), "whatever", this.newCollaborateurDto.getTelephone(),"", this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
+    void testAddCollaborateur_shouldReturn400_invalidNameAndSurname(String name) throws Exception {
+        CollaborateurDto inputDto = new CollaborateurDto(name, name, this.newCollaborateurDto.getAdresse(), this.newCollaborateurDto.getEmail(), this.newCollaborateurDto.getTelephone(), this.newCollaborateurDto.getPseudo(), this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
 
         this.mock.perform(MockMvcRequestBuilders.post("/collaborateur")
                 .characterEncoding("UTF-8")
@@ -457,16 +462,14 @@ class CollaborateurRestControleurTest {
                 .content(objectMapper.writeValueAsString(inputDto)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
-            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_PSEUDO)))
-            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_EMAIL)))
             .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_NOM)))
             .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_PRENOM)));
     }
 
     @Test
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
-    void testAddCollaborateur_shouldReturn400_invalidNames() throws Exception {
-        CollaborateurDto inputDto = new CollaborateurDto("a", "a", this.newCollaborateurDto.getAdresse(), this.newCollaborateurDto.getEmail(), this.newCollaborateurDto.getTelephone(), this.newCollaborateur.getPseudo(), this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
+    void testAddCollaborateur_shouldReturn400_invalidPseudo() throws Exception {
+        CollaborateurDto inputDto = new CollaborateurDto(this.newCollaborateurDto.getNom(), this.newCollaborateurDto.getPrenom(), this.newCollaborateurDto.getAdresse(), this.newCollaborateurDto.getEmail(), this.newCollaborateurDto.getTelephone(), "", this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
 
         this.mock.perform(MockMvcRequestBuilders.post("/collaborateur")
                 .characterEncoding("UTF-8")
@@ -476,8 +479,47 @@ class CollaborateurRestControleurTest {
                 .content(objectMapper.writeValueAsString(inputDto)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
-            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_NOM)))
-            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_PRENOM)));
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_PSEUDO)));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"a", "whatever", "whatever@"} )
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testAddCollaborateur_shouldReturn400_invalidEmail(String email) throws Exception {
+        CollaborateurDto inputDto = new CollaborateurDto(this.newCollaborateurDto.getNom(), this.newCollaborateurDto.getPrenom(), this.newCollaborateurDto.getAdresse(), email, this.newCollaborateurDto.getTelephone(), this.newCollaborateurDto.getPseudo(), this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
+
+        this.mock.perform(MockMvcRequestBuilders.post("/collaborateur")
+                .characterEncoding("UTF-8")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(inputDto)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_EMAIL)));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"whatever@whatever", "whatever@whatever.whatever"})
+    @EmptySource
+    @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
+    void testAddCollaborateur_shouldReturn200_validEmail(String email) throws Exception {
+        CollaborateurDto inputDto = new CollaborateurDto(this.newCollaborateurDto.getNom(), this.newCollaborateurDto.getPrenom(), this.newCollaborateurDto.getAdresse(), email, this.newCollaborateurDto.getTelephone(), this.newCollaborateurDto.getPseudo(), this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
+
+        Collaborateur mappedCollaborateur = new Collaborateur(this.newCollaborateurDto.getNom(), this.newCollaborateurDto.getPrenom(), this.newCollaborateurDto.getAdresse(), email, this.newCollaborateurDto.getTelephone(), this.newCollaborateurDto.getPseudo(), this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
+
+        Collaborateur savedCollaborateur = new Collaborateur(this.newCollaborateurDto.getNom(), this.newCollaborateurDto.getPrenom(), this.newCollaborateurDto.getAdresse(), email, this.newCollaborateurDto.getTelephone(), this.newCollaborateurDto.getPseudo(), this.newCollaborateurDto.getPassword(), this.newCollaborateurDto.getAdmin());
+
+        when(collaborateurService.createCollaborateur(mappedCollaborateur)).thenReturn(savedCollaborateur);
+
+        this.mock.perform(MockMvcRequestBuilders.post("/collaborateur")
+                .characterEncoding("UTF-8")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(inputDto)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.email").value(inputDto.getEmail()));
     }
 
     /********************
