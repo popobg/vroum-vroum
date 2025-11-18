@@ -158,7 +158,7 @@ public class CovoiturageService {
     }
 
     public Set<Covoiturage> findAll() {
-        return new HashSet<Covoiturage>(covoiturageRepository.findAll());
+        return new HashSet<>(covoiturageRepository.findAll());
     }
 
     /**
