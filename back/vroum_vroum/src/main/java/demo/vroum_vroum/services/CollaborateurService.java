@@ -31,9 +31,6 @@ public class CollaborateurService implements UserDetailsService {
     /** Repository de l'entité Collaborateur */
     private final CollaborateurRepository collaborateurRepository;
 
-    /** Classe de sécurité permettant de hasher le mot de passe */
-    //private final PasswordEncoder passwordEncoder;
-
     /**
      * Constructeur
      * @param collaborateurRepository repo Collaborateur
@@ -138,9 +135,6 @@ public class CollaborateurService implements UserDetailsService {
             throw new IllegalArgumentException(ErrorMessages.ERROR_MESSAGE_PASSWORD.toString());
         }
 
-        // Hashage du mot de passe
-        //collaborateur.setPassword(passwordEncoder.encode(password));
-
         return collaborateurRepository.save(collaborateur);
     }
 
@@ -159,9 +153,6 @@ public class CollaborateurService implements UserDetailsService {
         if (!Validator.isPasswordValid(password)) {
             throw new IllegalArgumentException(ErrorMessages.ERROR_MESSAGE_PASSWORD.toString());
         }
-
-        // Hashage du mot de passe
-        //collaborateur.setPassword(passwordEncoder.encode(password));
 
         return collaborateurRepository.save(collaborateur);
     }
