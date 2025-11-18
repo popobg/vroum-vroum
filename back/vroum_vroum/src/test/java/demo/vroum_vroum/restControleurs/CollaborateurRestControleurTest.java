@@ -195,21 +195,23 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
     void testGetCollaborateurById_shouldReturnUser_roleAdmin() throws NoSuchElementException, Exception {
+        int id = this.adminId;
+
         CollaborateurDto collaborateurDto = this.collaborateursDto.stream()
-        .filter(c -> c.getId() == this.userId)
+        .filter(c -> c.getId() == id)
         .findFirst()
         .orElseThrow();
 
         List<VehiculeLiteDto> vehicules = collaborateurDto.getVehicules();
 
         Collaborateur collaborateur = this.collaborateursMocked.stream()
-        .filter(c -> c.getId() == this.userId)
+        .filter(c -> c.getId() == id)
         .findFirst()
         .orElseThrow();
 
-        when(collaborateurService.getCollaborateurById(this.userId)).thenReturn(collaborateur);
+        when(collaborateurService.getCollaborateurById(id)).thenReturn(collaborateur);
 
-        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.userId)).andDo(print())
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + id)).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(collaborateurDto.getId())))
                 .andExpect(jsonPath("nom", is(collaborateurDto.getNom())))
@@ -233,21 +235,23 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
     void testGetCollaborateurById_shouldReturUser_roleUser() throws NoSuchElementException, Exception {
+        int id = this.userId;
+
         CollaborateurDto collaborateurDto = this.collaborateursDto.stream()
-        .filter(c -> c.getId() == this.userId)
+        .filter(c -> c.getId() == id)
         .findFirst()
         .orElseThrow();
 
         List<VehiculeLiteDto> vehicules = collaborateurDto.getVehicules();
 
         Collaborateur collaborateur = this.collaborateursMocked.stream()
-        .filter(c -> c.getId() == this.userId)
+        .filter(c -> c.getId() == id)
         .findFirst()
         .orElseThrow();
 
-        when(collaborateurService.getCollaborateurById(this.userId)).thenReturn(collaborateur);
+        when(collaborateurService.getCollaborateurById(id)).thenReturn(collaborateur);
 
-        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + this.userId)).andDo(print())
+        this.mock.perform(MockMvcRequestBuilders.get("/collaborateur/" + id)).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", is(collaborateurDto.getId())))
                 .andExpect(jsonPath("nom", is(collaborateurDto.getNom())))
