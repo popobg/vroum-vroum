@@ -1,8 +1,8 @@
 # Vroum vroum 🚗
 
 ## Sommaire
-[A propos](#a-propos)
-[Stack technique](#stack-technique)
+[A propos](#a-propos)\
+[Stack technique](#stack-technique)\
 [Collaborateurs](#collaborateurs)
 
 ## A propos
