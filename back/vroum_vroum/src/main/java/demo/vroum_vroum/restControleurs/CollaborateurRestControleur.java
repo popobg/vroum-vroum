@@ -6,10 +6,8 @@ package demo.vroum_vroum.restControleurs;
 import demo.vroum_vroum.dto.CollaborateurDto;
 import demo.vroum_vroum.dto.CollaborateurLiteDto;
 import demo.vroum_vroum.entities.Collaborateur;
-import demo.vroum_vroum.exceptions.NotAuthenticatedException;
 import demo.vroum_vroum.mappers.CollaborateurMapper;
 import demo.vroum_vroum.services.CollaborateurService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 import org.springframework.security.access.prepost.PreAuthorize;

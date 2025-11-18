@@ -2,8 +2,6 @@ package demo.vroum_vroum.services;
 
 //package demo.vroum_vroum.services;
 
-import demo.vroum_vroum.entities.Collaborateur;
-import demo.vroum_vroum.exceptions.Controle;
 import demo.vroum_vroum.repositories.VehiculeServiceRepository;
 import demo.vroum_vroum.entities.VehiculeService;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
@@ -30,12 +27,10 @@ class VehiculeServiceServTest {
     private VehiculeServiceServ vehiculeServiceServ;
 
     private VehiculeService vehiculeService;
-    private Collaborateur collaborateur;
 
     @BeforeEach
     public void setup() {
-        vehiculeService = new VehiculeService(); // configure ton objet si nécessaire
-        collaborateur = new Collaborateur();     // idem ici
+        vehiculeService = new VehiculeService();
     }
 
     @Test

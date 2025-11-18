@@ -4,7 +4,6 @@ import demo.vroum_vroum.dto.ReservationDto;
 import demo.vroum_vroum.entities.Reservation;
 import demo.vroum_vroum.mappers.ReservationMapper;
 import demo.vroum_vroum.services.ReservationService;
-import jakarta.persistence.EntityNotFoundException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

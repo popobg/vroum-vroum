@@ -62,9 +62,6 @@ public class CollaborateurServiceTest {
     @InjectMocks
     private CollaborateurService collaborateurService;
 
-    // Suffixe mot de passe hashé
-    private static final String encoded = "Encoded";
-
     // DATA
     private static final int adminId = 1;
     private static final int userId = 2;
