@@ -36,6 +36,7 @@ import demo.vroum_vroum.dto.CollaborateurLiteDto;
 import demo.vroum_vroum.dto.VehiculeLiteDto;
 import demo.vroum_vroum.entities.Collaborateur;
 import demo.vroum_vroum.entities.Vehicule;
+import demo.vroum_vroum.enums.ErrorMessages;
 import demo.vroum_vroum.mappers.CollaborateurMapper;
 import demo.vroum_vroum.mappers.VehiculeMapper;
 import demo.vroum_vroum.services.CollaborateurService;
@@ -47,7 +48,7 @@ import jakarta.persistence.EntityNotFoundException;
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-public class CollaborateurRestControleurTest {
+class CollaborateurRestControleurTest {
     /** Service Collaborateur mocké */
     @MockitoBean
     private CollaborateurService collaborateurService;
@@ -60,22 +61,8 @@ public class CollaborateurRestControleurTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    // Messages d'erreur
-    private final String errorMessagePassword = "Le mot de passe doit contenir au moins 8 caractères, dont au minimum une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial";
-
-    private final String errorMessageUnknownId = "Pas de collaborateur trouvé pour l'ID ";
-
-    private final String errorMessageIdForNewItem = "Un nouveau collaborateur ne peut pas avoir d'ID";
-
-    private final String errorMessagePseudo = "Le collaborateur doit avoir un pseudo";
-
-    private final String errorMessageEmail = "Le format de l'email n'est pas valide";
-
-    private final String errorMessageNom = "Le nom doit comporter au moins deux caractères";
-
-    private final String errorMessagePrenom = "Le prénom doit comporter au moins deux caractères";
-
-    private final String errorMessageAccessDenied = "Access Denied";
+    // Message d'erreur
+    private static final String ERROR_MESSAGE_ACCESS_DENIED = "Access Denied";
 
     // DATA
     private final int adminId = 1;
@@ -275,7 +262,7 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "mmartin", password = "Password2!", roles = "USER")
     void testGetCollaborateurById_shouldRetur404_badId() throws Exception {
-        String errorMessage = this.errorMessageUnknownId + this.nonExistingId;
+        String errorMessage = ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID + this.nonExistingId;
 
         when(collaborateurService.getCollaborateurById(this.nonExistingId)).thenThrow(new EntityNotFoundException(errorMessage));
 
@@ -372,7 +359,7 @@ public class CollaborateurRestControleurTest {
                     .accept(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(this.newCollaborateurDto)))
                 .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.message").value(errorMessageAccessDenied));
+                .andExpect(jsonPath("$.message").value(ERROR_MESSAGE_ACCESS_DENIED));
     }
 
     @Test
@@ -420,7 +407,7 @@ public class CollaborateurRestControleurTest {
 
         Collaborateur mappedCollaborateur = CollaborateurMapper.toEntity(inputDto);
 
-        String errorMessage = this.errorMessageIdForNewItem;
+        String errorMessage = ErrorMessages.ERROR_MESSAGE_ID_FOR_NEW_ITEM;
 
         when(collaborateurService.createCollaborateur(mappedCollaborateur)).thenThrow(new IllegalArgumentException(errorMessage));
 
@@ -442,7 +429,7 @@ public class CollaborateurRestControleurTest {
 
         Collaborateur mappedCollaborateur = CollaborateurMapper.toEntity(inputDto);
 
-        String errorMessage = this.errorMessagePassword;
+        String errorMessage = ErrorMessages.ERROR_MESSAGE_PASSWORD;
 
         when(collaborateurService.createCollaborateur(mappedCollaborateur)).thenThrow(new IllegalArgumentException(errorMessage));
 
@@ -470,10 +457,10 @@ public class CollaborateurRestControleurTest {
                 .content(objectMapper.writeValueAsString(inputDto)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessagePseudo)))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessageEmail)))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessageNom)))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessagePrenom)));
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_PSEUDO)))
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_EMAIL)))
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_NOM)))
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_PRENOM)));
     }
 
     @Test
@@ -489,8 +476,8 @@ public class CollaborateurRestControleurTest {
                 .content(objectMapper.writeValueAsString(inputDto)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessageNom)))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessagePrenom)));
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_NOM)))
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_PRENOM)));
     }
 
     /********************
@@ -574,7 +561,7 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
     void testUpdateCollaborateur_shouldReturn404_badId() throws Exception {
-        String errorMessage = this.errorMessageUnknownId + this.nonExistingId;
+        String errorMessage = ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID + this.nonExistingId;
 
         CollaborateurDto inputDto = new CollaborateurDto(this.nonExistingId, this.modifiedCollaborateurDto.getNom(), this.modifiedCollaborateurDto.getPrenom(), this.modifiedCollaborateurDto.getAdresse(), this.modifiedCollaborateurDto.getEmail(), this.modifiedCollaborateurDto.getTelephone(), this.modifiedCollaborateurDto.getPseudo(), this.modifiedCollaborateurDto.getPassword(), this.modifiedCollaborateurDto.getAdmin());
 
@@ -600,7 +587,7 @@ public class CollaborateurRestControleurTest {
 
         Collaborateur mappedCollaborateur = CollaborateurMapper.toEntity(inputDto);
 
-        String errorMessage = this.errorMessagePassword;
+        String errorMessage = ErrorMessages.ERROR_MESSAGE_PASSWORD;
 
         when(collaborateurService.updateCollaborateur(mappedCollaborateur)).thenThrow(new IllegalArgumentException(errorMessage));
 
@@ -628,10 +615,10 @@ public class CollaborateurRestControleurTest {
                 .content(objectMapper.writeValueAsString(inputDto)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessagePseudo)))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessageEmail)))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessageNom)))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessagePrenom)));
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_PSEUDO)))
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_EMAIL)))
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_NOM)))
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_PRENOM)));
     }
 
     @Test
@@ -647,8 +634,8 @@ public class CollaborateurRestControleurTest {
                 .content(objectMapper.writeValueAsString(inputDto)))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.Erreur").value("IllegalArgumentException"))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessageNom)))
-            .andExpect(jsonPath("$.message", containsString(this.errorMessagePrenom)));
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_NOM)))
+            .andExpect(jsonPath("$.message", containsString(ErrorMessages.ERROR_MESSAGE_PRENOM)));
     }
 
     /********************
@@ -673,7 +660,7 @@ public class CollaborateurRestControleurTest {
         this.mock.perform(MockMvcRequestBuilders.delete("/collaborateur/" + this.userId)
                     .with(csrf()))
                 .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.message").value(errorMessageAccessDenied));
+                .andExpect(jsonPath("$.message").value(ERROR_MESSAGE_ACCESS_DENIED));
     }
 
     @Test
@@ -695,7 +682,7 @@ public class CollaborateurRestControleurTest {
     @Test
     @WithMockUser(username = "jdupont", password = "Password1!", roles = "ADMIN")
     void testDeleteCollaborateur_shouldReturn404_badId() throws Exception {
-        String errorMessage = this.errorMessageUnknownId + this.nonExistingId;
+        String errorMessage = ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID + this.nonExistingId;
 
         doThrow(new EntityNotFoundException(errorMessage)).when(collaborateurService).deleteCollaborateur(this.nonExistingId);
 

@@ -52,7 +52,7 @@ import jakarta.persistence.EntityNotFoundException;
  * Classe de tests unitaires du controller de Collaborateur.
  */
 @ExtendWith(MockitoExtension.class)
-public class CollaborateurServiceTest {
+class CollaborateurServiceTest {
     @Mock
     private CollaborateurRepository collaborateurRepository;
 
@@ -63,11 +63,11 @@ public class CollaborateurServiceTest {
     private CollaborateurService collaborateurService;
 
     // DATA
-    private static final int adminId = 1;
-    private static final int userId = 2;
-    private static final int nonExistingId = 4;
-    private static final String adminPseudo = "jdupont";
-    private static final String userPseudo = "mmartin";
+    private static final int ADMIN_ID = 1;
+    private static final int USER_ID = 2;
+    private static final int NON_EXISTING_ID = 4;
+    private static final String ADMIN_PSEUDO = "jdupont";
+    private static final String USER_PSEUDO = "mmartin";
 
     private Set<Collaborateur> collaborateurs = new HashSet<>();
 
@@ -79,8 +79,8 @@ public class CollaborateurServiceTest {
         this.newCollaborateur = new Collaborateur("Abitbol", "Georges", "14 avenue Franklin Delano Roosevelt, Paris", "georges.abitbol@example.com", "+12135096996", "gabitbol", "Password4!", false);
 
         // Collaborateurs
-        Collaborateur collaborateur1 = new Collaborateur(1, "Dupont", "Jean", "3 avenue du Général de Gaulle", "jean.dupont@example.com", "6010203040", adminPseudo, "Password1!", true);
-        Collaborateur collaborateur2 = new Collaborateur(2, "Martin", "Marie", "12 impasse des Alpes", "marie.martin@example.com", "6050607080", userPseudo, "Password2!", false);
+        Collaborateur collaborateur1 = new Collaborateur(1, "Dupont", "Jean", "3 avenue du Général de Gaulle", "jean.dupont@example.com", "6010203040", ADMIN_PSEUDO, "Password1!", true);
+        Collaborateur collaborateur2 = new Collaborateur(2, "Martin", "Marie", "12 impasse des Alpes", "marie.martin@example.com", "6050607080", USER_PSEUDO, "Password2!", false);
         Collaborateur collaborateur3 = new Collaborateur(3, "Durant", "Pierre", "5 grande rue des prés", "pierre.durant@example.com", "6090101112", "pdurant", "Password3!", true);
 
         // Véhicules
@@ -162,17 +162,17 @@ public class CollaborateurServiceTest {
     void findByPseudo_shouldReturnCollaborateur() {
         // ARRANGE
         Collaborateur expectedCollaborateur = this.collaborateurs.stream()
-        .filter(c -> c.getPseudo() == adminPseudo)
+        .filter(c -> c.getPseudo() == ADMIN_PSEUDO)
         .findFirst()
         .orElseThrow();
 
-        when(collaborateurRepository.findByPseudo(adminPseudo)).thenReturn(Optional.of(expectedCollaborateur));
+        when(collaborateurRepository.findByPseudo(ADMIN_PSEUDO)).thenReturn(Optional.of(expectedCollaborateur));
 
         // ACT
-        Collaborateur actualCollaborateur = collaborateurService.findByPseudo(adminPseudo);
+        Collaborateur actualCollaborateur = collaborateurService.findByPseudo(ADMIN_PSEUDO);
 
         // ASSERT
-        assertTrue(actualCollaborateur.equals(expectedCollaborateur));
+        assertEquals(expectedCollaborateur, actualCollaborateur);
 
         List<Vehicule> expectedVehicules = expectedCollaborateur.getVehicules();
         List<Vehicule> actualVehicules = actualCollaborateur.getVehicules();
@@ -209,7 +209,7 @@ public class CollaborateurServiceTest {
         }
 
         // Vérifie que la méthode du repository a bien été appelée
-        verify(collaborateurRepository).findByPseudo(adminPseudo);
+        verify(collaborateurRepository).findByPseudo(ADMIN_PSEUDO);
     }
 
     @ParameterizedTest
@@ -225,7 +225,7 @@ public class CollaborateurServiceTest {
     @Test
     void getCurrentUser_shouldReturnCollaborateur() {
         Collaborateur expectedCollaborateur = this.collaborateurs.stream()
-        .filter(c -> c.getId() == adminId)
+        .filter(c -> c.getId() == ADMIN_ID)
         .findFirst()
         .orElseThrow();
 
@@ -237,12 +237,12 @@ public class CollaborateurServiceTest {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        when(collaborateurRepository.findByPseudo(adminPseudo)).thenReturn(Optional.of(expectedCollaborateur));
+        when(collaborateurRepository.findByPseudo(ADMIN_PSEUDO)).thenReturn(Optional.of(expectedCollaborateur));
 
         Collaborateur actualCollaborateur = collaborateurService.getCurrentUser();
 
-        assertTrue(actualCollaborateur.equals(expectedCollaborateur));
-        verify(collaborateurRepository).findByPseudo(adminPseudo);
+        assertEquals(expectedCollaborateur, actualCollaborateur);
+        verify(collaborateurRepository).findByPseudo(ADMIN_PSEUDO);
     }
 
     @Test
@@ -262,14 +262,14 @@ public class CollaborateurServiceTest {
     void loadUserByUsername_shouldReturnUserDetails_roleAdmin() {
         // ARRANGE
         Collaborateur expectedCollaborateur = this.collaborateurs.stream()
-        .filter(c -> c.getPseudo() == adminPseudo)
+        .filter(c -> c.getPseudo() == ADMIN_PSEUDO)
         .findFirst()
         .orElseThrow();
 
-        when(collaborateurRepository.findByPseudo(adminPseudo)).thenReturn(Optional.of(expectedCollaborateur));
+        when(collaborateurRepository.findByPseudo(ADMIN_PSEUDO)).thenReturn(Optional.of(expectedCollaborateur));
 
         // ACT
-        UserDetails actualUserDetails = collaborateurService.findByPseudo(adminPseudo);
+        UserDetails actualUserDetails = collaborateurService.findByPseudo(ADMIN_PSEUDO);
 
         assertEquals(actualUserDetails.getUsername(), expectedCollaborateur.getPseudo());
         assertEquals(actualUserDetails.getPassword(), expectedCollaborateur.getPassword());
@@ -280,14 +280,14 @@ public class CollaborateurServiceTest {
     void loadUserByUsername_shouldReturnUserDetails_roleUser() {
         // ARRANGE
         Collaborateur expectedCollaborateur = this.collaborateurs.stream()
-        .filter(c -> c.getPseudo() == userPseudo)
+        .filter(c -> c.getPseudo() == USER_PSEUDO)
         .findFirst()
         .orElseThrow();
 
-        when(collaborateurRepository.findByPseudo(userPseudo)).thenReturn(Optional.of(expectedCollaborateur));
+        when(collaborateurRepository.findByPseudo(USER_PSEUDO)).thenReturn(Optional.of(expectedCollaborateur));
 
         // ACT
-        UserDetails actualUserDetails = collaborateurService.loadUserByUsername(userPseudo);
+        UserDetails actualUserDetails = collaborateurService.loadUserByUsername(USER_PSEUDO);
 
         assertEquals(expectedCollaborateur.getPseudo(), actualUserDetails.getUsername());
         assertEquals(expectedCollaborateur.getPassword(), actualUserDetails.getPassword());
@@ -305,7 +305,7 @@ public class CollaborateurServiceTest {
     }
 
     @Test
-    void testGetAllCollaborateurs_shouldReturnListOfCollaborateurs() throws Exception {
+    void testGetAllCollaborateurs_shouldReturnListOfCollaborateurs() {
         when(collaborateurRepository.findAllCollaborateurs()).thenReturn(new HashSet<>(this.collaborateurs));
 
         Set<Collaborateur> actualCollaborateurs = collaborateurService.getAllCollaborateurs();
@@ -316,7 +316,7 @@ public class CollaborateurServiceTest {
     }
 
     @Test
-    void testGetAllCollaborateurs_shouldReturnEmptyList() throws Exception {
+    void testGetAllCollaborateurs_shouldReturnEmptyList() {
         when(collaborateurRepository.findAllCollaborateurs()).thenReturn(new HashSet<>());
 
         Set<Collaborateur> actualCollaborateurs = collaborateurService.getAllCollaborateurs();
@@ -327,19 +327,19 @@ public class CollaborateurServiceTest {
     @Test
     void testGetCollaborateurById_shouldReturnCollaborateur() {
         Collaborateur expectedCollaborateur = this.collaborateurs.stream()
-        .filter(c -> c.getId() == adminId)
+        .filter(c -> c.getId() == ADMIN_ID)
         .findFirst()
         .orElseThrow();
 
-        when(collaborateurRepository.findById(adminId)).thenReturn(Optional.of(expectedCollaborateur));
+        when(collaborateurRepository.findById(ADMIN_ID)).thenReturn(Optional.of(expectedCollaborateur));
 
-        Collaborateur actualCollaborateur = collaborateurService.getCollaborateurById(adminId);
+        Collaborateur actualCollaborateur = collaborateurService.getCollaborateurById(ADMIN_ID);
 
         assertTrue(actualCollaborateur.equals(expectedCollaborateur));
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {nonExistingId, 0})
+    @ValueSource(ints = {NON_EXISTING_ID, 0})
     void testGetCollaborateurById_shouldThrowEntityNotFoundException(int id) {
         when(collaborateurRepository.findById(id)).thenReturn(Optional.empty());
 
@@ -353,7 +353,7 @@ public class CollaborateurServiceTest {
 
     @Test
     void testCreateCollaborateur_shouldReturnCollaborateur() {
-        Collaborateur newSavedCollaborateur = new Collaborateur(nonExistingId, this.newCollaborateur.getNom(), this.newCollaborateur.getPrenom(), this.newCollaborateur.getAdresse(), this.newCollaborateur. getEmail(), this.newCollaborateur.getTelephone(), this.newCollaborateur.getPseudo(), this.newCollaborateur.getPassword(), this.newCollaborateur.getAdmin());
+        Collaborateur newSavedCollaborateur = new Collaborateur(NON_EXISTING_ID, this.newCollaborateur.getNom(), this.newCollaborateur.getPrenom(), this.newCollaborateur.getAdresse(), this.newCollaborateur. getEmail(), this.newCollaborateur.getTelephone(), this.newCollaborateur.getPseudo(), this.newCollaborateur.getPassword(), this.newCollaborateur.getAdmin());
 
         when(collaborateurRepository.save(this.newCollaborateur)).thenReturn(newSavedCollaborateur);
         //when(passwordEncoder.encode(this.newCollaborateur.getPassword())).thenReturn(this.newCollaborateur.getPassword() + encoded);
@@ -364,7 +364,7 @@ public class CollaborateurServiceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {adminId, userId})
+    @ValueSource(ints = {ADMIN_ID, USER_ID})
     void testCreateCollaborateur_shouldThrowIllegalArgumentException(int id) {
         this.newCollaborateur.setId(id);
 
@@ -388,7 +388,7 @@ public class CollaborateurServiceTest {
 
     @Test
     void testUpdateCollaborateur_shouldReturnCollaborateur_roleAdmin() {
-        Collaborateur modifiedCollaborateur = new Collaborateur(adminId, "Nouveau nom", "Nouveau prénom", "Nouvelle adresse", "Nouvel email", "Nouveau numéro", "Nouveau pseudo", "Nouveau mot de passe6!", false);
+        Collaborateur modifiedCollaborateur = new Collaborateur(ADMIN_ID, "Nouveau nom", "Nouveau prénom", "Nouvelle adresse", "Nouvel email", "Nouveau numéro", "Nouveau pseudo", "Nouveau mot de passe6!", false);
 
         Collaborateur expectedCollaborateur = this.collaborateurs.stream()
         .filter(c -> c.getId() == modifiedCollaborateur.getId())
@@ -410,12 +410,12 @@ public class CollaborateurServiceTest {
 
         Collaborateur actualCollaborateur = collaborateurService.updateCollaborateur(modifiedCollaborateur);
 
-        assertTrue(actualCollaborateur.equals(expectedCollaborateur));
+        assertEquals(expectedCollaborateur, actualCollaborateur);
     }
 
     @Test
     void testUpdateCollaborateur_shouldReturnCollaborateur_roleUser() {
-        Collaborateur modifiedCollaborateur = new Collaborateur(userId, "Nouveau nom", "Nouveau prénom", "Nouvelle adresse", "Nouvel email", "Nouveau numéro", "Nouveau pseudo", "Nouveau mot de passe6!", false);
+        Collaborateur modifiedCollaborateur = new Collaborateur(USER_ID, "Nouveau nom", "Nouveau prénom", "Nouvelle adresse", "Nouvel email", "Nouveau numéro", "Nouveau pseudo", "Nouveau mot de passe6!", false);
 
         Collaborateur expectedCollaborateur = this.collaborateurs.stream()
         .filter(c -> c.getId() == modifiedCollaborateur.getId())
@@ -437,11 +437,11 @@ public class CollaborateurServiceTest {
 
         Collaborateur actualCollaborateur = collaborateurService.updateCollaborateur(modifiedCollaborateur);
 
-        assertTrue(actualCollaborateur.equals(expectedCollaborateur));
+        assertEquals(expectedCollaborateur, actualCollaborateur);
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, nonExistingId})
+    @ValueSource(ints = {0, NON_EXISTING_ID})
     void testUpdateCollaborateur_shouldThrowEntityNotFoundException(int id) {
         this.newCollaborateur.setId(id);
 
@@ -455,7 +455,7 @@ public class CollaborateurServiceTest {
     @ValueSource(strings = {"a", "#", "6", "Aa5,", "Ceci est une longue phrase", "Il manque un chiffre !", "il manque 1 majuscule !", "Password66"})
     @NullAndEmptySource
     void testUpdateCollaborateur_shouldReturnCollaborateur(String password) {
-        int id = adminId;
+        int id = ADMIN_ID;
 
         this.newCollaborateur.setId(id);
         this.newCollaborateur.setPassword(password);
@@ -471,7 +471,7 @@ public class CollaborateurServiceTest {
      ********************/
 
     @ParameterizedTest
-    @ValueSource(ints = {userId, adminId})
+    @ValueSource(ints = {USER_ID, ADMIN_ID})
     void testDeleteCollaborateur_shouldCallDeletion(int id) {
         when(collaborateurRepository.existsById(id)).thenReturn(true);
         doNothing().when(collaborateurRepository).deleteById(id);
@@ -481,7 +481,7 @@ public class CollaborateurServiceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {nonExistingId, 0})
+    @ValueSource(ints = {NON_EXISTING_ID, 0})
     void testDeleteCollaborateur_shouldThrowEntityNotFoundException(int id) {
         when(collaborateurRepository.existsById(id)).thenReturn(false);
 

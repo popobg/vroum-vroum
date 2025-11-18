@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import demo.vroum_vroum.enums.ErrorMessages;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -16,25 +17,25 @@ public class CollaborateurDto implements Serializable {
     private int id;
 
     /** Nom du collaborateur */
-    @Size(min = 2, message = "Le nom doit comporter au moins deux caractères")
+    @Size(min = 2, message = ErrorMessages.ERROR_MESSAGE_NOM)
     private String nom;
 
     /** Prénom du collaborateur */
-    @Size(min = 2, message = "Le prénom doit comporter au moins deux caractères")
+    @Size(min = 2, message = ErrorMessages.ERROR_MESSAGE_PRENOM)
     private String prenom;
 
     /** Adresse du collaborateur */
     private String adresse;
 
     /** Adresse électronique du collaborateur */
-    @Email(message = "Le format de l'email n'est pas valide")
+    @Email(message = ErrorMessages.ERROR_MESSAGE_EMAIL)
     private String email;
 
     /** Numéro de téléphone du collaborateur */
     private String telephone;
 
     /** Pseudo du collaborateur */
-    @NotBlank(message = "Le collaborateur doit avoir un pseudo")
+    @NotBlank(message = ErrorMessages.ERROR_MESSAGE_PSEUDO)
     private String pseudo;
 
     /** Mot de passe du collaborateur */
