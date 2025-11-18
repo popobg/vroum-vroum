@@ -1,0 +1,16 @@
+\babel@toc {french}{}\relax 
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Objet du document}{2}{subsection.1.1}%
+\contentsline {section}{\numberline {2}Architecture logicielle}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Produits et versions}{3}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Langages, frameworks et librairies spécifiques}{3}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}serveur de base de données}{3}{subsubsection.2.1.2}%
+\contentsline {section}{\numberline {3}Focus technique}{4}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Diagramme de classes métier (ou MCD)}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Diagramme entités relations (ou MPD)}{5}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Diagramme en couche }{5}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Règles de développement coté back}{6}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Tests et intégration}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Tests unitaires}{6}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Tests fonctionnels}{6}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Indicateurs de qualité de code}{6}{subsection.4.3}%
