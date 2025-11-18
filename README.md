@@ -2,7 +2,7 @@
 
 ## Sommaire
 [A propos](#a-propos)
-[Stack technique]
+[Stack technique](#stack-technique)
 [Collaborateurs](#collaborateurs)
 
 ## A propos
