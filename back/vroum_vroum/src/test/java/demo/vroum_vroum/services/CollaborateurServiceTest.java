@@ -42,6 +42,7 @@ import demo.vroum_vroum.entities.Reservation;
 import demo.vroum_vroum.entities.Vehicule;
 import demo.vroum_vroum.entities.VehiculeService;
 import demo.vroum_vroum.enums.Categorie;
+import demo.vroum_vroum.enums.ErrorMessages;
 import demo.vroum_vroum.enums.StatutVehicule;
 import demo.vroum_vroum.exceptions.NotAuthenticatedException;
 import demo.vroum_vroum.repositories.CollaborateurRepository;
@@ -60,17 +61,6 @@ public class CollaborateurServiceTest {
 
     @InjectMocks
     private CollaborateurService collaborateurService;
-
-    // Messages d'erreur
-    private static final String errorMessagePassword = "Le mot de passe doit contenir au moins 8 caractères, dont au minimum une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial";
-
-    private static final String errorMessageUnknownId = "Pas de collaborateur trouvé pour l'ID ";
-
-    private static final String errorMessageUnknownUsername = "Pas d'utilisateur trouvé pour le pseudo ";
-
-    private static final String errorMessageNoConnectedUser = "Pas d'utilisateur connecté";
-
-    private static final String errorMessageIdForNewItem = "Un nouveau collaborateur ne peut pas avoir d'ID";
 
     // Suffixe mot de passe hashé
     private static final String encoded = "Encoded";
@@ -232,7 +222,7 @@ public class CollaborateurServiceTest {
         when(collaborateurRepository.findByPseudo(pseudo)).thenReturn(Optional.empty());
 
         Exception ex = assertThrows(UsernameNotFoundException.class, () -> collaborateurService.findByPseudo(pseudo));
-        assertEquals(errorMessageUnknownUsername + pseudo, ex.getMessage());
+        assertEquals(ErrorMessages.ERROR_MESSAGE_UNKNOWN_USERNAME.toString() + pseudo, ex.getMessage());
     }
 
     @Test
@@ -268,7 +258,7 @@ public class CollaborateurServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         Exception ex = assertThrows(NotAuthenticatedException.class, () -> collaborateurService.getCurrentUser());
-        assertEquals(errorMessageNoConnectedUser, ex.getMessage());
+        assertEquals(ErrorMessages.ERROR_MESSAGE_NO_CONNECTED_USER.toString(), ex.getMessage());
     }
 
     @Test
@@ -314,7 +304,7 @@ public class CollaborateurServiceTest {
         when(collaborateurRepository.findByPseudo(pseudo)).thenReturn(Optional.empty());
 
         Exception ex = assertThrows(UsernameNotFoundException.class, () -> collaborateurService.loadUserByUsername(pseudo));
-        assertEquals(errorMessageUnknownUsername + pseudo, ex.getMessage());
+        assertEquals(ErrorMessages.ERROR_MESSAGE_UNKNOWN_USERNAME.toString() + pseudo, ex.getMessage());
     }
 
     @Test
@@ -357,7 +347,7 @@ public class CollaborateurServiceTest {
         when(collaborateurRepository.findById(id)).thenReturn(Optional.empty());
 
         Exception ex = assertThrows(EntityNotFoundException.class, () -> collaborateurService.getCollaborateurById(id));
-        assertEquals(errorMessageUnknownId + id, ex.getMessage());
+        assertEquals(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID.toString() + id, ex.getMessage());
     }
 
     /********************
@@ -382,7 +372,7 @@ public class CollaborateurServiceTest {
         this.newCollaborateur.setId(id);
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> collaborateurService.createCollaborateur(newCollaborateur));
-        assertEquals(errorMessageIdForNewItem, ex.getMessage());
+        assertEquals(ErrorMessages.ERROR_MESSAGE_ID_FOR_NEW_ITEM.toString(), ex.getMessage());
     }
 
     @ParameterizedTest
@@ -392,7 +382,7 @@ public class CollaborateurServiceTest {
         this.newCollaborateur.setPassword(password);
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> collaborateurService.createCollaborateur(newCollaborateur));
-        assertEquals(errorMessagePassword, ex.getMessage());
+        assertEquals(ErrorMessages.ERROR_MESSAGE_PASSWORD.toString(), ex.getMessage());
     }
 
     /********************
@@ -461,7 +451,7 @@ public class CollaborateurServiceTest {
         when(collaborateurRepository.existsById(id)).thenReturn(false);
 
         Exception ex = assertThrows(EntityNotFoundException.class, () -> collaborateurService.updateCollaborateur(this.newCollaborateur));
-        assertEquals(errorMessageUnknownId + id, ex.getMessage());
+        assertEquals(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID.toString() + id, ex.getMessage());
     }
 
     @ParameterizedTest
@@ -476,7 +466,7 @@ public class CollaborateurServiceTest {
         when(collaborateurRepository.existsById(id)).thenReturn(true);
 
         Exception ex = assertThrows(IllegalArgumentException.class, () -> collaborateurService.updateCollaborateur(newCollaborateur));
-        assertEquals(errorMessagePassword, ex.getMessage());
+        assertEquals(ErrorMessages.ERROR_MESSAGE_PASSWORD.toString(), ex.getMessage());
     }
 
     /********************
@@ -499,6 +489,6 @@ public class CollaborateurServiceTest {
         when(collaborateurRepository.existsById(id)).thenReturn(false);
 
         Exception ex = assertThrows(EntityNotFoundException.class, () -> collaborateurService.deleteCollaborateur(id));
-        assertEquals(errorMessageUnknownId + id, ex.getMessage());
+        assertEquals(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID.toString() + id, ex.getMessage());
     }
 }

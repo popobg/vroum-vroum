@@ -1,6 +1,7 @@
 package demo.vroum_vroum.services;
 
 import demo.vroum_vroum.entities.Collaborateur;
+import demo.vroum_vroum.enums.ErrorMessages;
 import demo.vroum_vroum.exceptions.NotAuthenticatedException;
 import demo.vroum_vroum.repositories.CollaborateurRepository;
 import demo.vroum_vroum.utils.Validator;
@@ -15,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,16 +27,6 @@ import java.util.Set;
  */
 @Service
 public class CollaborateurService implements UserDetailsService {
-    // Messages d'erreur
-    private static final String errorMessagePassword = "Le mot de passe doit contenir au moins 8 caractères, dont au minimum une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial";
-
-    private static final String errorMessageUnknownId = "Pas de collaborateur trouvé pour l'ID ";
-
-    private static final String errorMessageUnknownUsername = "Pas d'utilisateur trouvé pour le pseudo ";
-
-    private static final String errorMessageNoConnectedUser = "Pas d'utilisateur connecté";
-
-    private static final String errorMessageIdForNewItem = "Un nouveau collaborateur ne peut pas avoir d'ID";
 
     /** Repository de l'entité Collaborateur */
     private final CollaborateurRepository collaborateurRepository;
@@ -62,7 +52,7 @@ public class CollaborateurService implements UserDetailsService {
         Optional<Collaborateur> collaborateur = collaborateurRepository.findByPseudo(pseudo);
 
         if (collaborateur.isEmpty()) {
-            throw new UsernameNotFoundException(errorMessageUnknownUsername + pseudo);
+            throw new UsernameNotFoundException(ErrorMessages.ERROR_MESSAGE_UNKNOWN_USERNAME.toString() + pseudo);
         }
 
         return collaborateur.get();
@@ -76,7 +66,7 @@ public class CollaborateurService implements UserDetailsService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication instanceof AnonymousAuthenticationToken) {
-            throw new NotAuthenticatedException(errorMessageNoConnectedUser);
+            throw new NotAuthenticatedException(ErrorMessages.ERROR_MESSAGE_NO_CONNECTED_USER.toString());
         }
 
         String username = authentication.getName();
@@ -93,7 +83,7 @@ public class CollaborateurService implements UserDetailsService {
 
         // Si aucun collaborateur trouvé à partir du pseudo
         if (optionalCollaborateur.isEmpty()) {
-            throw new UsernameNotFoundException(errorMessageUnknownUsername + username);
+            throw new UsernameNotFoundException(ErrorMessages.ERROR_MESSAGE_UNKNOWN_USERNAME.toString() + username);
         }
 
         Collaborateur collaborateur = optionalCollaborateur.get();
@@ -126,7 +116,7 @@ public class CollaborateurService implements UserDetailsService {
         Optional<Collaborateur> collaborateur = collaborateurRepository.findById(id);
 
         if (collaborateur.isEmpty()) {
-            throw new EntityNotFoundException(errorMessageUnknownId + id);
+            throw new EntityNotFoundException(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID.toString() + id);
         }
 
         return collaborateur.get();
@@ -139,13 +129,13 @@ public class CollaborateurService implements UserDetailsService {
      */
     public Collaborateur createCollaborateur(Collaborateur collaborateur) {
         if (collaborateur.getId() != 0) {
-            throw new IllegalArgumentException(errorMessageIdForNewItem);
+            throw new IllegalArgumentException(ErrorMessages.ERROR_MESSAGE_ID_FOR_NEW_ITEM.toString());
         }
 
         String password = collaborateur.getPassword();
 
         if (!Validator.isPasswordValid(password)) {
-            throw new IllegalArgumentException(errorMessagePassword);
+            throw new IllegalArgumentException(ErrorMessages.ERROR_MESSAGE_PASSWORD.toString());
         }
 
         // Hashage du mot de passe
@@ -161,13 +151,13 @@ public class CollaborateurService implements UserDetailsService {
      */
     public Collaborateur updateCollaborateur(Collaborateur collaborateur) {
         if (!collaborateurRepository.existsById(collaborateur.getId())) {
-            throw new EntityNotFoundException(errorMessageUnknownId + collaborateur.getId());
+            throw new EntityNotFoundException(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID.toString() + collaborateur.getId());
         }
 
         String password = collaborateur.getPassword();
 
         if (!Validator.isPasswordValid(password)) {
-            throw new IllegalArgumentException(errorMessagePassword);
+            throw new IllegalArgumentException(ErrorMessages.ERROR_MESSAGE_PASSWORD.toString());
         }
 
         // Hashage du mot de passe
@@ -185,7 +175,7 @@ public class CollaborateurService implements UserDetailsService {
         if (collaborateurRepository.existsById(id)) {
             collaborateurRepository.deleteById(id);
         } else {
-            throw new EntityNotFoundException(errorMessageUnknownId + id);
+            throw new EntityNotFoundException(ErrorMessages.ERROR_MESSAGE_UNKNOWN_ID.toString() + id);
         }
     }
 }
