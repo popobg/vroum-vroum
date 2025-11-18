@@ -17,6 +17,7 @@ pipeline {
             steps {
                 echo "======================> mvn test"
                 sh 'mvn -B -f back/vroum_vroum/pom.xml -Dmaven.repo.local=.m2 test'
+                sh 'mvn -B -f back/vroum_vroum/pom.xml -Dmaven.repo.local=.m2 jacoco:report'
             }
             post {
                 always {
