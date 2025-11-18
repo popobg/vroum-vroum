@@ -45,7 +45,6 @@ import demo.vroum_vroum.enums.Categorie;
 import demo.vroum_vroum.enums.StatutVehicule;
 import demo.vroum_vroum.exceptions.NotAuthenticatedException;
 import demo.vroum_vroum.repositories.CollaborateurRepository;
-import demo.vroum_vroum.utils_tests.Utils;
 import jakarta.persistence.EntityNotFoundException;
 
 /**
@@ -93,9 +92,9 @@ public class CollaborateurServiceTest {
         this.newCollaborateur = new Collaborateur("Abitbol", "Georges", "14 avenue Franklin Delano Roosevelt, Paris", "georges.abitbol@example.com", "+12135096996", "gabitbol", "Password4!", false);
 
         // Collaborateurs
-        Collaborateur collaborateur1 = new Collaborateur(1, "Dupont", "Jean", "3 avenue du Général de Gaulle", "jean.dupont@example.com", "6010203040", adminPseudo, "Password1!" + encoded, true);
-        Collaborateur collaborateur2 = new Collaborateur(2, "Martin", "Marie", "12 impasse des Alpes", "marie.martin@example.com", "6050607080", userPseudo, "Password2!" + encoded, false);
-        Collaborateur collaborateur3 = new Collaborateur(3, "Durant", "Pierre", "5 grande rue des prés", "pierre.durant@example.com", "6090101112", "pdurant", "Password3!" + encoded, true);
+        Collaborateur collaborateur1 = new Collaborateur(1, "Dupont", "Jean", "3 avenue du Général de Gaulle", "jean.dupont@example.com", "6010203040", adminPseudo, "Password1!", true);
+        Collaborateur collaborateur2 = new Collaborateur(2, "Martin", "Marie", "12 impasse des Alpes", "marie.martin@example.com", "6050607080", userPseudo, "Password2!", false);
+        Collaborateur collaborateur3 = new Collaborateur(3, "Durant", "Pierre", "5 grande rue des prés", "pierre.durant@example.com", "6090101112", "pdurant", "Password3!", true);
 
         // Véhicules
         Vehicule vehicule1 = new Vehicule(1, 5, "Fiesta", "Ford", "BG069WC");
@@ -367,10 +366,10 @@ public class CollaborateurServiceTest {
 
     @Test
     void testCreateCollaborateur_shouldReturnCollaborateur() {
-        Collaborateur newSavedCollaborateur = new Collaborateur(nonExistingId, this.newCollaborateur.getNom(), this.newCollaborateur.getPrenom(), this.newCollaborateur.getAdresse(), this.newCollaborateur. getEmail(), this.newCollaborateur.getTelephone(), this.newCollaborateur.getPseudo(), this.newCollaborateur.getPassword() + encoded, this.newCollaborateur.getAdmin());
+        Collaborateur newSavedCollaborateur = new Collaborateur(nonExistingId, this.newCollaborateur.getNom(), this.newCollaborateur.getPrenom(), this.newCollaborateur.getAdresse(), this.newCollaborateur. getEmail(), this.newCollaborateur.getTelephone(), this.newCollaborateur.getPseudo(), this.newCollaborateur.getPassword(), this.newCollaborateur.getAdmin());
 
         when(collaborateurRepository.save(this.newCollaborateur)).thenReturn(newSavedCollaborateur);
-        when(passwordEncoder.encode(this.newCollaborateur.getPassword())).thenReturn(this.newCollaborateur.getPassword() + encoded);
+        //when(passwordEncoder.encode(this.newCollaborateur.getPassword())).thenReturn(this.newCollaborateur.getPassword() + encoded);
 
         Collaborateur actualCollaborateur = collaborateurService.createCollaborateur(this.newCollaborateur);
 
@@ -415,12 +414,12 @@ public class CollaborateurServiceTest {
         expectedCollaborateur.setEmail(modifiedCollaborateur.getEmail());
         expectedCollaborateur.setTelephone(modifiedCollaborateur.getTelephone());
         expectedCollaborateur.setPseudo(modifiedCollaborateur.getPseudo());
-        expectedCollaborateur.setPassword(modifiedCollaborateur.getPassword() + encoded);
+        expectedCollaborateur.setPassword(modifiedCollaborateur.getPassword());
         expectedCollaborateur.setAdmin(modifiedCollaborateur.getAdmin());
 
         when(collaborateurRepository.existsById(modifiedCollaborateur.getId())).thenReturn(true);
         when(collaborateurRepository.save(modifiedCollaborateur)).thenReturn(expectedCollaborateur);
-        when(passwordEncoder.encode(modifiedCollaborateur.getPassword())).thenReturn(expectedCollaborateur.getPassword() + encoded);
+        // when(passwordEncoder.encode(modifiedCollaborateur.getPassword())).thenReturn(expectedCollaborateur.getPassword());
 
         Collaborateur actualCollaborateur = collaborateurService.updateCollaborateur(modifiedCollaborateur);
 
@@ -442,12 +441,12 @@ public class CollaborateurServiceTest {
         expectedCollaborateur.setEmail(modifiedCollaborateur.getEmail());
         expectedCollaborateur.setTelephone(modifiedCollaborateur.getTelephone());
         expectedCollaborateur.setPseudo(modifiedCollaborateur.getPseudo());
-        expectedCollaborateur.setPassword(modifiedCollaborateur.getPassword() + encoded);
+        expectedCollaborateur.setPassword(modifiedCollaborateur.getPassword());
         expectedCollaborateur.setAdmin(modifiedCollaborateur.getAdmin());
 
         when(collaborateurRepository.existsById(modifiedCollaborateur.getId())).thenReturn(true);
         when(collaborateurRepository.save(modifiedCollaborateur)).thenReturn(expectedCollaborateur);
-        when(passwordEncoder.encode(modifiedCollaborateur.getPassword())).thenReturn(expectedCollaborateur.getPassword() + encoded);
+        //when(passwordEncoder.encode(modifiedCollaborateur.getPassword())).thenReturn(expectedCollaborateur.getPassword() + encoded);
 
         Collaborateur actualCollaborateur = collaborateurService.updateCollaborateur(modifiedCollaborateur);
 

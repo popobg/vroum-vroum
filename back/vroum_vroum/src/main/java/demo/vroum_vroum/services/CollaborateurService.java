@@ -42,17 +42,15 @@ public class CollaborateurService implements UserDetailsService {
     private final CollaborateurRepository collaborateurRepository;
 
     /** Classe de sécurité permettant de hasher le mot de passe */
-    private final PasswordEncoder passwordEncoder;
+    //private final PasswordEncoder passwordEncoder;
 
     /**
      * Constructeur
      * @param collaborateurRepository repo Collaborateur
      * @param passwordEncoder classe de hash du mot de passe
      */
-    public CollaborateurService(CollaborateurRepository collaborateurRepository,
-    PasswordEncoder passwordEncoder) {
+    public CollaborateurService(CollaborateurRepository collaborateurRepository) {
         this.collaborateurRepository = collaborateurRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -151,7 +149,7 @@ public class CollaborateurService implements UserDetailsService {
         }
 
         // Hashage du mot de passe
-        collaborateur.setPassword(passwordEncoder.encode(password));
+        //collaborateur.setPassword(passwordEncoder.encode(password));
 
         return collaborateurRepository.save(collaborateur);
     }
@@ -173,7 +171,7 @@ public class CollaborateurService implements UserDetailsService {
         }
 
         // Hashage du mot de passe
-        collaborateur.setPassword(passwordEncoder.encode(password));
+        //collaborateur.setPassword(passwordEncoder.encode(password));
 
         return collaborateurRepository.save(collaborateur);
     }
