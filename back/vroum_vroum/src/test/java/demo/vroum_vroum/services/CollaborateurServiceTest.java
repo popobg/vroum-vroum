@@ -42,10 +42,10 @@ import demo.vroum_vroum.entities.Reservation;
 import demo.vroum_vroum.entities.Vehicule;
 import demo.vroum_vroum.entities.VehiculeService;
 import demo.vroum_vroum.enums.Categorie;
-import demo.vroum_vroum.enums.ErrorMessages;
 import demo.vroum_vroum.enums.StatutVehicule;
 import demo.vroum_vroum.exceptions.NotAuthenticatedException;
 import demo.vroum_vroum.repositories.CollaborateurRepository;
+import demo.vroum_vroum.utils.ErrorMessages;
 import jakarta.persistence.EntityNotFoundException;
 
 /**

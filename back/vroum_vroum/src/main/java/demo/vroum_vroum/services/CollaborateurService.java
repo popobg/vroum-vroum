@@ -1,9 +1,9 @@
 package demo.vroum_vroum.services;
 
 import demo.vroum_vroum.entities.Collaborateur;
-import demo.vroum_vroum.enums.ErrorMessages;
 import demo.vroum_vroum.exceptions.NotAuthenticatedException;
 import demo.vroum_vroum.repositories.CollaborateurRepository;
+import demo.vroum_vroum.utils.ErrorMessages;
 import demo.vroum_vroum.utils.Validator;
 import jakarta.persistence.EntityNotFoundException;
 

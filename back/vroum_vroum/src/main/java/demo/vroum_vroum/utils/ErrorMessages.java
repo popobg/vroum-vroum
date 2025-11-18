@@ -1,9 +1,13 @@
-package demo.vroum_vroum.enums;
+package demo.vroum_vroum.utils;
 
 /**
  * Enumération pour les messages d'erreur
  */
 public final class ErrorMessages {
+    private ErrorMessages() {
+        throw new IllegalStateException("Classe utilitaire de constantes");
+    }
+
     public static final String ERROR_MESSAGE_PASSWORD = "Le mot de passe doit contenir au moins 8 caractères, dont au minimum une lettre majuscule, une lettre minuscule, un chiffre et un caractère spécial";
     public static final String ERROR_MESSAGE_UNKNOWN_ID = "Pas de collaborateur trouvé pour l'ID ";
     public static final String ERROR_MESSAGE_UNKNOWN_USERNAME = "Pas d'utilisateur trouvé pour le pseudo ";
