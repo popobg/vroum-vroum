@@ -1,4 +1,4 @@
-package demo.vroum_vroum.restControleurs.auth;
+package demo.vroum_vroum.controllers.auth;
 
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.GetMapping;

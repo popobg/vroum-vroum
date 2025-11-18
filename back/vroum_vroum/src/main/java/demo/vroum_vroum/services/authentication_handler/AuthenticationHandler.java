@@ -1,4 +1,4 @@
-package demo.vroum_vroum.services.authenticationHandler;
+package demo.vroum_vroum.services.authentication_handler;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

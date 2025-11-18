@@ -1,4 +1,4 @@
-package demo.vroum_vroum.restControleurs;
+package demo.vroum_vroum.controllers;
 
 import demo.vroum_vroum.dto.CovoiturageDto;
 import demo.vroum_vroum.entities.Covoiturage;

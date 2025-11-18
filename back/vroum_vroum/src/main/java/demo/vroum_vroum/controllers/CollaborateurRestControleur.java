@@ -1,7 +1,7 @@
 // ==============================
 // Collaborateur Rest Controller
 // ==============================
-package demo.vroum_vroum.restControleurs;
+package demo.vroum_vroum.controllers;
 
 import demo.vroum_vroum.dto.CollaborateurDto;
 import demo.vroum_vroum.dto.CollaborateurLiteDto;

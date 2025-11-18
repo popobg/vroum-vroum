@@ -18,7 +18,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import demo.vroum_vroum.services.authenticationHandler.AuthenticationHandler;
+import demo.vroum_vroum.services.authentication_handler.AuthenticationHandler;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
