@@ -28,7 +28,7 @@ pipeline {
         stage('Analyse SonarQube') {
             steps {
                 withSonarQubeEnv("${env.SONARQUBE_ENV}") {
-                    sh "mvn -f back/vroum_vroum/pom.xml sonar:sonar -Dmaven.repo.local=.m2 -Duser.home=~ -Dsonar.projectKey=${env.SONAR_PROJECT_KEY}"
+                    sh "mvn -f back/vroum_vroum/pom.xml sonar:sonar -Dmaven.repo.local=.m2 -Duser.home=~ -Dsonar.projectKey=${env.SONAR_PROJECT_KEY} -Dsonar.branch.name=${env.BRANCH_NAME}"
                 }
             }
         }
