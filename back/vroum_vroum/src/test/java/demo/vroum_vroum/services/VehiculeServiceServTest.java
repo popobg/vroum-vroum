@@ -42,66 +42,6 @@ class VehiculeServiceServTest {
         assertEquals(1, result.size());
         verify(vehiculeServiceRepository, times(1)).findAll();
     }
-
-//    @Test
-//    public void testFindByIdExists() throws Controle {
-//        when(vehiculeServiceRepository.existsById(1)).thenReturn(true);
-//        when(vehiculeServiceRepository.findById(1)).thenReturn(Optional.of(vehiculeService));
-//
-//        VehiculeService result = vehiculeServiceServ.findById(1);
-//        assertNotNull(result);
-//        verify(vehiculeServiceRepository).findById(1);
-//    }
-
-//    @Test
-//    public void testFindByIdNotExists() {
-//        when(vehiculeServiceRepository.existsById(1)).thenReturn(false);
-//
-//        Controle exception = assertThrows(Controle.class, () -> {
-//            vehiculeServiceServ.findById(1);
-//        });
-//        assertEquals("L'id n'existe pas", exception.getMessage());
-//    }
-//
-//    @Test
-//    public void testFindVehiculeServiceByCollaborateur() throws Controle {
-//        List<VehiculeService> list = Arrays.asList(vehiculeService);
-//        when(vehiculeServiceRepository.findVehiculeServiceByCollaborateurs(collaborateur)).thenReturn(list);
-//
-//        Iterable<VehiculeService> result = vehiculeServiceServ.findVehiculeServiceByCollaborateur(collaborateur);
-//        assertNotNull(result);
-//        verify(vehiculeServiceRepository).findVehiculeServiceByCollaborateurs(collaborateur);
-//    }
-//
-//    @Test
-//    public void testCreate() throws Controle {
-//        vehiculeServiceServ.create(vehiculeService);
-//        verify(vehiculeServiceRepository).save(vehiculeService);
-//    }
-//
-//    @Test
-//    public void testUpdate() throws Controle {
-//        vehiculeServiceServ.update(vehiculeService);
-//        verify(vehiculeServiceRepository).save(vehiculeService);
-//    }
-//
-//    @Test
-//    public void testDeleteExists() throws Controle {
-//        when(vehiculeServiceRepository.existsById(1)).thenReturn(true);
-//
-//        vehiculeServiceServ.delete(1);
-//        verify(vehiculeServiceRepository).deleteById(1);
-//    }
-//
-//    @Test
-//    public void testDeleteNotExists() {
-//        when(vehiculeServiceRepository.existsById(1)).thenReturn(false);
-//
-//        Controle exception = assertThrows(Controle.class, () -> {
-//            vehiculeServiceServ.delete(1);
-//        });
-//        assertEquals("L'id n'existe pas.", exception.getMessage());
-//    }
 }
 
 
