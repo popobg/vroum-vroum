@@ -13,8 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @Configuration
 public class AuthenticationHandler {
-    private AuthenticationHandler() {}
-
     /**
      * Méthode permettant de gérer la réponse envoyée au client en cas d'erreur d'authentification.
      * @return un objet AuthenticationFailureHandler
