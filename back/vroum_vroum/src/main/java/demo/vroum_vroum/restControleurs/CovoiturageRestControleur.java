@@ -56,7 +56,6 @@ public class CovoiturageRestControleur {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.status(500).body(null);
         }
     }
@@ -83,24 +82,9 @@ public class CovoiturageRestControleur {
      * @return 204 si supprimé, 404 si non trouvé, 400 si non autorisé
      */
     @DeleteMapping("/delete/{idCovoit}/{idCollaborateur}")
-    public ResponseEntity<Void> supprimerCovoiturage(
-            @PathVariable int idCovoit,
-            @PathVariable int idCollaborateur) {
-
-        try {
-            covoiturageService.supprimerCovoiturage(idCovoit, idCollaborateur);
-            return ResponseEntity.noContent().build();
-
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).build();
-        }
+    public ResponseEntity<Void> supprimerCovoiturage(@PathVariable int idCovoit, @PathVariable int idCollaborateur) {
+        covoiturageService.supprimerCovoiturage(idCovoit, idCollaborateur);
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -111,19 +95,9 @@ public class CovoiturageRestControleur {
      * @return réponse 204 si succès
      */
     @PutMapping("/update/{idCovoit}")
-    public ResponseEntity<Void> updateCovoiturage(
-            @PathVariable int idCovoit,
-            @RequestBody CovoiturageDto dto) {
-
-        try {
-            covoiturageService.updateCovoiturage(idCovoit, dto);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).build();
-        }
+    public ResponseEntity<Void> updateCovoiturage(@PathVariable int idCovoit, @RequestBody CovoiturageDto dto) {
+        covoiturageService.updateCovoiturage(idCovoit, dto);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/tous")
@@ -183,14 +157,8 @@ public class CovoiturageRestControleur {
      */
     @PutMapping("/reservations/annuler/{idReservation}/{idCollaborateur}")
     public ResponseEntity<Void> annulerReservation(@PathVariable int idReservation, @PathVariable int idCollaborateur) {
-        try {
-            covoiturageService.annulerReservationCovoit(idReservation, idCollaborateur);
-
-            return ResponseEntity.noContent().build();
-        } catch (Exception e) {
-            e.printStackTrace(); // voir l’erreur exacte dans les logs
-            return ResponseEntity.status(500).build();
-        }
+        covoiturageService.annulerReservationCovoit(idReservation, idCollaborateur);
+        return ResponseEntity.noContent().build();
     }
 
 
