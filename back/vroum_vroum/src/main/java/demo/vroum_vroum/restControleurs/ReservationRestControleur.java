@@ -46,10 +46,9 @@ public class ReservationRestControleur {
      *
      * @param id id de la réservation
      * @return une réservation
-     * @throws EntityNotFoundException statut 404 : réservation non trouvée
      */
     @GetMapping("{id}")
-    public ResponseEntity<Reservation> getReservationById(@PathVariable int id) throws EntityNotFoundException {
+    public ResponseEntity<Reservation> getReservationById(@PathVariable int id) {
         return ResponseEntity.ok(reservationService.findById(id));
     }
 
@@ -57,10 +56,9 @@ public class ReservationRestControleur {
      * Récupère les reservations d'un utilisateur.
      *
      * @return une liste de réservation dto
-     * @throws EntityNotFoundException 404 : collaborateur non trouvé
      */
     @GetMapping("/vehicule")
-    public ResponseEntity<List<ReservationDto>> getReservationsVehicule(int idCollaborateur) throws EntityNotFoundException {
+    public ResponseEntity<List<ReservationDto>> getReservationsVehicule(int idCollaborateur) {
         return  ResponseEntity.ok(ReservationMapper.toDtos(reservationService.getMesReservationsVehicule(idCollaborateur)));
     }
 
@@ -81,10 +79,9 @@ public class ReservationRestControleur {
      *
      * @param reservation réservation avec informations modifiées
      * @return statut 204 si l'opération s'est déroulée avec succès, sinon erreur 500
-     * @throws EntityNotFoundException 404 : réservation non trouvée
      */
     @PutMapping("/vehicule")
-    public ResponseEntity<Void> putReservation(@RequestBody Reservation reservation) throws EntityNotFoundException {
+    public ResponseEntity<Void> putReservation(@RequestBody Reservation reservation) {
         reservationService.update(reservation);
         return ResponseEntity.noContent().build();
     }
@@ -96,12 +93,9 @@ public class ReservationRestControleur {
      * @param idReservation Id de la réservation
      * @param idCollaborateur Id du collaborateur
      * @return statut HTTP 204 si l'annulation a eu lieu avec succès, sinon 404 ou 500
-     * @throws EntityNotFoundException Collaborateur ou réservation non trouvé.s
-     * @throws IllegalArgumentException conditions d'annulation non respectées
-     * @throws Exception opération échouée
      */
     @PutMapping("/vehicule/annuler/{idReservation}")
-    public ResponseEntity<Void> cancelReservation(@PathVariable int idReservation, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
+    public ResponseEntity<Void> cancelReservation(@PathVariable int idReservation, int idCollaborateur) {
         reservationService.annulerReservationVehicule(idReservation, idCollaborateur);
 
         return ResponseEntity.noContent().build();

@@ -169,9 +169,8 @@ public class CollaborateurService implements UserDetailsService {
     /**
      * Supprime un collaborateur de la BDD à partir de son ID.
      * @param id identifiant du collaborateur
-     * @throws RuntimeException lève une exception en cas d'erreur au moment de la suppression du collaborateur
      */
-    public void deleteCollaborateur(int id) throws RuntimeException {
+    public void deleteCollaborateur(int id) {
         if (collaborateurRepository.existsById(id)) {
             collaborateurRepository.deleteById(id);
         } else {

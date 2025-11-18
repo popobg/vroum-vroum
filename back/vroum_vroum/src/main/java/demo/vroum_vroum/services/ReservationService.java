@@ -46,9 +46,8 @@ public class ReservationService {
      * Méthode de service permettant de récupérer une réservation à partir de son ID.
      * @param id id de la réservation
      * @return une Reservation
-     * @throws EntityNotFoundException aucune réservation trouvée
      */
-    public Reservation findById(int id) throws EntityNotFoundException {
+    public Reservation findById(int id) {
         Optional<Reservation> reservation = reservationRepository.findById(id);
 
         if (reservation.isEmpty()) {
@@ -62,19 +61,26 @@ public class ReservationService {
      * Méthode de service récupérant les réservations de véhicule de service d'un collaborateur.
      * @param idCollaborateur id du collaborateur
      * @return liste de réservation
-     * @throws EntityNotFoundException pas de collaborateur trouvé
      */
-    public List<Reservation> getMesReservationsVehicule(int idCollaborateur) throws EntityNotFoundException {
+    public List<Reservation> getMesReservationsVehicule(int idCollaborateur) {
         Collaborateur collaborateur = collaborateurService.getCollaborateurById(idCollaborateur);
 
         return collaborateur.getReservations();
     }
 
+    /**
+     * Méthode de service permettant d'ajouter une nouvelle réservation en BDD.
+     * @param reservation nouvelle réservation
+     */
     public void create(Reservation reservation) {
         reservationRepository.save(reservation);
     }
 
-    public void update(Reservation reservation) throws EntityNotFoundException {
+    /**
+     * Méthode de service permettant de mettre à jour les informations d'une réservation.
+     * @param reservation réservation modifiée
+     */
+    public void update(Reservation reservation) {
         if (!reservationRepository.existsById(reservation.getId())) {
             throw new EntityNotFoundException("La réservation d'ID" + reservation.getId() + "n'existe pas");
         }
@@ -86,10 +92,8 @@ public class ReservationService {
      * Méthode permettant de supprimer une réservation de véhicule pour un collaborateur.
      * @param idReservation Id de la réservation
      * @param idCollaborateur Id du collaborateur
-     * @throws EntityNotFoundException collaborateur ou réservation non trouvé.s
-     * @throws IllegalArgumentException conditions d'annulation non respectées
      */
-    public void annulerReservationVehicule(int idReservation, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException {
+    public void annulerReservationVehicule(int idReservation, int idCollaborateur) {
         Collaborateur collaborateur = collaborateurService.getCollaborateurById(idCollaborateur);
         Reservation reservation = this.findById(idReservation);
 

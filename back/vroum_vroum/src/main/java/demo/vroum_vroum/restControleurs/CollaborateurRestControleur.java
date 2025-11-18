@@ -79,7 +79,7 @@ public class CollaborateurRestControleur {
      * @return l'entité Collaborateur demandée
      */
     @GetMapping("/{id}")
-    public ResponseEntity<CollaborateurDto> getCollaborateurById(@PathVariable Integer id) throws EntityNotFoundException {
+    public ResponseEntity<CollaborateurDto> getCollaborateurById(@PathVariable Integer id) {
         Collaborateur collaborateur = collaborateurService.getCollaborateurById(id);
         return ResponseEntity.ok(CollaborateurMapper.toDto(collaborateur));
     }
@@ -139,9 +139,6 @@ public class CollaborateurRestControleur {
      * Supprime le compte de l'utilisateur connecté. Action demandée par lui-même.
      *
      * @return statut HTTP 204 si suppression réussie, sinon statut 404 ou 500
-     * @throws EntityNotFoundException
-     * @throws NotAuthenticatedException
-     * @throws RuntimeException
      */
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteUtilisateurConnecte() {

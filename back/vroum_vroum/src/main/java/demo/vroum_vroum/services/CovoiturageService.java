@@ -43,10 +43,8 @@ public class CovoiturageService {
      * @param idOrganisateur ID du collaborateur conducteur
      * @param idVehicule ID du véhicule utilisé
      * @return le covoiturage créé
-     * @throws EntityNotFoundException si collaborateur ou véhicule introuvable
-     * @throws IllegalArgumentException si données invalides (places, date, adresses)
      */
-    public Covoiturage creerCovoiturage(CovoiturageDto dto, int idOrganisateur, int idVehicule) throws EntityNotFoundException, IllegalArgumentException, Controle {
+    public Covoiturage creerCovoiturage(CovoiturageDto dto, int idOrganisateur, int idVehicule) throws Controle {
 
         Collaborateur organisateur = collaborateurService.getCollaborateurById(idOrganisateur);
         Vehicule vehicule = vehiculeService.getVehiculeById(idVehicule);
@@ -91,16 +89,20 @@ public class CovoiturageService {
      * @param idCollaborateur identifiant du collaborateur organisateur
      * @return liste de covoiturages organisés
      */
-    public Set<Covoiturage> getMesCovoituragesOrganises(int idCollaborateur) throws EntityNotFoundException {
+    public Set<Covoiturage> getMesCovoituragesOrganises(int idCollaborateur) {
         Collaborateur collaborateur = collaborateurService.getCollaborateurById(idCollaborateur);
 
         // On filtre tous les covoiturages où l'organisateur est ce collaborateur
         return covoiturageRepository.findByOrganisateur(collaborateur);
     }
 
-    public void supprimerCovoiturage(int idCovoit, int idCollaborateur)
-            throws EntityNotFoundException, IllegalArgumentException, Exception {
-
+    /**
+     * Méthode de service permettant de supprimer un covoiturage existant.
+     *
+     * @param idCovoit id du covoiturage à supprimer
+     * @param idCollaborateur id du collaborateur organisateur du covoiturage
+     */
+    public void supprimerCovoiturage(int idCovoit, int idCollaborateur) {
         Covoiturage covoit = this.getCovoiturageById(idCovoit);
         Collaborateur organisateur = collaborateurService.getCollaborateurById(idCollaborateur);
 
@@ -129,9 +131,8 @@ public class CovoiturageService {
      *
      * @param idCovoit Id du covoiturage
      * @param dto DTO contenant les nouvelles valeurs
-     * @throws EntityNotFoundException si covoiturage non trouvé
      */
-    public void updateCovoiturage(int idCovoit, CovoiturageDto dto) throws EntityNotFoundException {
+    public void updateCovoiturage(int idCovoit, CovoiturageDto dto) {
         Covoiturage covoit = covoiturageRepository.findById(idCovoit)
                 .orElseThrow(() -> new EntityNotFoundException("Covoiturage introuvable"));
 
@@ -170,7 +171,7 @@ public class CovoiturageService {
      * @param dateDepart date-heure de départ
      * @return liste de covoiturages
      */
-    public Set<Covoiturage> getCovoitDisponiblesByAdressesDate(String villeDepart, String codePostalDepart, String villeArrivee, String codePostalArrivee, LocalDateTime dateDepart) throws IllegalArgumentException {
+    public Set<Covoiturage> getCovoitDisponiblesByAdressesDate(String villeDepart, String codePostalDepart, String villeArrivee, String codePostalArrivee, LocalDateTime dateDepart) {
         if (villeDepart.isEmpty()
                 || codePostalDepart.isEmpty()
                 || villeArrivee.isEmpty()
@@ -194,9 +195,8 @@ public class CovoiturageService {
      * Méthode de service récupérant un covoiturage à partir de son Id.
      * @param id Id du covoiturage
      * @return un covoiturage ou null si pas de covoiturage trouvé à cet Id
-     * @throws EntityNotFoundException aucune entité correspondante à cet Id
      */
-    public Covoiturage getCovoiturageById(int id) throws EntityNotFoundException {
+    public Covoiturage getCovoiturageById(int id) {
         Optional<Covoiturage> optCovoit = covoiturageRepository.findById(id);
 
         if (optCovoit.isEmpty()) {
@@ -210,7 +210,7 @@ public class CovoiturageService {
      * Méthode de service récupérant les covoiturages d'un passager.
      * @return liste de covoiturages
      */
-    public Set<Covoiturage> getMesReservationsCovoit(int idCollaborateur) throws EntityNotFoundException {
+    public Set<Covoiturage> getMesReservationsCovoit(int idCollaborateur) {
         Collaborateur collaborateur = collaborateurService.getCollaborateurById(idCollaborateur);
 
         return collaborateur.getCovoiturages();
@@ -220,11 +220,8 @@ public class CovoiturageService {
      * Méthode permettant de supprimer une réservation de covoiturage pour un passager
      * @param idCovoit Id du covoiturage
      * @param idCollaborateur Id du collaborateur passager
-     * @throws EntityNotFoundException collaborateur ou covoit non trouvé
-     * @throws IllegalArgumentException conditions d'annulation non respectées
-     * @throws Exception erreur lors de l'opération
      */
-    public void annulerReservationCovoit(int idCovoit, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
+    public void annulerReservationCovoit(int idCovoit, int idCollaborateur) {
         Collaborateur passager = collaborateurService.getCollaborateurById(idCollaborateur);
         Covoiturage covoit = this.getCovoiturageById(idCovoit);
 
@@ -249,11 +246,8 @@ public class CovoiturageService {
      * Méthode permettant d'ajouter un passager à un covoiturage disponible
      * @param idCovoit Id du covoiturage
      * @param idCollaborateur Id du passager
-     * @throws EntityNotFoundException collaborateur ou covoit non trouvé
-     * @throws IllegalArgumentException conditions de réservation non respectées
-     * @throws Exception erreur lors de l'opération
      */
-    public void reserverCovoit(int idCovoit, int idCollaborateur) throws EntityNotFoundException, IllegalArgumentException, Exception {
+    public void reserverCovoit(int idCovoit, int idCollaborateur) {
         Collaborateur passager = collaborateurService.getCollaborateurById(idCollaborateur);
         Covoiturage covoit = this.getCovoiturageById(idCovoit);
 
