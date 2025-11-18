@@ -10,7 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class ValidatorTest {
+class ValidatorTest {
     @ParameterizedTest
     @ValueSource(strings = {"75000", "69501", "78150"})
     void testMatchCodePostalFormatOK(String input) {
